@@ -44,7 +44,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	jfieldID field_Url = env->GetFieldID(httpRequest_Class, "url", "Ljava/lang/String;");
 
 	if (field_Url == NULL) {
-		return NULL_JSTRING;
+		return env->NewStringUTF("error: found url");;
 	}
 
 	jstring url = (jstring) env->GetObjectField(request, field_Url);

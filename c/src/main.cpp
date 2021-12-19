@@ -35,7 +35,6 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_post
  */
 JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_request 
 (JNIEnv* env, jobject, jobject request) {
-	jstring NULL_JSTRING = env->NewStringUTF("");
 
 	jclass httpRequestClass = env->GetObjectClass(request);
 	jfieldID field_Method = env->GetFieldID(httpRequestClass, "method", "I");
@@ -121,6 +120,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	env->DeleteLocalRef(setObj);
 	env->DeleteLocalRef(hashMapClass);
 	env->DeleteLocalRef(objectHeaders);
+	env->DeleteLocalRef(stringUrl);
 	env->DeleteLocalRef(httpRequestClass);
 
 	return resp != nullptr ? env->NewStringUTF(resp->body.c_str()) : nullptr;

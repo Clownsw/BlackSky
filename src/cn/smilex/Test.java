@@ -6,8 +6,12 @@ import cn.smilex.libhv.jni.Requests;
 public class Test {
     public static void main(String[] args) {
         Requests requests = new Requests();
-        System.out.println(requests.request(new HttpRequest()
+        HttpRequest req = new HttpRequest()
                 .setUrl("https://www.smilex.cn/")
-                .setMethod(1)));
+                .setMethod(HttpRequest.HTTP_METHOD_GET)
+                .setHeaders("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                .setHeaders("Accept", "*/*");
+
+        requests.request(req);
     }
 }

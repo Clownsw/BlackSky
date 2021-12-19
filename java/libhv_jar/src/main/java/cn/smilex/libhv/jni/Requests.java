@@ -26,7 +26,7 @@ public class Requests {
     /**
      * 以Post方式请求网站并返回结果
      * @param request 请求对象
-     * @return 返回响应
+     * @return 返回响应对象
      */
-    public native String request(HttpRequest request);
+    public native HttpResponse request(HttpRequest request);
 }

@@ -1,6 +1,7 @@
 package cn.smilex.test;
 
 import cn.smilex.libhv.jni.HttpRequest;
+import cn.smilex.libhv.jni.HttpResponse;
 import cn.smilex.libhv.jni.Requests;
 
 /**
@@ -13,10 +14,11 @@ public class Test {
         Requests requests = new Requests();
         HttpRequest request = HttpRequest
                 .build()
-                .setUrl("https://www.google.com/")
+                .setUrl("https://www.baidu.com/")
                 .setMethod(HttpRequest.HTTP_METHOD_GET);
 
-        String body = requests.request(request);
-        System.out.println(body);
+        HttpResponse httpResponse = requests.request(request);
+        System.out.println(httpResponse.getStatusCode());
+        System.out.println(httpResponse.getBody());
     }
 }

@@ -29,12 +29,12 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_post
   (JNIEnv* env, jobject, jstring url);
 
 /*
- * 通过HttpRequest类请求指定网站并返回结果
+ * 通过HttpRequest类请求指定网站并返回HttpResponse
  * Class:     cn_smilex_libhv_jni_Requests
  * Method:    request
  * Signature: (Lcn/smilex/libhv/jni/HttpRequest;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_request
+JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
   (JNIEnv* env, jobject, jobject request);
 
 #ifdef __cplusplus

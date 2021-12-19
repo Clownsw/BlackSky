@@ -29,12 +29,12 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_post
 }
 
 /*
- * 通过HttpRequest类请求指定网站并返回结果
+ * 通过HttpRequest类请求指定网站并返回HttpResponse
  * Class:     cn_smilex_libhv_jni_Requests
  * Method:    request
  * Signature: (Lcn/smilex/libhv/jni/HttpRequest;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_request 
+JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request 
 (JNIEnv* env, jobject, jobject request) {
 
 	requests::Request req(new HttpRequest);
@@ -78,11 +78,26 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_request
 
 	auto resp = requests::request(req);
 
+	jclass classHttpResponse = env->FindClass("Lcn/smilex/libhv/jni/HttpResponse;");
+	jmethodID methodHttpResponseDefaultCon = env->GetMethodID(classHttpResponse, "<init>", "()V");
+
+	jfieldID fieldBody = env->GetFieldID(classHttpResponse, "body", "Ljava/lang/String;");
+	jfieldID fieldStatusCode = env->GetFieldID(classHttpResponse, "statusCode", "I");
+
+	jobject objectHttpResponse = env->NewObject(classHttpResponse, methodHttpResponseDefaultCon);
+	
+	// 设置响应内容
+	env->SetObjectField(objectHttpResponse, fieldBody, env->NewStringUTF(resp->body.c_str()));
+
+	// 设置响应状态
+	env->SetIntField(objectHttpResponse, fieldStatusCode, resp->status_code);
+
+	env->DeleteLocalRef(classHttpResponse);
 	env->DeleteLocalRef(objectCookie);
 	env->DeleteLocalRef(objectParams);
 	env->DeleteLocalRef(objectHeaders);
 	env->DeleteLocalRef(stringUrl);
 	env->DeleteLocalRef(httpRequestClass);
 
-	return resp != nullptr ? env->NewStringUTF(resp->body.c_str()) : nullptr;
+	return objectHttpResponse;
 }

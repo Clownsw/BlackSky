@@ -8,10 +8,13 @@ public class HttpRequest {
 
     private String url;
     private int method;
+    private String cookie;
     private HashMap<String, String> headers;
+    private HashMap<String, String> params;
 
     public HttpRequest() {
         headers = new HashMap<>();
+        params = new HashMap<>();
     }
 
     public String getUrl() {
@@ -22,21 +25,27 @@ public class HttpRequest {
         return method;
     }
 
+    public String getCookie() {
+        return cookie;
+    }
+
     public HashMap<String, String> getHeaders() {
         return headers;
     }
 
-    public static int getHttpMethodGet() {
-        return HTTP_METHOD_GET;
+    public HashMap<String, String> getParams() {
+        return params;
     }
 
-    /**
-     * 1 = GET
-     * 2 = POST
-     * @param method 请求方式
-     */
+
+
     public HttpRequest setMethod(int method) {
         this.method = method;
+        return this;
+    }
+
+    public HttpRequest setCookie(String cookie) {
+        this.cookie = cookie;
         return this;
     }
 
@@ -50,12 +59,8 @@ public class HttpRequest {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "HttpRequest{" +
-                "url='" + url + '\'' +
-                ", method=" + method +
-                ", headers=" + headers +
-                '}';
+    public HttpRequest setParams(String key, String value) {
+        params.put(key, value);
+        return this;
     }
 }

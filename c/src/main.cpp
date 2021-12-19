@@ -1,4 +1,5 @@
 #include "Requests.h"
+#include "tools.h"
 #include <hv/requests.h>
 
 /*
@@ -36,89 +37,49 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_post
 JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_request 
 (JNIEnv* env, jobject, jobject request) {
 
+	requests::Request req(new HttpRequest);
+
 	jclass httpRequestClass = env->GetObjectClass(request);
 	jfieldID field_Method = env->GetFieldID(httpRequestClass, "method", "I");
 	int method = env->GetIntField(request, field_Method);
 
 	jfieldID fieldUrl = env->GetFieldID(httpRequestClass, "url", "Ljava/lang/String;");
-
-	if (fieldUrl == NULL) {
-		return env->NewStringUTF("error: found url");;
-	}
-
 	jstring stringUrl = (jstring) env->GetObjectField(request, fieldUrl);
 
-	requests::Request req(new HttpRequest);
+	jfieldID fieldHeaders = env->GetFieldID(httpRequestClass, "headers", "Ljava/util/HashMap;");
+	jfieldID fieldParmams = env->GetFieldID(httpRequestClass, "params", "Ljava/util/HashMap;");
+	jfieldID fieldCookie = env->GetFieldID(httpRequestClass, "cookie", "Ljava/lang/String;");
+
+	jobject objectHeaders = env->GetObjectField(request, fieldHeaders);
+	jobject objectParams = env->GetObjectField(request, fieldParmams);
+	jobject objectCookie = env->GetObjectField(request, fieldCookie);
 
 	req->SetMethod(method == 1 ? "GET" : "POST");
 	req->SetUrl(env->GetStringUTFChars(stringUrl, false));
 
-	/**
-	 * 获取到Map<String, String> headers的jfieldID
-	 */
+	if (objectHeaders != NULL) {
+		std::map<std::string, std::string> m_headers = parseMap(env, objectHeaders);
+		for (auto& item : m_headers) {
+			req->headers[item.first] = item.second;
+		}
+	}
 
-	jfieldID fieldHeaders = env->GetFieldID(httpRequestClass, "headers", "Ljava/util/HashMap;");
-	jobject objectHeaders = env->GetObjectField(request, fieldHeaders);
+	if (objectParams != NULL) {
+		std::map<std::string, std::string> m_params = parseMap(env, objectParams);
+		for (auto& item : m_params) {
+			req->SetParam(item.first.c_str(), item.second.c_str());
+		}
+	}
 
-	// if (fieldHeaders != NULL) {
-	// 	std::cout << fieldHeaders << std::endl;
-	// }
-
-	// 获取到HashMap类的class
-	jclass hashMapClass = env->FindClass("Ljava/util/HashMap;");
-	// 获取到HashMap中的entrySet()方法ID
-	jmethodID methodEntrySet = env->GetMethodID(hashMapClass, "entrySet", "()Ljava/util/Set;");
-
-	jobject setObj = env->CallObjectMethod(objectHeaders, methodEntrySet);
-
-	jmethodID methodSize = env->GetMethodID(hashMapClass, "size", "()I");
-
-	jint intSize = env->CallIntMethod(objectHeaders, methodSize);
-
-	// std::cout << intSize << std::endl;
-
-	// 获取到set方法中的iterator() 方法ID
-	jclass classSet = env->FindClass("Ljava/util/Set;");
-	jmethodID methodIterator = env->GetMethodID(classSet, "iterator", "()Ljava/util/Iterator;");
-
-	// 通过调用iterator()获取到iterator对象
-	jobject objectIterator = env->CallObjectMethod(setObj, methodIterator);
-
-	// 获取Iterator类
-	jclass classIterator = env->FindClass("Ljava/util/Iterator;");
-	// 获取Iterator类中的hasNext()方法ID
-	jmethodID methodHasNext = env->GetMethodID(classIterator, "hasNext", "()Z");
-	// 获取Iterator类中的next()方法ID
-	jmethodID methodNext = env->GetMethodID(classIterator, "next", "()Ljava/lang/Object;");
-
-	// 获取Entry类
-	jclass classMapEntry = env->FindClass("Ljava/util/Map$Entry;");
-	// 获取Entry类内的getKey方法ID
-	jmethodID methodGetKey = env->GetMethodID(classMapEntry, "getKey", "()Ljava/lang/Object;");
-	// 获取Entry类内的getValue方法ID
-	jmethodID methodGetValue = env->GetMethodID(classMapEntry, "getValue", "()Ljava/lang/Object;");
-
-	while (env->CallBooleanMethod(objectIterator, methodHasNext)) {
-		jobject objectEntry = env->CallObjectMethod(objectIterator, methodNext);
-		jstring key = (jstring)env->CallObjectMethod(objectEntry, methodGetKey);
-
-		jstring value = (jstring)env->CallObjectMethod(objectEntry, methodGetValue);
-
-		req->headers[env->GetStringUTFChars(key, false)] = env->GetStringUTFChars(value, false);
-
-		env->DeleteLocalRef(value);
-		env->DeleteLocalRef(key);
-		env->DeleteLocalRef(objectEntry);
+	if (objectCookie != NULL) {
+		// std::cout << env->GetStringUTFChars((jstring)objectCookie, false) << std::endl;
+		req->headers["Cookie"] = env->GetStringUTFChars((jstring)objectCookie, false);
 	}
 
 	auto resp = requests::request(req);
 
-	env->DeleteLocalRef(classMapEntry);
-	env->DeleteLocalRef(classIterator);
-	env->DeleteLocalRef(objectIterator);
-	env->DeleteLocalRef(classSet);
-	env->DeleteLocalRef(setObj);
-	env->DeleteLocalRef(hashMapClass);
+	env->DeleteLocalRef(objectCookie);
+	env->DeleteLocalRef(objectParams);
 	env->DeleteLocalRef(objectHeaders);
 	env->DeleteLocalRef(stringUrl);
 	env->DeleteLocalRef(httpRequestClass);

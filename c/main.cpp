@@ -57,22 +57,17 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	req->SetMethod(method == 1 ? "GET" : "POST");
 	req->SetUrl(env->GetStringUTFChars(stringUrl, JNI_FALSE));
 
-	if (objectHeaders != NULL) {
-		std::map<std::string, std::string> m_headers = parseMap(env, objectHeaders);
-		for (auto& item : m_headers) {
-			req->headers[item.first] = item.second;
-		}
+	std::map<std::string, std::string> m_headers = parseMap(env, objectHeaders);
+	for (auto& item : m_headers) {
+		req->headers[item.first] = item.second;
 	}
 
-	if (objectParams != NULL) {
-		std::map<std::string, std::string> m_params = parseMap(env, objectParams);
-		for (auto& item : m_params) {
-			req->SetParam(item.first.c_str(), item.second.c_str());
-		}
+	std::map<std::string, std::string> m_params = parseMap(env, objectParams);
+	for (auto& item : m_params) {
+		req->SetParam(item.first.c_str(), item.second.c_str());
 	}
 
 	if (objectCookie != NULL) {
-		// std::cout << env->GetStringUTFChars((jstring)objectCookie, false) << std::endl;
 		req->headers["Cookie"] = env->GetStringUTFChars((jstring)objectCookie, JNI_FALSE);
 	}
 
@@ -100,4 +95,12 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	env->DeleteLocalRef(httpRequestClass);
 
 	return objectHttpResponse;
+}
+
+JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_getHashTest
+(JNIEnv* env, jobject) {
+
+	jobject objectHashMap = createHashMap(env);
+
+	return objectHashMap;
 }

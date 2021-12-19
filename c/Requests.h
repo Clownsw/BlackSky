@@ -37,6 +37,14 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_Requests_post
 JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
   (JNIEnv* env, jobject, jobject request);
 
+/*
+ * Class:     cn_smilex_libhv_jni_Requests
+ * Method:    getHashTest
+ * Signature: ()Ljava/util/HashMap;
+ */
+JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_getHashTest
+  (JNIEnv* env, jobject);
+
 #ifdef __cplusplus
 }
 #endif

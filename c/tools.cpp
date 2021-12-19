@@ -1,5 +1,16 @@
 #include "tools.h"
 
+static jclass _queryJclassByName(const char* name) {
+	for (auto& item : g_jclasss) {
+		if (item.first.compare(name)) {
+			return item.second;
+		}
+	}
+	return nullptr;
+}
+
+jclass queryJclassByName(const char* name) { return _queryJclassByName(name); }
+
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 
     std::map<std::string, std::string> m;
@@ -53,3 +64,20 @@ std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 	env->DeleteLocalRef(hashMapClass);
     return m;
 }
+
+static jobject _createHashMap(JNIEnv* env) {
+	jclass classHashMap = queryJclassByName("HashMapClass");
+	if (classHashMap == nullptr) {
+		classHashMap = env->FindClass("Ljava/util/HashMap;");
+		g_jclasss.insert(std::make_pair("HashMapClass", classHashMap));
+	}
+
+	std::cout << classHashMap << std::endl;
+
+	jmethodID methodHashMapDefaultCon = env->GetMethodID(classHashMap, "<init>", "()V");
+	std::cout << methodHashMapDefaultCon << std::endl;
+
+	return env->NewObject(classHashMap, methodHashMapDefaultCon);
+}
+
+jobject createHashMap(JNIEnv* env) { return _createHashMap(env); }

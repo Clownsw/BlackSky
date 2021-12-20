@@ -6,8 +6,7 @@
 #include <jni.h>
 #include <map>
 #include <string>
-#include <string.h>
-#include <iostream>
+#include <cstring>
 
 #define CLASSNAME_String            "Ljava/lang/String;"
 #define CLASSNAME_Set               "Ljava/util/Set;"

@@ -1,18 +1,11 @@
 #include "tools.h"
 
 static jclass _queryJClassByName(JNIEnv* &env, const char* name, const char* className) {
-    auto it = g_jclasss.begin();
-
 	for (const auto& item : g_jclasss) {
-        if (item.first.c_str() == name) {
-            std::cout << "success" << std::endl;
-
-            if (item.second != nullptr) {
-                return item.second;
-            } else {
-                g_jclasss.erase(it);
-            }
-            it++;
+//        std::cout << "name:" << name << " " << "name1:" << item.first << std::endl;
+        if (strcmp(item.first.c_str(), name) == 0) {
+//            std::cout << "success" << std::endl;
+            return item.second;
 		}
 	}
 
@@ -72,12 +65,8 @@ std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 		env->DeleteLocalRef(objectEntry);
 	}
 
-    env->DeleteLocalRef(classMapEntry);
-	env->DeleteLocalRef(classIterator);
 	env->DeleteLocalRef(objectIterator);
-	env->DeleteLocalRef(classSet);
 	env->DeleteLocalRef(setObj);
-	env->DeleteLocalRef(hashMapClass);
     return m;
 }
 

@@ -74,13 +74,22 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	auto resp = requests::request(req);
 
 	jclass classHttpResponse = queryJClassByName(env, "HttpResponseClass", CLASSNAME_HttpResponse);
+    jclass classHashMap = queryJClassByName(env, "HashMapClass", CLASSNAME_HashMap);
 
 	jmethodID methodHttpResponseDefaultCon = env->GetMethodID(classHttpResponse, "<init>", "()V");
+    jmethodID methodPut = env->GetMethodID(classHashMap,
+                                           "put",
+                                           "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 
 	jfieldID fieldBody = env->GetFieldID(classHttpResponse, "body", CLASSNAME_String);
 	jfieldID fieldStatusCode = env->GetFieldID(classHttpResponse, "statusCode", "I");
+    jfieldID fieldResponseHeaders = env->GetFieldID(classHttpResponse, "headers", CLASSNAME_HashMap);
+    jfieldID fieldResponseCookies = env->GetFieldID(classHttpResponse, "cookies", CLASSNAME_HashMap);
 
 	jobject objectHttpResponse = env->NewObject(classHttpResponse, methodHttpResponseDefaultCon);
+
+    jobject tmpCookies = createHashMap(env);
+    jobject tmpHeaders = createHashMap(env);
 
     // 设置响应内容
 	env->SetObjectField(objectHttpResponse, fieldBody, env->NewStringUTF(resp->body.c_str()));
@@ -88,6 +97,24 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	// 设置响应状态
 	env->SetIntField(objectHttpResponse, fieldStatusCode, resp->status_code);
 
+    // 设置所有响应cookie
+    for (const auto &item : resp->cookies) {
+        env->CallObjectMethod(tmpCookies, methodPut,
+                              env->NewStringUTF(item.name.c_str()),
+                              env->NewStringUTF(item.value.c_str()));
+    }
+    env->SetObjectField(objectHttpResponse, fieldResponseCookies, tmpCookies);
+
+    // 设置所有响应头
+    for (const auto &item : resp->headers) {
+        env->CallObjectMethod(tmpHeaders, methodPut,
+                              env->NewStringUTF(item.first.c_str()),
+                              env->NewStringUTF(item.second.c_str()));
+    }
+    env->SetObjectField(objectHttpResponse, fieldResponseHeaders, tmpHeaders);
+
+	env->DeleteLocalRef(tmpHeaders);
+	env->DeleteLocalRef(tmpCookies);
 	env->DeleteLocalRef(objectCookie);
 	env->DeleteLocalRef(objectParams);
 	env->DeleteLocalRef(objectHeaders);
@@ -95,21 +122,4 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	env->DeleteLocalRef(httpRequestClass);
 
 	return objectHttpResponse;
-}
-
-JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_getHashTest
-(JNIEnv* env, jobject) {
-
-	jobject objectHashMap = createHashMap(env);
-
-    jclass classHashMap = queryJClassByName(env, "HashMapClass", CLASSNAME_HashMap);
-    jmethodID methodPut = env->GetMethodID(classHashMap,
-                                           "put",
-                                           "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-
-    env->CallObjectMethod(objectHashMap, methodPut,
-                          env->NewStringUTF("testK"),
-                          env->NewStringUTF("testV"));
-
-	return objectHashMap;
 }

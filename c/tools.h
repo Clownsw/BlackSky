@@ -6,6 +6,7 @@
 #include <jni.h>
 #include <map>
 #include <string>
+#include <string.h>
 #include <iostream>
 
 #define CLASSNAME_String            "Ljava/lang/String;"

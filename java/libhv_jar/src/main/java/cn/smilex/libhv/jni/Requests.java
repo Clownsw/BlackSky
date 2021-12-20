@@ -31,6 +31,4 @@ public class Requests {
      * @return 返回响应对象
      */
     public native HttpResponse request(HttpRequest request);
-
-    public native HashMap<String, String> getHashTest();
 }

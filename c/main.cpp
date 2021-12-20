@@ -46,6 +46,14 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	jfieldID fieldUrl = env->GetFieldID(httpRequestClass, "url", CLASSNAME_String);
 	jstring stringUrl = (jstring) env->GetObjectField(request, fieldUrl);
 
+    if (stringUrl == nullptr) {
+        jclass classNullPointerException = queryJClassByName(env,
+                                                             "NullPointerExceptionClass",
+                                                             CLASSNAME_NullPointerException);
+        env->ThrowNew(classNullPointerException, "*** url is null ***");
+        return nullptr;
+    }
+
 	jfieldID fieldHeaders = env->GetFieldID(httpRequestClass, "headers", CLASSNAME_HashMap);
 	jfieldID fieldParmams = env->GetFieldID(httpRequestClass, "params", CLASSNAME_HashMap);
 	jfieldID fieldCookie = env->GetFieldID(httpRequestClass, "cookie", CLASSNAME_String);

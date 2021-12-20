@@ -91,13 +91,12 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 
 	jfieldID fieldBody = env->GetFieldID(classHttpResponse, "body", CLASSNAME_String);
 	jfieldID fieldStatusCode = env->GetFieldID(classHttpResponse, "statusCode", "I");
-    jfieldID fieldResponseHeaders = env->GetFieldID(classHttpResponse, "headers", CLASSNAME_HashMap);
     jfieldID fieldResponseCookies = env->GetFieldID(classHttpResponse, "cookies", CLASSNAME_HashMap);
+    jfieldID fieldResponseHeaders = env->GetFieldID(classHttpResponse, "headers", CLASSNAME_HashMap);
 
 	jobject objectHttpResponse = env->NewObject(classHttpResponse, methodHttpResponseDefaultCon);
-
-    jobject tmpCookies = createHashMap(env);
-    jobject tmpHeaders = createHashMap(env);
+    jobject tmpCookies = env->GetObjectField(objectHttpResponse, fieldResponseCookies);
+    jobject tmpHeaders = env->GetObjectField(objectHttpResponse, fieldResponseHeaders);
 
     // 设置响应内容
 	env->SetObjectField(objectHttpResponse, fieldBody, env->NewStringUTF(resp->body.c_str()));
@@ -111,7 +110,6 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
                               env->NewStringUTF(item.name.c_str()),
                               env->NewStringUTF(item.value.c_str()));
     }
-    env->SetObjectField(objectHttpResponse, fieldResponseCookies, tmpCookies);
 
     // 设置所有响应头
     for (const auto &item : resp->headers) {
@@ -119,7 +117,6 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
                               env->NewStringUTF(item.first.c_str()),
                               env->NewStringUTF(item.second.c_str()));
     }
-    env->SetObjectField(objectHttpResponse, fieldResponseHeaders, tmpHeaders);
 
 	env->DeleteLocalRef(tmpHeaders);
 	env->DeleteLocalRef(tmpCookies);

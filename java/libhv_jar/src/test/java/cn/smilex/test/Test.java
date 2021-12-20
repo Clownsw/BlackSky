@@ -14,19 +14,9 @@ public class Test {
         Requests requests = new Requests();
         HttpRequest request = HttpRequest
                 .build()
-                .setUrl("https://www.smilex.cn/")
+                .setUrl("https://www.baidu.com/")
                 .setMethod(HttpRequest.HTTP_METHOD_GET);
         HttpResponse httpResponse = requests.request(request);
-//        System.out.println(httpResponse.getCookies());
-//        System.out.println(httpResponse.getHeaders());
-        System.out.println(httpResponse.getContentType());
-//        System.out.println(httpResponse.getHeaders().size());
-//        System.out.println(httpResponse.getCookies().size());
-//        System.out.println(httpResponse.getCookies());
-//        System.out.println(httpResponse.getCookies().size());
-//        System.out.println(httpResponse.getStatusCode());
-//        System.out.println(httpResponse.getBody());
-
-//        test02();
+        HttpResponse httpResponse1 = requests.request(request);
     }
 }

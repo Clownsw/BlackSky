@@ -1,23 +1,5 @@
 #include "tools.h"
 
-static jclass _queryJClassByName(JNIEnv* &env, const char* name, const char* className) {
-	for (const auto& item : g_jclasss) {
-//        std::cout << "name:" << name << " " << "name1:" << item.first << std::endl;
-        if (strcmp(item.first.c_str(), name) == 0) {
-//            std::cout << "success" << std::endl;
-            return item.second;
-		}
-	}
-
-    jclass tmp = env->FindClass(className);
-    g_jclasss.insert(std::make_pair(name, tmp));
-	return tmp;
-}
-
-jclass queryJClassByName(JNIEnv* &env, const char* name, const char* className) {
-    return _queryJClassByName(env, name, className);
-}
-
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 
     std::map<std::string, std::string> m;
@@ -29,14 +11,14 @@ std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 
 	jobject setObj = env->CallObjectMethod(obj, methodEntrySet);
 
-    jclass classSet = queryJClassByName(env, "SetClass", CLASSNAME_Set);
+    jclass classSet = env->FindClass(CLASSNAME_Set);
 	jmethodID methodIterator = env->GetMethodID(classSet, "iterator", "()Ljava/util/Iterator;");
 
 	// 通过调用iterator()获取到iterator对象
 	jobject objectIterator = env->CallObjectMethod(setObj, methodIterator);
 
 	// 获取Iterator类
-    jclass classIterator = queryJClassByName(env, "IteratorClass", CLASSNAME_Iterator);
+    jclass classIterator = env->FindClass(CLASSNAME_Iterator);
 
 	// 获取Iterator类中的hasNext()方法ID
 	jmethodID methodHasNext = env->GetMethodID(classIterator, "hasNext", "()Z");
@@ -44,7 +26,7 @@ std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 	jmethodID methodNext = env->GetMethodID(classIterator, "next", "()Ljava/lang/Object;");
 
 	// 获取Entry类
-	jclass classMapEntry = queryJClassByName(env, "Map$EntryClass", CLASSNAME_Map$Entry);
+	jclass classMapEntry = env->FindClass(CLASSNAME_Map$Entry);
 
 	// 获取Entry类内的getKey方法ID
 	jmethodID methodGetKey = env->GetMethodID(classMapEntry, "getKey", "()Ljava/lang/Object;");
@@ -65,15 +47,20 @@ std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 		env->DeleteLocalRef(objectEntry);
 	}
 
+	env->DeleteLocalRef(classMapEntry);
+	env->DeleteLocalRef(classIterator);
+	env->DeleteLocalRef(classSet);
 	env->DeleteLocalRef(objectIterator);
 	env->DeleteLocalRef(setObj);
     return m;
 }
 
 static jobject _createHashMap(JNIEnv* env) {
-	jclass classHashMap = queryJClassByName(env, "HashMapClass", CLASSNAME_HashMap);
+	jclass classHashMap = env->FindClass(CLASSNAME_HashMap);
 
 	jmethodID methodHashMapDefaultCon = env->GetMethodID(classHashMap, "<init>", "()V");
+
+    env->DeleteLocalRef(classHashMap);
 
 	return env->NewObject(classHashMap, methodHashMapDefaultCon);
 }

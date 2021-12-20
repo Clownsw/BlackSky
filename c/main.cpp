@@ -39,18 +39,23 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 
 	requests::Request req(new HttpRequest);
 
-	jclass httpRequestClass = env->GetObjectClass(request);
-	jfieldID field_Method = env->GetFieldID(httpRequestClass, "method", "I");
-	int method = env->GetIntField(request, field_Method);
+    jclass httpRequestClass = env->FindClass(CLASSNAME_HttpRequest);
 
-	jfieldID fieldUrl = env->GetFieldID(httpRequestClass, "url", CLASSNAME_String);
+    jfieldID field_Method = env->GetFieldID(httpRequestClass, "method", "I");
+
+    int method = env->GetIntField(request, field_Method);
+
+    jfieldID fieldUrl = env->GetFieldID(httpRequestClass, "url", CLASSNAME_String);
 	jstring stringUrl = (jstring) env->GetObjectField(request, fieldUrl);
 
+    /**
+     * 如果未传入url则抛出异常
+     */
     if (stringUrl == nullptr) {
-        jclass classNullPointerException = queryJClassByName(env,
-                                                             "NullPointerExceptionClass",
-                                                             CLASSNAME_NullPointerException);
+        jclass classNullPointerException = env->FindClass(CLASSNAME_NullPointerException);
+
         env->ThrowNew(classNullPointerException, "*** url is null ***");
+        env->DeleteLocalRef(classNullPointerException);
         return nullptr;
     }
 
@@ -70,32 +75,31 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 		req->headers[item.first] = item.second;
 	}
 
-	std::map<std::string, std::string> m_params = parseMap(env, objectParams);
+    std::map<std::string, std::string> m_params = parseMap(env, objectParams);
 	for (auto& item : m_params) {
 		req->SetParam(item.first.c_str(), item.second);
 	}
-
-	if (objectCookie != nullptr) {
+    if (objectCookie != nullptr) {
 		req->headers["Cookie"] = env->GetStringUTFChars((jstring)objectCookie, JNI_FALSE);
 	}
 
-	auto resp = requests::request(req);
+    auto resp = requests::request(req);
 
-	jclass classHttpResponse = queryJClassByName(env, "HttpResponseClass", CLASSNAME_HttpResponse);
-    jclass classHashMap = queryJClassByName(env, "HashMapClass", CLASSNAME_HashMap);
+	jclass classHttpResponse = env->FindClass(CLASSNAME_HttpResponse);
+    jclass classHashMap = env->FindClass(CLASSNAME_HashMap);
 
-	jmethodID methodHttpResponseDefaultCon = env->GetMethodID(classHttpResponse, "<init>", "()V");
+    jmethodID methodHttpResponseDefaultCon = env->GetMethodID(classHttpResponse, "<init>", "()V");
     jmethodID methodPut = env->GetMethodID(classHashMap,
                                            "put",
                                            "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 
-	jfieldID fieldBody = env->GetFieldID(classHttpResponse, "body", CLASSNAME_String);
+    jfieldID fieldBody = env->GetFieldID(classHttpResponse, "body", CLASSNAME_String);
 	jfieldID fieldStatusCode = env->GetFieldID(classHttpResponse, "statusCode", "I");
     jfieldID fieldResponseCookies = env->GetFieldID(classHttpResponse, "cookies", CLASSNAME_HashMap);
     jfieldID fieldResponseHeaders = env->GetFieldID(classHttpResponse, "headers", CLASSNAME_HashMap);
     jfieldID fieldContentType = env->GetFieldID(classHttpResponse, "contentType", CLASSNAME_String);
 
-	jobject objectHttpResponse = env->NewObject(classHttpResponse, methodHttpResponseDefaultCon);
+    jobject objectHttpResponse = env->NewObject(classHttpResponse, methodHttpResponseDefaultCon);
     jobject tmpCookies = env->GetObjectField(objectHttpResponse, fieldResponseCookies);
     jobject tmpHeaders = env->GetObjectField(objectHttpResponse, fieldResponseHeaders);
 
@@ -125,12 +129,15 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
                         env->NewStringUTF(getContentTypeName(resp->content_type)));
 
 	env->DeleteLocalRef(tmpHeaders);
+	env->DeleteLocalRef(tmpHeaders);
 	env->DeleteLocalRef(tmpCookies);
+	env->DeleteLocalRef(classHashMap);
+	env->DeleteLocalRef(classHttpResponse);
 	env->DeleteLocalRef(objectCookie);
 	env->DeleteLocalRef(objectParams);
 	env->DeleteLocalRef(objectHeaders);
 	env->DeleteLocalRef(stringUrl);
 	env->DeleteLocalRef(httpRequestClass);
 
-	return objectHttpResponse;
+    return objectHttpResponse;
 }

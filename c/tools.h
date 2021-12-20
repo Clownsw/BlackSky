@@ -16,12 +16,10 @@
 #define CLASSNAME_Iterator                  "Ljava/util/Iterator;"
 #define CLASSNAME_NullPointerException      "Ljava/lang/NullPointerException;"
 
+#define CLASSNAME_HttpRequest              "Lcn/smilex/libhv/jni/HttpRequest;"
 #define CLASSNAME_HttpResponse              "Lcn/smilex/libhv/jni/HttpResponse;"
 
-static std::map<std::string, jclass> g_jclasss;
-
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
-jclass queryJClassByName(JNIEnv* &env, const char* name, const char* className);
 
 jobject createHashMap(JNIEnv* env);
 const char* getContentTypeName(http_content_type type);

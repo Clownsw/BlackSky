@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <cstring>
+#include <hv/httpdef.h>
 
 #define CLASSNAME_String                    "Ljava/lang/String;"
 #define CLASSNAME_Set                       "Ljava/util/Set;"
@@ -23,4 +24,5 @@ std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
 jclass queryJClassByName(JNIEnv* &env, const char* name, const char* className);
 
 jobject createHashMap(JNIEnv* env);
+const char* getContentTypeName(http_content_type type);
 #endif

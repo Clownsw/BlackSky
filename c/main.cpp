@@ -93,6 +93,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
 	jfieldID fieldStatusCode = env->GetFieldID(classHttpResponse, "statusCode", "I");
     jfieldID fieldResponseCookies = env->GetFieldID(classHttpResponse, "cookies", CLASSNAME_HashMap);
     jfieldID fieldResponseHeaders = env->GetFieldID(classHttpResponse, "headers", CLASSNAME_HashMap);
+    jfieldID fieldContentType = env->GetFieldID(classHttpResponse, "contentType", CLASSNAME_String);
 
 	jobject objectHttpResponse = env->NewObject(classHttpResponse, methodHttpResponseDefaultCon);
     jobject tmpCookies = env->GetObjectField(objectHttpResponse, fieldResponseCookies);
@@ -117,6 +118,11 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
                               env->NewStringUTF(item.first.c_str()),
                               env->NewStringUTF(item.second.c_str()));
     }
+
+    // 设置响应contentType
+    env->SetObjectField(objectHttpResponse,
+                        fieldContentType,
+                        env->NewStringUTF(getContentTypeName(resp->content_type)));
 
 	env->DeleteLocalRef(tmpHeaders);
 	env->DeleteLocalRef(tmpCookies);

@@ -79,3 +79,60 @@ static jobject _createHashMap(JNIEnv* env) {
 }
 
 jobject createHashMap(JNIEnv* env) { return _createHashMap(env); }
+
+static const char* _getContentTypeName(http_content_type type) {
+    switch (type) {
+        case TEXT_PLAIN: {
+            return "text/plain";
+        }
+        case TEXT_HTML: {
+            return "text/html";
+        }
+        case TEXT_CSS: {
+            return "text/css";
+        }
+        case IMAGE_JPEG: {
+            return "image/jpeg";
+        }
+        case IMAGE_PNG: {
+            return "image/png";
+        }
+        case IMAGE_GIF: {
+            return "image/gif";
+        }
+        case IMAGE_BMP: {
+            return "image/bmp";
+        }
+        case IMAGE_SVG: {
+            return "image/svg";
+        }
+        case APPLICATION_OCTET_STREAM: {
+            return "application/octet-stream";
+        }
+        case APPLICATION_JAVASCRIPT: {
+            return "application/javascript";
+        }
+        case APPLICATION_XML: {
+            return "application/xml";
+        }
+        case APPLICATION_JSON: {
+            return "application/json";
+        }
+        case APPLICATION_GRPC: {
+            return "application/grpc";
+        }
+        case APPLICATION_URLENCODED: {
+            return "application/x-www-form-urlencoded";
+        }
+        case MULTIPART_FORM_DATA: {
+            return "multipart/form-data";
+        }
+        default: {
+            return "null";
+        }
+    }
+}
+
+const char* getContentTypeName(http_content_type type) {
+    return _getContentTypeName(type);
+}

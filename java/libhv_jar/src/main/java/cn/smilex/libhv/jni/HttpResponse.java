@@ -10,6 +10,7 @@ public class HttpResponse {
     private int statusCode;
     private HashMap<String, String> cookies;
     private HashMap<String, String> headers;
+    private String contentType;
 
     public HttpResponse() {
         cookies = new HashMap<>();
@@ -46,5 +47,13 @@ public class HttpResponse {
 
     public void setHeaders(HashMap<String, String> headers) {
         this.headers = headers;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

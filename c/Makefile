@@ -1,13 +1,24 @@
-all: tools.o main.o
-	g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll tools.o main.o -Llib -lhv -lssl -lcrypto -lws2_32 -lwsock32
+all: Tools.o Requests.o
+	g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll Tools.o Requests.o -Llib -lhv -lssl -lcrypto -lws2_32 -lwsock32
+	
+release: ToolsRelease.o RequestsRelease.o
+	g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll ToolsRelease.o RequestsRelease.o -Llib -lhv -lssl -lcrypto -lws2_32 -lwsock32
 
-tools.o: tools.h tools.cpp
-	g++ -Wall -Ofast -s -static -DNDEBUG -fno-exceptions -c tools.cpp -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
+ToolsRelease.o: Tools.h Tools.cpp
+	g++ -Wall -Ofast -s -static -DNDEBUG -fno-exceptions -o ToolsRelease.o -c Tools.cpp -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
 
-main.o: Requests.h main.cpp
-	g++ -Wall -Ofast -s -static -DNDEBUG -fno-exceptions -c main.cpp -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
+RequestsRelease.o: Requests.h Requests.cpp
+	g++ -Wall -Ofast -s -static -DNDEBUG -fno-exceptions -o RequestsRelease.o -c Requests.cpp -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
+
+Tools.o: Tools.h Tools.cpp
+	g++ -Wall -Ofast -s -static -g -fno-exceptions -c Tools.cpp -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
+
+Requests.o: Requests.h Requests.cpp
+	g++ -Wall -Ofast -s -static -g -fno-exceptions -c Requests.cpp -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
 
 clean:
-	del tools.o
-	del main.o
+	del Tools.o
+	del Requests.o
+	del ToolsRelease.o
+	del RequestsRelease.o
 	del libhv.dll

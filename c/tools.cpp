@@ -1,4 +1,4 @@
-#include "tools.h"
+#include "Tools.h"
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 

@@ -1,5 +1,5 @@
 #include "Requests.h"
-#include "tools.h"
+#include "Tools.h"
 #include <hv/requests.h>
 
 /*
@@ -60,11 +60,11 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_Requests_request
     }
 
 	jfieldID fieldHeaders = env->GetFieldID(httpRequestClass, "headers", CLASSNAME_HashMap);
-	jfieldID fieldParmams = env->GetFieldID(httpRequestClass, "params", CLASSNAME_HashMap);
+	jfieldID fieldParams = env->GetFieldID(httpRequestClass, "params", CLASSNAME_HashMap);
 	jfieldID fieldCookie = env->GetFieldID(httpRequestClass, "cookie", CLASSNAME_String);
 
 	jobject objectHeaders = env->GetObjectField(request, fieldHeaders);
-	jobject objectParams = env->GetObjectField(request, fieldParmams);
+	jobject objectParams = env->GetObjectField(request, fieldParams);
 	jobject objectCookie = env->GetObjectField(request, fieldCookie);
 
 	req->SetMethod(method == 1 ? "GET" : "POST");

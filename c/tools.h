@@ -8,6 +8,8 @@
 #include <string>
 #include <cstring>
 #include <hv/httpdef.h>
+#include <fmt/color.h>
+#include <fmt/core.h>
 
 #define CLASSNAME_String                    "Ljava/lang/String;"
 #define CLASSNAME_Set                       "Ljava/util/Set;"
@@ -20,6 +22,21 @@
 #define CLASSNAME_HttpResponse              "Lcn/smilex/libhv/jni/HttpResponse;"
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
+
+template <typename... T>
+const char* formatStr(const char* first, T &&... args) {
+    return fmt::format(first, args...).c_str();
+}
+
+template <typename... T2>
+void print(const char* first, T2 &&... args) {
+    fmt::print(first, args...);
+}
+
+template <typename T, typename... T2>
+void print(fmt::detail::color_type color, T first, T2 &&... args) {
+    fmt::print(fmt::fg(color), first, args...);
+}
 
 jobject createHashMap(JNIEnv* env);
 const char* getContentTypeName(http_content_type type);

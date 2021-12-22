@@ -103,7 +103,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
     jobject tmpCookies = env->GetObjectField(objectHttpResponse, fieldResponseCookies);
     jobject tmpHeaders = env->GetObjectField(objectHttpResponse, fieldResponseHeaders);
 
-    if (resp->status_code == HTTP_STATUS_OK) {
+    if (resp != nullptr) {
         // 设置响应内容
         env->SetObjectField(objectHttpResponse, fieldBody, env->NewStringUTF(resp->body.c_str()));
 
@@ -141,5 +141,5 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
 	env->DeleteLocalRef(stringUrl);
 	env->DeleteLocalRef(httpRequestClass);
 
-    return nullptr;
+    return objectHttpResponse;
 }

@@ -15,12 +15,15 @@ public class Test {
         Requests requests = new Requests();
         HttpRequest request = HttpRequest
                 .build()
-                .setUrl("https://www.huya.com/")
+                .setUrl("https://www.baidu.com/")
                 .setMethod(HttpRequest.HTTP_METHOD_GET);
-        HttpResponse httpResponse = requests.request(request);
-        HttpResponse httpResponse1 = requests.request(request);
 
-        String str = "1234abcd";
+        HttpResponse httpResponse = requests.request(request);
+        System.out.println(httpResponse.getBody());
+        HttpResponse httpResponse1 = requests.request(request);
+        System.out.println(httpResponse1.getBody());
+
+        String str = "admin";
         String md5 = Ssl.md5.getMD5(str, str.length());
         System.out.println(md5);
     }

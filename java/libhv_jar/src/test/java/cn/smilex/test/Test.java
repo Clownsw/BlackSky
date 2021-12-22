@@ -1,9 +1,9 @@
 package cn.smilex.test;
 
-import cn.smilex.libhv.jni.HttpRequest;
-import cn.smilex.libhv.jni.HttpResponse;
-import cn.smilex.libhv.jni.Requests;
-import cn.smilex.libhv.jni.fmt.Fmt;
+import cn.smilex.libhv.jni.http.HttpRequest;
+import cn.smilex.libhv.jni.http.HttpResponse;
+import cn.smilex.libhv.jni.http.Requests;
+import cn.smilex.libhv.jni.ssl.Ssl;
 
 /**
  * @author smilex
@@ -15,16 +15,13 @@ public class Test {
         Requests requests = new Requests();
         HttpRequest request = HttpRequest
                 .build()
-                .setUrl("https://www.baidu.com/")
+                .setUrl("https://www.huya.com/")
                 .setMethod(HttpRequest.HTTP_METHOD_GET);
         HttpResponse httpResponse = requests.request(request);
         HttpResponse httpResponse1 = requests.request(request);
-        System.out.println(Fmt.fmt.format("", ""));
-    }
 
-    @org.junit.Test
-    public void test02() {
-        System.out.println(Fmt.fmt.format("a={}, b={}, c={}", "1", "2", "3"));
-
+        String str = "1234abcd";
+        String md5 = Ssl.md5.getMD5(str, str.length());
+        System.out.println(md5);
     }
 }

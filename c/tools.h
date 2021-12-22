@@ -18,8 +18,8 @@
 #define CLASSNAME_Iterator                  "Ljava/util/Iterator;"
 #define CLASSNAME_NullPointerException      "Ljava/lang/NullPointerException;"
 
-#define CLASSNAME_HttpRequest              "Lcn/smilex/libhv/jni/HttpRequest;"
-#define CLASSNAME_HttpResponse              "Lcn/smilex/libhv/jni/HttpResponse;"
+#define CLASSNAME_HttpRequest              "Lcn/smilex/libhv/jni/http/HttpRequest;"
+#define CLASSNAME_HttpResponse              "Lcn/smilex/libhv/jni/http/HttpResponse;"
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
 

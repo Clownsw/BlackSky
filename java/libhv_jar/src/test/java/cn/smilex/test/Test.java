@@ -31,7 +31,7 @@ public class Test {
     @org.junit.Test
     public void test02() {
         Requests requests = new Requests();
-        HttpResponse httpResponse = requests.get("https://www.baidu.com/");
+        HttpResponse httpResponse = requests.get("https://tenapi.cn/video/?url=https://www.douyin.com/video/7044802663178865956?previous_page=follow&tab_name=follow");
         System.out.println(httpResponse.getBody());
     }
 

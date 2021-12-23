@@ -123,3 +123,25 @@ static const char* _getContentTypeName(http_content_type type) {
 const char* getContentTypeName(http_content_type type) {
     return _getContentTypeName(type);
 }
+
+static http_method _getMethodName(int n) {
+    switch (n) {
+        case 0: { return HTTP_DELETE; }
+        default:
+        case 1: { return HTTP_GET; }
+        case 2: { return HTTP_HEAD; }
+        case 3: { return HTTP_POST; }
+        case 4: { return HTTP_PUT; }
+        case 5: { return HTTP_CONNECT; }
+        case 6: { return HTTP_OPTIONS; }
+        case 7: { return HTTP_TRACE; }
+        case 8: { return HTTP_COPY; }
+        case 9: { return HTTP_LOCK; }
+        case 10: { return HTTP_MKCOL; }
+        case 11: { return HTTP_MOVE; }
+    }
+}
+
+http_method getMethodName(int n) {
+    return _getMethodName(n);
+}

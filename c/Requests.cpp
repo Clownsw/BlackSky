@@ -3,32 +3,6 @@
 #include <hv/requests.h>
 
 /*
- * 以Get方式请求网站并返回结果
- * Class:     cn_smilex_libhv_jni_http_Requests
- * Method:    get
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
- * Author:	  Smilex
- */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_http_Requests_get
-(JNIEnv* env, jobject, jstring url) {
-	auto resp = requests::get(env->GetStringUTFChars(url, JNI_FALSE));
-	return resp != nullptr ? env->NewStringUTF(resp->body.c_str()) : nullptr;
-}
-
-/*
- * 以Post方式请求指定网站并返回结果
- * Class:     cn_smilex_libhv_jni_http_Requests
- * Method:    post
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
- * Author:	  Smilex
- */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_http_Requests_post
-(JNIEnv* env, jobject, jstring url) {
-	auto resp = requests::post(env->GetStringUTFChars(url, JNI_FALSE));
-	return resp != nullptr ? env->NewStringUTF(resp->body.c_str()) : nullptr;
-}
-
-/*
  * 通过HttpRequest类请求指定网站并返回HttpResponse
  * Class:     cn_smilex_libhv_jni_http_Requests
  * Method:    request
@@ -67,7 +41,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
 	jobject objectParams = env->GetObjectField(request, fieldParams);
 	jobject objectCookie = env->GetObjectField(request, fieldCookie);
 
-	req->SetMethod(method == 1 ? "GET" : "POST");
+    req->method = getMethodName(method);
 	req->SetUrl(env->GetStringUTFChars(stringUrl, JNI_FALSE));
 
     std::map<std::string, std::string> m_headers = parseMap(env, objectHeaders);
@@ -140,6 +114,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
 	env->DeleteLocalRef(objectHeaders);
 	env->DeleteLocalRef(stringUrl);
 	env->DeleteLocalRef(httpRequestClass);
+    env->DeleteLocalRef(request);
 
     return objectHttpResponse;
 }

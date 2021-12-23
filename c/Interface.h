@@ -8,26 +8,6 @@ extern "C" {
 #endif
 
 /*
- * 以Get方式请求指定网站并返回结果
- * Class:     cn_smilex_libhv_jni_http_Requests
- * Method:    get
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
- * Author:	  Smilex
- */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_http_Requests_get
-  (JNIEnv* env, jobject, jstring url);
-
-/*
- * 以Post方式请求指定网站并返回结果
- * Class:     cn_smilex_libhv_jni_http_Requests
- * Method:    post
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
- * Author:	  Smilex
- */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_http_Requests_post
-  (JNIEnv* env, jobject, jstring url);
-
-/*
  * 通过HttpRequest类请求指定网站并返回HttpResponse
  * Class:     cn_smilex_libhv_jni_http_Requests
  * Method:    request

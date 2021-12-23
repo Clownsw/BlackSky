@@ -16,7 +16,7 @@ public class Test {
         HttpRequest request = HttpRequest
                 .build()
                 .setUrl("https://www.baidu.com/")
-                .setMethod(HttpRequest.HTTP_METHOD_GET);
+                .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id);
 
         HttpResponse httpResponse = requests.request(request);
         System.out.println(httpResponse.getBody());
@@ -26,5 +26,19 @@ public class Test {
         String str = "admin";
         String md5 = Ssl.md5.getMD5(str, str.length());
         System.out.println(md5);
+    }
+
+    @org.junit.Test
+    public void test02() {
+        Requests requests = new Requests();
+        HttpResponse httpResponse = requests.get("https://www.baidu.com/");
+        System.out.println(httpResponse.getBody());
+    }
+
+    @org.junit.Test
+    public void test03() {
+        Requests requests = new Requests();
+        HttpResponse post = requests.post("https://www.baidu.com/");
+        System.out.println(post.getBody());
     }
 }

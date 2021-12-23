@@ -6,8 +6,25 @@ import java.util.HashMap;
  * @author smilex
  */
 public class HttpRequest {
-    public static final int HTTP_METHOD_GET = 1;
-    public static final int HTTP_METHOD_POST = 2;
+    public enum HTTP_METHOD {
+        HTTP_METHOD_GET(1),
+        HTTP_METHOD_HEAD(2),
+        HTTP_METHOD_POST(3),
+        HTTP_METHOD_PUT(4),
+        HTTP_METHOD_CONNECT(5),
+        HTTP_METHOD_OPTIONS(6),
+        HTTP_METHOD_TRACE(7),
+        HTTP_METHOD_COPY(8),
+        HTTP_METHOD_LOCK(9),
+        HTTP_METHOD_MKCOL(10),
+        HTTP_METHOD_MOVE(11);
+
+        public final int id;
+
+        private HTTP_METHOD(int id) {
+            this.id = id;
+        }
+    };
 
     private String url;
     private int method;

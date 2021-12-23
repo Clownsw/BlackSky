@@ -18,14 +18,26 @@ public class Requests {
      * @param url url
      * @return 返回结果
      */
-    public native String get(String url);
+    public HttpResponse get(String url) {
+        HttpRequest httpRequest = HttpRequest
+                .build()
+                .setUrl(url)
+                .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id);
+        return new Requests().request(httpRequest);
+    }
 
     /**
      * 以Post方式请求网站并返回结果
      * @param url url
      * @return 返回结果
      */
-    public native String post(String url);
+    public HttpResponse post(String url) {
+        HttpRequest httpRequest = HttpRequest
+                .build()
+                .setUrl(url)
+                .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_POST.id);
+        return new Requests().request(httpRequest);
+    }
 
     /**
      * 以Post方式请求网站并返回结果

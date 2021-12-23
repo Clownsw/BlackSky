@@ -40,4 +40,5 @@ void print(fmt::detail::color_type color, T first, T2 &&... args) {
 
 jobject createHashMap(JNIEnv* env);
 const char* getContentTypeName(http_content_type type);
+http_method getMethodName(int n);
 #endif

@@ -1,3 +1,7 @@
+//
+// By: smilex
+//
+
 #pragma once
 
 #ifndef TOOLS_H
@@ -10,6 +14,7 @@
 #include <hv/httpdef.h>
 #include <fmt/color.h>
 #include <fmt/core.h>
+#include <hv/base64.h>
 
 #define CLASSNAME_String                    "Ljava/lang/String;"
 #define CLASSNAME_Set                       "Ljava/util/Set;"

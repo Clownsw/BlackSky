@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="libhv_jar:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/libhv_jar_jar</output-path>
-    <root id="archive" name="libhv_jar.jar">
-      <element id="module-output" name="libhv_jar" />
-    </root>
-  </artifact>
-</component>

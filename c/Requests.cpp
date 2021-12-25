@@ -1,3 +1,7 @@
+//
+// By: smilex
+//
+
 #include "Interface.h"
 #include "Tools.h"
 #include <hv/requests.h>

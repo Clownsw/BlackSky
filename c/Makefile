@@ -1,6 +1,6 @@
 
-CC_DEBUG = g++ -Wall -Ofast -s -static -g -fno-exceptions -c
-CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -fno-exceptions -c
+CC_DEBUG = g++ -Wall -std=c++20 -s -static -g -fno-exceptions -c
+CC_RELEASE = g++ -Wall -Ofast -std=c++20 -s -static -DNDEBUG -flto -fno-exceptions -c
 INCLUDE = -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
 LIB = -Llib -lfmt -lhv -lssl -lcrypto -lws2_32 -lwsock32
 LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll

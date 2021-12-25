@@ -33,11 +33,6 @@ const char* formatStr(const char* first, T &&... args) {
     return fmt::format(first, args...).c_str();
 }
 
-template <typename... T2>
-void print(const char* first, T2 &&... args) {
-    fmt::print(first, args...);
-}
-
 template <typename T, typename... T2>
 void print(fmt::detail::color_type color, T first, T2 &&... args) {
     fmt::print(fmt::fg(color), first, args...);

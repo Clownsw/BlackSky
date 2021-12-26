@@ -1,8 +1,8 @@
 
-CC_DEBUG = g++ -Wall -std=c++20 -s -static -g -fno-exceptions -c
-CC_RELEASE = g++ -Wall -Ofast -std=c++20 -s -static -DNDEBUG -flto -fno-exceptions -c
-INCLUDE = -ID:/jdk11/include -ID:/jdk11/include/win32 -Iinclude
-LIB = -Llib -lfmt -lhv -lssl -lcrypto -lws2_32 -lwsock32
+CC_DEBUG = g++ -Wall -s -static -g -fno-exceptions -c
+CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -fno-exceptions -c
+INCLUDE = -ID:/zulujdk11/include -ID:/zulujdk11/include/win32 -Iinclude
+LIB = -Llib -lfmt -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
 LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll
 
 DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o

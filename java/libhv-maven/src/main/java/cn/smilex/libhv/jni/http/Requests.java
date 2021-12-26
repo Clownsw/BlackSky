@@ -9,7 +9,9 @@ public class Requests {
 
     static {
         synchronized (Requests.class) {
-            System.loadLibrary(Info.LIBRARY_NAME);
+            if (!Info.isInit) {
+                Info.init();
+            }
         }
     }
 

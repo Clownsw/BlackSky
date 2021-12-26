@@ -10,7 +10,9 @@ public class MD5 {
 
     static {
         synchronized (Requests.class) {
-            System.loadLibrary(Info.LIBRARY_NAME);
+            if (!Info.isInit) {
+                Info.init();
+            }
         }
     }
 

@@ -17,7 +17,7 @@ public class Info {
             String osName = System.getProperty("os.name");
             String libraryName;
 
-            if (osName.indexOf("Windows") > 0) {
+            if (osName.contains("Windows")) {
                 libraryName = "libhv";
             } else {
                 libraryName = "hv";

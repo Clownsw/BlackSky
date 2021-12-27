@@ -40,12 +40,12 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
     jfieldID fieldHeaders = env->GetFieldID(httpRequestClass, "headers", CLASSNAME_HashMap);
 	jfieldID fieldParams = env->GetFieldID(httpRequestClass, "params", CLASSNAME_HashMap);
 	jfieldID fieldCookie = env->GetFieldID(httpRequestClass, "cookie", CLASSNAME_String);
-	jfieldID fieldBody = env->GetFieldID(httpRequestClass, "body", CLASSNAME_String);
+//	jfieldID fieldBody = env->GetFieldID(httpRequestClass, "body", CLASSNAME_String);
 
 	jobject objectHeaders = env->GetObjectField(request, fieldHeaders);
 	jobject objectParams = env->GetObjectField(request, fieldParams);
 	jobject objectCookie = env->GetObjectField(request, fieldCookie);
-	jobject objectBody = env->GetObjectField(request, fieldBody);
+//	jobject objectBody = env->GetObjectField(request, fieldBody);
 
     // 设置请求方法
     req->method = getMethodName(method);
@@ -53,10 +53,10 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
     // 设置请求URL
 	req->SetUrl(env->GetStringUTFChars(stringUrl, JNI_FALSE));
 
-    // 设置请求body
-    if (objectBody != nullptr) {
-        req->SetBody(env->GetStringUTFChars((jstring)objectBody, JNI_FALSE));
-    }
+//    // 设置请求body
+//    if (objectBody != nullptr) {
+//        req->SetBody(env->GetStringUTFChars((jstring)objectBody, JNI_FALSE));
+//    }
 
     std::map<std::string, std::string> m_headers = parseMap(env, objectHeaders);
 	for (auto& item : m_headers) {
@@ -128,7 +128,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
 	env->DeleteLocalRef(tmpCookies);
 	env->DeleteLocalRef(classHashMap);
 	env->DeleteLocalRef(classHttpResponse);
-	env->DeleteLocalRef(objectBody);
+//	env->DeleteLocalRef(objectBody);
 	env->DeleteLocalRef(objectCookie);
 	env->DeleteLocalRef(objectParams);
 	env->DeleteLocalRef(objectHeaders);

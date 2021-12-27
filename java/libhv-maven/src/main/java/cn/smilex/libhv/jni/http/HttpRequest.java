@@ -29,7 +29,6 @@ public class HttpRequest {
     private String url;
     private int method;
     private String cookie;
-    private String body;
     private HashMap<String, String> headers;
     private HashMap<String, String> params;
 
@@ -49,11 +48,6 @@ public class HttpRequest {
 
     public HttpRequest setMethod(int method) {
         this.method = method;
-        return this;
-    }
-
-    public HttpRequest setBody(String body) {
-        this.body = body;
         return this;
     }
 

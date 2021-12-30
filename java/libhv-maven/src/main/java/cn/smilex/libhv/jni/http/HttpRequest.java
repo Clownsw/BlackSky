@@ -61,6 +61,11 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest setHeaders(HashMap<String, String> headers) {
+        this.headers = headers;
+        return this;
+    }
+
     public HttpRequest setParams(String key, String value) {
         params.put(key, value);
         return this;

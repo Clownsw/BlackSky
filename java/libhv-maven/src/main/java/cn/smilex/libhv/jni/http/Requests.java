@@ -2,17 +2,27 @@ package cn.smilex.libhv.jni.http;
 
 import cn.smilex.libhv.jni.Info;
 
+import java.util.HashMap;
+
 /**
  * @author smilex
  */
 public class Requests {
 
+    private static final Requests requests;
+
     static {
         synchronized (Requests.class) {
+            requests = new Requests();
             if (!Info.isInit) {
                 Info.init();
             }
         }
+    }
+
+    private Requests() {  }
+    public static Requests getRequests() {
+        return requests;
     }
 
     /**
@@ -25,7 +35,22 @@ public class Requests {
                 .build()
                 .setUrl(url)
                 .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id);
-        return new Requests().request(httpRequest);
+        return Requests.getRequests().request(httpRequest);
+    }
+
+    /**
+     * 以Get方式请求网站并返回结果
+     * @param url url
+     * @param headers headers
+     * @return 返回结果
+     */
+    public HttpResponse get(String url, HashMap<String, String> headers) {
+        HttpRequest httpRequest = HttpRequest
+                .build()
+                .setUrl(url)
+                .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id)
+                .setHeaders(headers);
+        return Requests.getRequests().request(httpRequest);
     }
 
     /**
@@ -38,7 +63,22 @@ public class Requests {
                 .build()
                 .setUrl(url)
                 .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_POST.id);
-        return new Requests().request(httpRequest);
+        return Requests.getRequests().request(httpRequest);
+    }
+
+    /**
+     * 以Post方式请求网站并返回结果
+     * @param url url
+     * @param headers header
+     * @return 返回结果
+     */
+    public HttpResponse post(String url, HashMap<String, String> headers) {
+        HttpRequest httpRequest = HttpRequest
+                .build()
+                .setUrl(url)
+                .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_POST.id)
+                .setHeaders(headers);
+        return Requests.getRequests().request(httpRequest);
     }
 
     /**

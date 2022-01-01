@@ -20,6 +20,14 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
     (JNIEnv* env, jobject, jobject request);
 
 /*
+ * Class:     cn_smilex_libhv_jni_http_Requests
+ * Method:    asyncRequest
+ * Signature: (Lcn/smilex/libhv/jni/http/HttpRequest;)Lcn/smilex/libhv/jni/http/HttpResponse;
+ */
+JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_asyncRequest
+    (JNIEnv* env, jobject, jobject request);
+
+/*
  * Class:     cn_smilex_libhv_jni_ssl_MD5
  * Method:    getMD5
  * Signature: (Ljava/lang/String;I)Ljava/lang/String;

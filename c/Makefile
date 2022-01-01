@@ -1,7 +1,7 @@
 
 CC_DEBUG = g++ -Wall -s -static -g -fno-exceptions -c
 CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -fno-exceptions -c
-INCLUDE = -ID:/zulujdk11/include -ID:/zulujdk11/include/win32 -Iinclude
+INCLUDE = -ID:/zulu-jdk11/include -ID:/zulu-jdk11/include/win32 -Iinclude
 LIB = -Llib -lfmt -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
 LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll
 
@@ -18,7 +18,7 @@ release: ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o
 ToolsRelease.o: Tools.h Tools.cpp
 	$(CC_RELEASE) -o ToolsRelease.o Tools.cpp $(INCLUDE)
 
-RequestsRelease.o: Interface.h Requests.cpp
+RequestsRelease.o: Interface.h Requests.h Requests.cpp
 	$(CC_RELEASE) -o RequestsRelease.o Requests.cpp $(INCLUDE)
 
 Md5Release.o: Interface.h Md5.cpp
@@ -32,7 +32,7 @@ Base64Release.o: Interface.h Base64.cpp
 Tools.o: Tools.h Tools.cpp
 	$(CC_DEBUG) -o Tools.o Tools.cpp $(INCLUDE)
 
-Requests.o: Interface.h Requests.cpp
+Requests.o: Interface.h Requests.h Requests.cpp
 	$(CC_DEBUG) -o Requests.o Requests.cpp $(INCLUDE)
 
 Md5.o: Interface.h Md5.cpp

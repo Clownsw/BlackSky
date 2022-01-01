@@ -1,5 +1,8 @@
 package cn.smilex;
 
+import cn.smilex.libhv.jni.http.HttpRequest;
+import cn.smilex.libhv.jni.http.HttpResponse;
+import cn.smilex.libhv.jni.http.Requests;
 import cn.smilex.libhv.jni.ssl.Ssl;
 import org.junit.Test;
 
@@ -27,6 +30,29 @@ public class T {
         for (int i = 0; i < 5000; i++) {
             Thread.sleep(1000);
         }
+    }
+
+    @Test
+    public void t2() {
+        HttpRequest httpRequest =
+                HttpRequest.build()
+                .setUrl("https://www.baidu.com")
+                .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id)
+                .setBody("123");
+
+        HttpResponse response = Requests.getRequests().request(httpRequest);
+
+    }
+
+    @Test
+    public void t3() {
+        HttpRequest httpRequest =
+                HttpRequest.build()
+                        .setUrl("https://www.baidu.com")
+                        .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id)
+                        .setBody("123");
+        HttpResponse response = Requests.getRequests().asyncRequest(httpRequest);
+        System.out.println(response.getBody());
     }
 
 }

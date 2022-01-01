@@ -82,9 +82,16 @@ public class Requests {
     }
 
     /**
-     * 以Post方式请求网站并返回结果
+     * 同步请求指定网站
      * @param request 请求对象
-     * @return 返回响应对象
+     * @return 响应对象
      */
     public native HttpResponse request(HttpRequest request);
+
+    /**
+     * 异步请求指定网站
+     * @param request 请求对象
+     * @return 响应对象
+     */
+    public native HttpResponse asyncRequest(HttpRequest request);
 }

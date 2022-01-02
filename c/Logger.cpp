@@ -28,7 +28,6 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
             realConsoleLogger->info(msg);
             if (isEnableFileLogger) {
                 realFileLogger->info(msg);
-                realFileLogger->flush();
             }
             break;
         }
@@ -37,11 +36,12 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
             realConsoleLogger->warn(msg);
             if (isEnableFileLogger) {
                 realFileLogger->warn(msg);
-                realFileLogger->flush();
             }
             break;
         }
     }
+
+    env->DeleteLocalRef(obj);
     env->DeleteLocalRef(message);
 }
 
@@ -70,7 +70,8 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_createFileLogger
     const char * _fileName = env->GetStringUTFChars(fileName, JNI_FALSE);
 
     try {
-        realFileLogger = spdlog::basic_logger_mt(_loggerName, _fileName);
+        realFileLogger = spdlog::basic_logger_mt(_loggerName, _fileName, true);
+        spdlog::shutdown();
     } catch (const spdlog::spdlog_ex &ex) {
         throwException(env, CLASSNAME_RuntimeException, ex.what());
     }

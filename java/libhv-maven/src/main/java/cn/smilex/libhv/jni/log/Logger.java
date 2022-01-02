@@ -14,11 +14,15 @@ public class Logger {
             if (!Info.isInit) {
                 Info.init();
             }
-            logger = new Logger();
         }
     }
 
-    public static Logger getLogger() {
+    public static Logger build(String loggerName, String fileName) {
+        if (logger == null) {
+            logger = new Logger();
+            logger.createFileLogger(loggerName, fileName);
+        }
+
         return logger;
     }
 

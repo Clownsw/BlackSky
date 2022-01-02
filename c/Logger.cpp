@@ -8,9 +8,9 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-static std::shared_ptr<spdlog::logger> realConsoleLogger = spdlog::stdout_color_mt("console");
-static std::shared_ptr<spdlog::logger> realFileLogger = nullptr;
-static bool isEnableFileLogger = false;
+inline static std::shared_ptr<spdlog::logger> realConsoleLogger = spdlog::stdout_color_mt("console");
+inline static std::shared_ptr<spdlog::logger> realFileLogger;
+inline static bool isEnableFileLogger = false;
 
 /*
  * Class:     cn_smilex_libhv_jni_log_Logger
@@ -28,6 +28,7 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
             realConsoleLogger->info(msg);
             if (isEnableFileLogger) {
                 realFileLogger->info(msg);
+                realFileLogger->flush();
             }
             break;
         }
@@ -36,6 +37,7 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
             realConsoleLogger->warn(msg);
             if (isEnableFileLogger) {
                 realFileLogger->warn(msg);
+                realFileLogger->flush();
             }
             break;
         }
@@ -51,9 +53,7 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
 JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_flush
     (JNIEnv* env, jobject obj) {
 
-    if (realFileLogger != nullptr) {
-        realFileLogger->flush();
-    }
+    realFileLogger->flush();
 
     env->DeleteLocalRef(obj);
 }
@@ -69,7 +69,12 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_createFileLogger
     const char * _loggerName = env->GetStringUTFChars(loggerName, JNI_FALSE);
     const char * _fileName = env->GetStringUTFChars(fileName, JNI_FALSE);
 
-    realFileLogger = spdlog::basic_logger_mt(_loggerName, _fileName);
+    try {
+        realFileLogger = spdlog::basic_logger_mt(_loggerName, _fileName);
+    } catch (const spdlog::spdlog_ex &ex) {
+        throwException(env, CLASSNAME_RuntimeException, ex.what());
+    }
+
     isEnableFileLogger = true;
 
     env->DeleteLocalRef(obj);

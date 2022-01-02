@@ -56,20 +56,4 @@ public class T {
         System.out.println(response.getBody());
     }
 
-    @Test
-    public void t4() {
-        Logger logger = Logger.getLogger();
-        System.out.println("1");
-        logger.info("Hello spdlog");
-        System.out.println("2");
-        logger.warn("Hello spdlog");
-    }
-
-    @Test
-    public void t5() {
-        Logger logger = Logger.getLogger();
-        logger.createFileLogger("aa", "aa.log");
-        logger.info("aaa");
-    }
-
 }

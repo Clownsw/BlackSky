@@ -1,6 +1,6 @@
 
-CC_DEBUG = g++ -Wall -Wformat -s -static -g -c
-CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -c
+CC_DEBUG = g++ -Wall -Wformat -s -static -g -fPIC -c
+CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -fPIC -c
 INCLUDE = -ID:/zulu-jdk11/include -ID:/zulu-jdk11/include/win32 -Iinclude
 LIB = -Llib -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
 LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll

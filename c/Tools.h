@@ -23,6 +23,7 @@
 #define CLASSNAME_Map$Entry                     "Ljava/util/Map$Entry;"
 #define CLASSNAME_Iterator                      "Ljava/util/Iterator;"
 #define CLASSNAME_NullPointerException          "Ljava/lang/NullPointerException;"
+#define CLASSNAME_RuntimeException              "Ljava/lang/RuntimeException;"
 
 #define CLASSNAME_HttpRequest                   "Lcn/smilex/libhv/jni/http/HttpRequest;"
 #define CLASSNAME_HttpResponse                  "Lcn/smilex/libhv/jni/http/HttpResponse;"

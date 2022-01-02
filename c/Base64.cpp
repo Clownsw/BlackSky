@@ -4,6 +4,7 @@
 
 #include "Interface.h"
 #include "Tools.h"
+#include <hv/base64.h>
 
 /*
  * Class:     cn_smilex_libhv_jni_ssl_Base64
@@ -11,7 +12,7 @@
  * Signature: (Ljava/lang/String;I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1encode
-    (JNIEnv* env, jobject, jstring data, jint len) {
+    (JNIEnv* env, jobject obj, jstring data, jint len) {
 
     const char* charData = env->GetStringUTFChars(data, JNI_FALSE);
 
@@ -30,6 +31,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1encode
 
     free(encoded);
 
+    env->DeleteLocalRef(obj);
     env->DeleteLocalRef(data);
 
     return ret;
@@ -41,7 +43,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1encode
  * Signature: (Ljava/lang/String;I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1decode
-    (JNIEnv* env, jobject, jstring data, jint len) {
+    (JNIEnv* env, jobject obj, jstring data, jint len) {
 
     const char* charData = env->GetStringUTFChars(data, JNI_FALSE);
 
@@ -59,6 +61,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1decode
 
     free(decoded);
 
+    env->DeleteLocalRef(obj);
     env->DeleteLocalRef(data);
 
     return ret;

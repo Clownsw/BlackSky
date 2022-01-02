@@ -3,6 +3,7 @@
 //
 
 #include "Tools.h"
+#include <cstring>
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 
@@ -266,4 +267,14 @@ static http_method _getMethodName(int n) {
 
 http_method getMethodName(int n) {
     return _getMethodName(n);
+}
+
+static void _throwException(JNIEnv* &env, const char * exceptionName, const char * message) {
+    jclass classNullPointerException = env->FindClass(exceptionName);
+    env->ThrowNew(classNullPointerException, message);
+    env->DeleteLocalRef(classNullPointerException);
+}
+
+void throwException(JNIEnv* &env, const char * exceptionName, const char * message) {
+    _throwException(env, exceptionName, message);
 }

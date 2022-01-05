@@ -51,6 +51,14 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1encode
 JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1decode
     (JNIEnv* env, jobject, jstring data, jint len);
 
+/*
+ * Class:     cn_smilex_libhv_jni_ssl_Sha
+ * Method:    sha
+ * Signature: (ILjava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Sha_sha
+    (JNIEnv* env, jobject obj, jint type, jstring data);
+
 #ifdef __cplusplus
 }
 #endif

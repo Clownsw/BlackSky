@@ -5,13 +5,13 @@ INCLUDE = -ID:/zulu-jdk11/include -ID:/zulu-jdk11/include/win32 -Iinclude
 LIB = -Llib -lfmt -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
 LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll
 
-DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o
-RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o
+DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o Sha.o
+RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o
 
-all: Tools.o Requests.o Md5.o Base64.o
+all: Tools.o Requests.o Md5.o Base64.o Sha.o
 	$(LINK) $(DEBUG_NAME) $(LIB)
 	
-release: ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o
+release: ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o
 	$(LINK) $(RELEASE_NAME) $(LIB)
 
 
@@ -27,6 +27,9 @@ Md5Release.o: Interface.h Md5.cpp
 Base64Release.o: Interface.h Base64.cpp
 	$(CC_RELEASE) -o Base64Release.o Base64.cpp $(INCLUDE)
 
+ShaRelease.o: Interface.h Sha.cpp
+	$(CC_RELEASE) -o ShaRelease.o Sha.cpp $(INCLUDE)
+
 
 
 Tools.o: Tools.h Tools.cpp
@@ -41,13 +44,19 @@ Md5.o: Interface.h Md5.cpp
 Base64.o: Interface.h Base64.cpp
 	$(CC_DEBUG) -o Base64.o Base64.cpp $(INCLUDE)
 
+Sha.o: Interface.h Sha.cpp
+	$(CC_DEBUG) -o Sha.o Sha.cpp $(INCLUDE)
+
+
 clean:
 	del Tools.o
 	del Md5.o
 	del Base64.o
 	del Requests.o
+	del Sha.o
 	del ToolsRelease.o
 	del RequestsRelease.o
 	del Md5Release.o
 	del Base64Release.o
+	del ShaRelease.o
 	del libhv.dll

@@ -13,7 +13,12 @@ public class T2 {
 
         logger.info("1");
         logger.flush();
-        logger.info("2");
-        logger.flush();
+        try {
+            Thread.sleep(10000000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        logger.info("2");
+//        logger.flush();
     }
 }

@@ -12,7 +12,7 @@
  * Signature: (Lcn/smilex/libhv/jni/http/HttpRequest;)Ljava/lang/String;
  */
 JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
-(JNIEnv* env, jobject, jobject request) {
+(JNIEnv* env, jobject obj, jobject request) {
 
     requests::Request req(new HttpRequest);
 
@@ -65,6 +65,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
 
     delete javaHttpRequest;
 
+    env->DeleteLocalRef(obj);
     env->DeleteLocalRef(request);
 
     return objectHttpResponse;
@@ -76,7 +77,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
  * Signature: (Lcn/smilex/libhv/jni/http/HttpRequest;)Lcn/smilex/libhv/jni/http/HttpResponse;
  */
 JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_asyncRequest
-    (JNIEnv* env, jobject, jobject request) {
+    (JNIEnv* env, jobject obj, jobject request) {
 
     requests::Request req(new HttpRequest);
 
@@ -84,10 +85,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_asyncRequest
 
     // 如果未传入url则抛出异常
     if (javaHttpRequest == nullptr) {
-        jclass classNullPointerException = env->FindClass(CLASSNAME_NullPointerException);
-
-        env->ThrowNew(classNullPointerException, "*** url is null ***");
-        env->DeleteLocalRef(classNullPointerException);
+        throwException(env, CLASSNAME_NullPointerException, "*** url is null ***");
         return nullptr;
     }
 
@@ -135,6 +133,8 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_asyncRequest
         objectHttpResponse = ResponseToHttpResponse(env, response);
     }
 
+    env->DeleteLocalRef(obj);
     env->DeleteLocalRef(request);
+
     return objectHttpResponse;
 }

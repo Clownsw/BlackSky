@@ -1,17 +1,17 @@
 
-CC_DEBUG = g++ -Wall -s -static -g -fno-exceptions -c
-CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -fno-exceptions -c
+CC_DEBUG = g++ -Wall -Wformat -s -static -g -fPIC -c
+CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -fPIC -c
 INCLUDE = -ID:/zulu-jdk11/include -ID:/zulu-jdk11/include/win32 -Iinclude
-LIB = -Llib -lfmt -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
+LIB = -Llib -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
 LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll
 
-DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o Sha.o
-RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o
+DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o  Sha.o Logger.o
+RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o
 
-all: Tools.o Requests.o Md5.o Base64.o Sha.o
+all: Tools.o Requests.o Md5.o Base64.o Sha.o Logger.o
 	$(LINK) $(DEBUG_NAME) $(LIB)
 	
-release: ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o
+release: ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o
 	$(LINK) $(RELEASE_NAME) $(LIB)
 
 
@@ -30,7 +30,8 @@ Base64Release.o: Interface.h Base64.cpp
 ShaRelease.o: Interface.h Sha.cpp
 	$(CC_RELEASE) -o ShaRelease.o Sha.cpp $(INCLUDE)
 
-
+LoggerRelease.o: Interface.h Logger.cpp
+	$(CC_RELEASE) -o LoggerRelease.o Logger.cpp $(INCLUDE)
 
 Tools.o: Tools.h Tools.cpp
 	$(CC_DEBUG) -o Tools.o Tools.cpp $(INCLUDE)
@@ -47,6 +48,8 @@ Base64.o: Interface.h Base64.cpp
 Sha.o: Interface.h Sha.cpp
 	$(CC_DEBUG) -o Sha.o Sha.cpp $(INCLUDE)
 
+Logger.o: Interface.h Logger.cpp
+	$(CC_DEBUG) -o Logger.o Logger.cpp $(INCLUDE)
 
 clean:
 	del Tools.o
@@ -54,9 +57,11 @@ clean:
 	del Base64.o
 	del Requests.o
 	del Sha.o
+	del Logger.o
 	del ToolsRelease.o
 	del RequestsRelease.o
 	del Md5Release.o
 	del Base64Release.o
 	del ShaRelease.o
+	del LoggerRelease.o
 	del libhv.dll

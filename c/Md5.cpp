@@ -13,7 +13,7 @@
  * Signature: (Ljava/lang/String;I)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_MD5_getMD5
-(JNIEnv* env, jobject, jstring data, jint len) {
+(JNIEnv* env, jobject obj, jstring data, jint len) {
 
     std::string resultStr;
     unsigned char resultMd5[MD5_DIGEST_LENGTH];
@@ -26,6 +26,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_MD5_getMD5
         resultStr += map[i % 16];
     }
 
+    env->DeleteLocalRef(obj);
     env->DeleteLocalRef(data);
 
     return env->NewStringUTF(resultStr.c_str());

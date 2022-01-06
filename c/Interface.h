@@ -83,6 +83,30 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_createFileLogger
 JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Sha_sha
     (JNIEnv* env, jobject obj, jint type, jstring data);
 
+/*
+ * Class:     cn_smilex_libhv_jni_log_Logger
+ * Method:    set_pattern
+ * Signature: (Ljava/lang/String;I)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1pattern
+    (JNIEnv* env, jobject obj, jboolean isFileLogger, jstring pattern, jint pattern_type);
+
+/*
+ * Class:     cn_smilex_libhv_jni_log_Logger
+ * Method:    set_level
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1level
+    (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level);
+
+/*
+ * Class:     cn_smilex_libhv_jni_log_Logger
+ * Method:    flush_on
+ * Signature: (ZI)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_flush_1on
+    (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level);
+
 #ifdef __cplusplus
 }
 #endif

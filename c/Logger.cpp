@@ -24,7 +24,23 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
 
     switch (loglevel) {
         default:
-        case 1: {
+        case SPDLOG_LEVEL_TRACE: {
+            realConsoleLogger->trace(msg);
+            if (isEnableFileLogger) {
+                realFileLogger->trace(msg);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_DEBUG: {
+            realConsoleLogger->debug(msg);
+            if (isEnableFileLogger) {
+                realFileLogger->debug(msg);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_INFO: {
             realConsoleLogger->info(msg);
             if (isEnableFileLogger) {
                 realFileLogger->info(msg);
@@ -32,12 +48,26 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
             break;
         }
 
-        case 2: {
+        case SPDLOG_LEVEL_WARN: {
             realConsoleLogger->warn(msg);
             if (isEnableFileLogger) {
                 realFileLogger->warn(msg);
             }
             break;
+        }
+
+        case SPDLOG_LEVEL_ERROR: {
+            realConsoleLogger->error(msg);
+            if (isEnableFileLogger) {
+                realFileLogger->error(msg);
+            }
+        }
+
+        case SPDLOG_LEVEL_CRITICAL: {
+            realConsoleLogger->critical(msg);
+            if (isEnableFileLogger) {
+                realFileLogger->critical(msg);
+            }
         }
     }
 
@@ -79,5 +109,178 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_createFileLogger
     isEnableFileLogger = true;
 
     env->DeleteLocalRef(obj);
+    env->DeleteLocalRef(loggerName);
+    env->DeleteLocalRef(fileName);
 
+}
+
+/*
+ * Class:     cn_smilex_libhv_jni_log_Logger
+ * Method:    set_pattern
+ * Signature: (Ljava/lang/String;I)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1pattern
+    (JNIEnv* env, jobject obj, jboolean isFileLogger, jstring pattern, jint pattern_type) {
+
+    const char* patternBuffer = env->GetStringUTFChars(pattern, JNI_FALSE);
+
+    switch (pattern_type) {
+
+        default:
+        case int(spdlog::pattern_time_type::local) : {
+            if ((int)isFileLogger) {
+                realFileLogger->set_pattern(patternBuffer);
+            } else {
+                realConsoleLogger->set_pattern(patternBuffer);
+            }
+            break;
+        }
+
+        case int(spdlog::pattern_time_type::utc) : {
+            if ((int)isFileLogger) {
+                realFileLogger->set_pattern(patternBuffer, spdlog::pattern_time_type::utc);
+            } else {
+                realConsoleLogger->set_pattern(patternBuffer, spdlog::pattern_time_type::utc);
+            }
+            break;
+        }
+    }
+
+    env->DeleteLocalRef(obj);
+    env->DeleteLocalRef(pattern);
+}
+
+/*
+ * Class:     cn_smilex_libhv_jni_log_Logger
+ * Method:    set_level
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1level
+    (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level) {
+
+    switch (level) {
+        default:
+        case SPDLOG_LEVEL_TRACE: {
+            if ((int)isFileLogger) {
+                realFileLogger->set_level(spdlog::level::trace);
+            } else {
+                realConsoleLogger->set_level(spdlog::level::trace);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_DEBUG: {
+            if ((int)isFileLogger) {
+                realFileLogger->set_level(spdlog::level::debug);
+            } else {
+                realConsoleLogger->set_level(spdlog::level::debug);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_INFO: {
+            if ((int)isFileLogger) {
+                realFileLogger->set_level(spdlog::level::info);
+            } else {
+                realConsoleLogger->set_level(spdlog::level::info);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_WARN: {
+            if ((int)isFileLogger) {
+                realFileLogger->set_level(spdlog::level::warn);
+            } else {
+                realConsoleLogger->set_level(spdlog::level::warn);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_ERROR: {
+            if ((int)isFileLogger) {
+                realFileLogger->set_level(spdlog::level::err);
+            } else {
+                realConsoleLogger->set_level(spdlog::level::err);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_CRITICAL: {
+            if ((int)isFileLogger) {
+                realFileLogger->set_level(spdlog::level::critical);
+            } else {
+                realConsoleLogger->set_level(spdlog::level::critical);
+            }
+            break;
+        }
+    }
+
+    env->DeleteLocalRef(obj);
+}
+
+/*
+ * Class:     cn_smilex_libhv_jni_log_Logger
+ * Method:    flush_on
+ * Signature: (ZI)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_flush_1on
+    (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level) {
+    switch (level) {
+        default:
+        case SPDLOG_LEVEL_TRACE: {
+            if ((int)isFileLogger) {
+                realFileLogger->flush_on(spdlog::level::trace);
+            } else {
+                realConsoleLogger->flush_on(spdlog::level::trace);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_DEBUG: {
+            if ((int)isFileLogger) {
+                realFileLogger->flush_on(spdlog::level::debug);
+            } else {
+                realConsoleLogger->flush_on(spdlog::level::debug);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_INFO: {
+            if ((int)isFileLogger) {
+                realFileLogger->flush_on(spdlog::level::info);
+            } else {
+                realConsoleLogger->flush_on(spdlog::level::info);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_WARN: {
+            if ((int)isFileLogger) {
+                realFileLogger->flush_on(spdlog::level::warn);
+            } else {
+                realConsoleLogger->flush_on(spdlog::level::warn);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_ERROR: {
+            if ((int)isFileLogger) {
+                realFileLogger->set_level(spdlog::level::err);
+            } else {
+                realConsoleLogger->flush_on(spdlog::level::err);
+            }
+            break;
+        }
+
+        case SPDLOG_LEVEL_CRITICAL: {
+            if ((int)isFileLogger) {
+                realFileLogger->flush_on(spdlog::level::critical);
+            } else {
+                realConsoleLogger->flush_on(spdlog::level::critical);
+            }
+            break;
+        }
+    }
+
+    env->DeleteLocalRef(obj);
 }

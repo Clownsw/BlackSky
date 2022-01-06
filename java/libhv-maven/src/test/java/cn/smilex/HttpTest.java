@@ -20,7 +20,7 @@ public class HttpTest {
                         .setUrl("https://www.baidu.com")
                         .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id)
                         .setBody("123");
-        HttpResponse response = Requests.getRequests().request(httpRequest);
+        HttpResponse response = Requests.getRequests().send(httpRequest);
         System.out.println(response.getBody());
     }
 
@@ -31,7 +31,19 @@ public class HttpTest {
                         .setUrl("https://www.baidu.com")
                         .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id)
                         .setBody("123");
-        HttpResponse response = Requests.getRequests().asyncRequest(httpRequest);
+        HttpResponse response = Requests.getRequests().asyncSend(httpRequest);
         System.out.println(response.getBody());
+    }
+
+    @Test
+    public void sendGetUrlTest() {
+        HttpRequest httpRequest = HttpRequest.build()
+                .setUrl("https://www.baidu.com")
+                .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id)
+                .setParams("a", "1")
+                .setParams("b", "2")
+                .setParams("c", "3");
+
+        HttpResponse httpResponse = Requests.getRequests().send(httpRequest);
     }
 }

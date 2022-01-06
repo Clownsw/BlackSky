@@ -1,10 +1,13 @@
 package cn.smilex.libhv.jni.http;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 
 /**
  * @author smilex
  */
+@Getter
 public class HttpRequest {
     public enum HTTP_METHOD {
         HTTP_METHOD_GET(1),

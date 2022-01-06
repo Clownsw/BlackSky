@@ -61,6 +61,7 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
             if (isEnableFileLogger) {
                 realFileLogger->error(msg);
             }
+            break;
         }
 
         case SPDLOG_LEVEL_CRITICAL: {
@@ -68,6 +69,7 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
             if (isEnableFileLogger) {
                 realFileLogger->critical(msg);
             }
+            break;
         }
     }
 

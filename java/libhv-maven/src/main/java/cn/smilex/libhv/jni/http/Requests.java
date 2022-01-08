@@ -11,11 +11,8 @@ import java.util.Set;
  */
 public class Requests {
 
-    private static final Requests requests;
-
     static {
         synchronized (Requests.class) {
-            requests = new Requests();
             if (!Info.isInit) {
                 Info.init();
             }
@@ -23,21 +20,18 @@ public class Requests {
     }
 
     private Requests() {  }
-    public static Requests getRequests() {
-        return requests;
-    }
 
     /**
      * 以Get方式请求网站并返回结果
      * @param url url
      * @return 返回结果
      */
-    public HttpResponse get(String url) {
+    public static HttpResponse get(String url) {
         HttpRequest httpRequest = HttpRequest
                 .build()
                 .setUrl(url)
                 .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id);
-        return Requests.getRequests().request(httpRequest);
+        return request(httpRequest);
     }
 
     /**
@@ -46,13 +40,13 @@ public class Requests {
      * @param headers headers
      * @return 返回结果
      */
-    public HttpResponse get(String url, HashMap<String, String> headers) {
+    public static HttpResponse get(String url, HashMap<String, String> headers) {
         HttpRequest httpRequest = HttpRequest
                 .build()
                 .setUrl(url)
                 .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id)
                 .setHeaders(headers);
-        return Requests.getRequests().request(httpRequest);
+        return request(httpRequest);
     }
 
     /**
@@ -61,12 +55,12 @@ public class Requests {
      * @return 返回结果
      *
      */
-    public HttpResponse post(String url) {
+    public static HttpResponse post(String url) {
         HttpRequest httpRequest = HttpRequest
                 .build()
                 .setUrl(url)
                 .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_POST.id);
-        return Requests.getRequests().request(httpRequest);
+        return request(httpRequest);
     }
 
      /**
@@ -75,27 +69,27 @@ public class Requests {
       * @param headers header
       * @return 返回结果
      */
-     public HttpResponse post(String url, HashMap<String, String> headers) {
+     public static HttpResponse post(String url, HashMap<String, String> headers) {
         HttpRequest httpRequest = HttpRequest
                 .build()
                 .setUrl(url)
                 .setMethod(HttpRequest.HTTP_METHOD.HTTP_METHOD_POST.id)
                 .setHeaders(headers);
-        return Requests.getRequests().request(httpRequest);
+        return request(httpRequest);
      }
 
 
-     public HttpResponse send(HttpRequest request) {
+     public static HttpResponse send(HttpRequest request) {
         urlDealWith(request);
         return request(request);
      }
 
-     public HttpResponse asyncSend(HttpRequest request) {
+     public static HttpResponse asyncSend(HttpRequest request) {
         urlDealWith(request);
         return asyncRequest(request);
      }
 
-    private void urlDealWith(HttpRequest request) {
+    private static void urlDealWith(HttpRequest request) {
         if (request.getMethod() == HttpRequest.HTTP_METHOD.HTTP_METHOD_GET.id) {
             HashMap<String, String> params = request.getParams();
 
@@ -126,12 +120,12 @@ public class Requests {
      * @param request 请求对象
      * @return 响应对象
      */
-    private native HttpResponse request(HttpRequest request);
+    private static native HttpResponse request(HttpRequest request);
 
     /**
      * 异步请求指定网站
      * @param request 请求对象
      * @return 响应对象
      */
-    private native HttpResponse asyncRequest(HttpRequest request);
+    private static native HttpResponse asyncRequest(HttpRequest request);
 }

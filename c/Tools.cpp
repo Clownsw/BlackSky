@@ -3,7 +3,6 @@
 //
 
 #include "Tools.h"
-#include <cstring>
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
 
@@ -135,6 +134,7 @@ static jobject _ResponseToHttpResponse(JNIEnv* &env, requests::Response& resp) {
     jfieldID fieldResponseCookies = env->GetFieldID(classHttpResponse, "cookies", CLASSNAME_HashMap);
     jfieldID fieldResponseHeaders = env->GetFieldID(classHttpResponse, "headers", CLASSNAME_HashMap);
     jfieldID fieldContentType = env->GetFieldID(classHttpResponse, "contentType", CLASSNAME_String);
+    jfieldID fieldContentLength = env->GetFieldID(classHttpResponse, "contentLength", "J");
 
     jobject objectHttpResponse = env->NewObject(classHttpResponse, methodHttpResponseDefaultCon);
 
@@ -143,6 +143,9 @@ static jobject _ResponseToHttpResponse(JNIEnv* &env, requests::Response& resp) {
 
     // 设置响应内容
     env->SetObjectField(objectHttpResponse, fieldResponseBody, env->NewStringUTF(resp->body.c_str()));
+
+    // 设置响应长度
+    env->SetLongField(objectHttpResponse, fieldContentLength, hv::from_string<long long>(resp->GetHeader("Content-Length")));
 
     // 设置响应状态
     env->SetIntField(objectHttpResponse, fieldStatusCode, resp->status_code);

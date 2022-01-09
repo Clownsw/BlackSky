@@ -14,6 +14,7 @@
 #include <hv/httpdef.h>
 #include <fmt/color.h>
 #include <fmt/core.h>
+#include <absl/strings/string_view.h>
 
 #include "Requests.h"
 
@@ -28,7 +29,7 @@
 #define CLASSNAME_HttpRequest                   "Lcn/smilex/libhv/jni/http/HttpRequest;"
 #define CLASSNAME_HttpResponse                  "Lcn/smilex/libhv/jni/http/HttpResponse;"
 
-std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
+std::map<absl::string_view, absl::string_view> parseMap(JNIEnv* env, jobject &obj);
 
 template <typename... T>
 const char* formatStr(const char* first, T &&... args) {
@@ -45,6 +46,6 @@ jobject ResponseToHttpResponse(JNIEnv* &env, requests::Response resp);
 jobject createHashMap(JNIEnv* &env);
 const char* getContentTypeName(http_content_type type);
 http_method getMethodName(int n);
-void throwException(JNIEnv* &env, const char * exceptionName, const char * message);
+void throwException(JNIEnv* &env, const char* exceptionName, const char* message);
 
 #endif

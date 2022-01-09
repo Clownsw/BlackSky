@@ -4,9 +4,9 @@
 
 #include "Tools.h"
 
-std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj) {
+std::map<absl::string_view, absl::string_view> parseMap(JNIEnv* env, jobject &obj) {
 
-    std::map<std::string, std::string> m;
+    std::map<absl::string_view, absl::string_view> m;
 
     // 获取到HashMap类的class
 	jclass hashMapClass = env->FindClass(CLASSNAME_HashMap);

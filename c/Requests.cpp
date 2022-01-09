@@ -40,13 +40,13 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
 
     // 设置请求头
 	for (auto& item : javaHttpRequest->headers) {
-		req->headers[item.first] = item.second;
+		req->headers[std::string(item.first).c_str()] = item.second;
 	}
 
     // 设置请求参数
 	for (auto& item : javaHttpRequest->params) {
 //		req->query_params.insert(std::make_pair(item.first.c_str(), item.second.c_str()));
-        req->SetUrlEncoded(item.first.c_str(), item.second);
+        req->SetUrlEncoded(std::string(item.first).c_str(), item.second);
     }
 
     // 设置body
@@ -102,13 +102,13 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_asyncRequest
 
     // 设置请求头
     for (auto& item : javaHttpRequest->headers) {
-        req->headers[item.first] = item.second;
+        req->headers[std::string(item.first).c_str()] = item.second;
     }
 
     // 设置请求参数
     for (auto& item : javaHttpRequest->params) {
 //		req->query_params.insert(std::make_pair(item.first.c_str(), item.second.c_str()));
-        req->SetUrlEncoded(item.first.c_str(), item.second);
+        req->SetUrlEncoded(std::string(item.first).c_str(), item.second);
     }
 
     // 设置body

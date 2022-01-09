@@ -12,8 +12,8 @@ typedef struct JavaHttpRequest {
     const char * url = nullptr;
     http_method method;
     const char * body = nullptr;
-    std::map<std::string, std::string> headers;
-    std::map<std::string, std::string> params;
+    std::map<absl::string_view, absl::string_view> headers;
+    std::map<absl::string_view, absl::string_view> params;
     const char * cookie = nullptr;
 } JavaHttpRequest;
 

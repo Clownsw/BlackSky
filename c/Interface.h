@@ -107,6 +107,30 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1level
 JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_flush_1on
     (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level);
 
+/*
+ * Class:     cn_smilex_libhv_jni_json_Json
+ * Method:    _create
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_libhv_jni_json_Json__1create
+    (JNIEnv* env, jobject obj, jstring jsonStr);
+
+/*
+ * Class:     cn_smilex_libhv_jni_json_Json
+ * Method:    _get
+ * Signature: (ILjava/lang/String;)Ljava/lang/Object;
+ */
+JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
+    (JNIEnv* env, jobject obj, jint type, jstring name);
+
+/*
+ * Class:     cn_smilex_libhv_jni_json_Json
+ * Method:    _close
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_json_Json__1close
+    (JNIEnv* env, jobject obj, jlong address);
+
 #ifdef __cplusplus
 }
 #endif

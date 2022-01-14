@@ -67,20 +67,44 @@ public class JsonTest {
 
     @Test
     public void getChildChildTest() {
+        /*
+            {
+                "a": {
+                    "name": "a-xuda",
+                    "b": {
+                        "name": "b-xuda",
+                        "c": {
+                            "name": "c-xuda"
+                        }
+                    }
+                }
+            }
+        */
         String jsonStr = "{\n" +
                 "\t\"a\": {\n" +
+                "\t\t\"name\": \"a-xuda\",\n" +
                 "\t\t\"b\": {\n" +
-                "\t\t\t\"name\": \"xuda\"\n" +
+                "\t\t\t\"name\": \"b-xuda\",\n" +
+                "\t\t\t\"c\": {\n" +
+                "\t\t\t\t\"name\": \"c-xuda\"\n" +
+                "\t\t\t}\n" +
                 "\t\t}\n" +
                 "\t}\n" +
                 "}";
 
         Json json = new Json(jsonStr);
 
+        JsonObject a = json.getObject("a");
+
+        System.out.println(a.getString("name"));
+
         JsonObject b = json.getObject("a").getObject("b");
-        System.out.println(b);
-        String name = b.getString("name");
-        System.out.println(name);
+
+        System.out.println(b.getString("name"));
+
+        JsonObject c = b.getObject("c");
+
+        System.out.println(c.getString("name"));
 
         json.close();
     }

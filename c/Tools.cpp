@@ -273,9 +273,9 @@ http_method getMethodName(int n) {
 }
 
 static void _throwException(JNIEnv* &env, const char * exceptionName, const char * message) {
-    jclass classNullPointerException = env->FindClass(exceptionName);
-    env->ThrowNew(classNullPointerException, message);
-    env->DeleteLocalRef(classNullPointerException);
+    jclass exception = env->FindClass(exceptionName);
+    env->ThrowNew(exception, message);
+    env->DeleteLocalRef(exception);
 }
 
 void throwException(JNIEnv* &env, const char * exceptionName, const char * message) {

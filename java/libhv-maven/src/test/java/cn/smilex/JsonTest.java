@@ -1,6 +1,7 @@
 package cn.smilex;
 
 import cn.smilex.libhv.jni.json.Json;
+import cn.smilex.libhv.jni.json.JsonObject;
 import org.junit.Test;
 
 /**
@@ -34,6 +35,32 @@ public class JsonTest {
         Json json = new Json(jsonStr);
         int star = json.getInt("star");
         System.out.println(star);
+
+        json.close();
+    }
+
+    @Test
+    public void getObjectTest() {
+        String jsonStr = "{\n" +
+                "\t\"info\": {\n" +
+                "\t\t\"name\": \"xuda\",\n" +
+                "\t\t\"age\": 18,\n" +
+                "\t\t\"gender\": \"女\",\n" +
+                "\t\t\"height\": 1.88\n" +
+                "\t}\n" +
+                "}";
+        Json json = new Json(jsonStr);
+        JsonObject info = json.getObject("info");
+
+        String name = info.getString("name");
+        int age = info.getInt("age");
+        String gender = info.getString("gender");
+        double height = info.getDouble("height");
+
+        System.out.println(name);
+        System.out.println(age);
+        System.out.println(gender);
+        System.out.println(height);
 
         json.close();
     }

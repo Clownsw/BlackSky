@@ -7,6 +7,9 @@ import cn.smilex.libhv.jni.Info;
  */
 public class Json {
 
+    private long root_address;
+    private long address;
+
     static {
         synchronized (Json.class) {
             if (!Info.isInit) {
@@ -15,32 +18,65 @@ public class Json {
         }
     }
 
-    private final long address;
+    protected Json() {  }
 
     public Json(String jsonStr) {
-        address = _create(jsonStr);
+        root_address = _create(jsonStr);
     }
 
     public void close() {
-        _close(address);
+        _close(root_address);
     }
 
     public String getString(String name) {
-        return (String) _get(Json_Type.STRING.id, name);
+        return (String) _get(Json_Type.STRING.id, name, true,0);
+    }
+
+    protected String getString(String name, long address) {
+        synchronized (Json.class) {
+            if (address == 0) {
+                return null;
+            }
+            return (String) _get(Json_Type.STRING.id, name,false, address);
+        }
     }
 
     public int getInt(String name) {
-        return Integer.parseInt((String)_get(Json_Type.INTEGER.id, name));
+        return Integer.parseInt((String)_get(Json_Type.INTEGER.id, name, true, 0));
+    }
+
+    protected int getInt(String name, long address) {
+        synchronized (Json.class) {
+            return Integer.parseInt((String) _get(Json_Type.INTEGER.id, name, false, address));
+        }
     }
 
     public double getDouble(String name) {
-        return Double.parseDouble((String)_get(Json_Type.INTEGER.id, name));
+        return Double.parseDouble((String)_get(Json_Type.INTEGER.id, name, true, 0));
     }
 
+    protected double getDouble(String name, long address) {
+        synchronized (Json.class) {
+            return Double.parseDouble((String) _get(Json_Type.DOUBLE.id, name, false, address));
+        }
+    }
+
+    public JsonObject getObject(String name) {
+        synchronized (Json.class) {
+            String _addr = (String) _get(Json_Type.OBJECT.id, name, true, 0);
+            if (_addr == null) {
+                return null;
+            }
+            address = Long.parseLong(_addr);
+            return new JsonObject(address);
+        }
+    }
+    
     private enum Json_Type {
         STRING(0),
         INTEGER(1),
-        DOUBLE(2);
+        DOUBLE(2),
+        OBJECT(3);
 
         int id;
         Json_Type(int id) {
@@ -50,7 +86,7 @@ public class Json {
 
     private native long _create(String jsonStr);
 
-    private native Object _get(int type, String name);
+    private native Object _get(int type, String name, boolean isRoot, long address);
 
     private native void _close(long address);
 }

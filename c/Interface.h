@@ -118,10 +118,10 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_libhv_jni_json_Json__1create
 /*
  * Class:     cn_smilex_libhv_jni_json_Json
  * Method:    _get
- * Signature: (ILjava/lang/String;)Ljava/lang/Object;
+ * Signature: (ILjava/lang/String;ZJ)Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
-    (JNIEnv* env, jobject obj, jint type, jstring name);
+    (JNIEnv* env, jobject obj, jint type, jstring name, jboolean isRoot, jlong address);
 
 /*
  * Class:     cn_smilex_libhv_jni_json_Json

@@ -26,6 +26,11 @@ public class JsonObject extends Json {
         return super.getDouble(name, address);
     }
 
+    @Override
+    public JsonObject getObject(String name) {
+        return super.getObject(name, address);
+    }
+
     public void setAddress(long address) {
         this.address = address;
     }

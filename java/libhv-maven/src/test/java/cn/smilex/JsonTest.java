@@ -64,4 +64,24 @@ public class JsonTest {
 
         json.close();
     }
+
+    @Test
+    public void getChildChildTest() {
+        String jsonStr = "{\n" +
+                "\t\"a\": {\n" +
+                "\t\t\"b\": {\n" +
+                "\t\t\t\"name\": \"xuda\"\n" +
+                "\t\t}\n" +
+                "\t}\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+
+        JsonObject b = json.getObject("a").getObject("b");
+        System.out.println(b);
+        String name = b.getString("name");
+        System.out.println(name);
+
+        json.close();
+    }
 }

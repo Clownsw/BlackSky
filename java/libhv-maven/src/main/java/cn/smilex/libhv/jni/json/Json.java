@@ -8,7 +8,6 @@ import cn.smilex.libhv.jni.Info;
 public class Json {
 
     private long root_address;
-    private long address;
 
     static {
         synchronized (Json.class) {
@@ -63,12 +62,21 @@ public class Json {
 
     public JsonObject getObject(String name) {
         synchronized (Json.class) {
-            String _addr = (String) _get(Json_Type.OBJECT.id, name, true, 0);
-            if (_addr == null) {
+            String _address = (String) _get(Json_Type.OBJECT.id, name, true, 0);
+            if (_address == null) {
                 return null;
             }
-            address = Long.parseLong(_addr);
-            return new JsonObject(address);
+            return new JsonObject(Long.parseLong(_address));
+        }
+    }
+
+    protected JsonObject getObject(String name, long address) {
+        synchronized (Json.class) {
+            String _address = (String) _get(Json_Type.OBJECT.id, name, false, address);
+            if (_address == null) {
+                return null;
+            }
+            return new JsonObject(Long.parseLong(_address));
         }
     }
     

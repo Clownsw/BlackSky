@@ -17,6 +17,12 @@ enum JSON_TYPE {
     JSON_TYPE_OBJECT = 3,
 };
 
+enum JSON_GET_METHOD {
+    JSON_GET_METHOD_DEFAULT = 0,
+    JSON_GET_METHOD_NAME_ADDRESS = 1,
+    JSON_GET_METHOD_ADDRESS = 2,
+};
+
 /*
  * Class:     cn_smilex_libhv_jni_json_Json
  * Method:    _create
@@ -45,17 +51,20 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_libhv_jni_json_Json__1create
 /*
  * Class:     cn_smilex_libhv_jni_json_Json
  * Method:    _get
- * Signature: (ILjava/lang/String;ZJ)Ljava/lang/Object;
+ * Signature: (ILjava/lang/String;IJ)Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
-    (JNIEnv* env, jobject obj, jint type, jstring name, jboolean isRoot, jlong address) {
+    (JNIEnv* env, jobject obj, jint type, jstring name, jint isRoot, jlong address) {
 
-    const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
+    const char* _name = name != nullptr ? env->GetStringUTFChars(name, JNI_FALSE) : nullptr;
 
     env->DeleteLocalRef(name);
     env->DeleteLocalRef(obj);
 
-    yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
+    yyjson_val *root =
+            isRoot == JSON_GET_METHOD_DEFAULT ? yyjson_obj_get(val, _name)
+            : isRoot == JSON_GET_METHOD_NAME_ADDRESS ? yyjson_obj_get((yyjson_val*) address, _name)
+            : (yyjson_val *) address;
 
     if (root == nullptr) {
         return nullptr;
@@ -99,7 +108,6 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_libhv_jni_json_Json__1getArray
 
     yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
 
-
     if (root == nullptr) {
         return nullptr;
     }
@@ -114,8 +122,6 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_libhv_jni_json_Json__1getArray
 
     /* 判断一下数组长度, 如果长度=0, 就没必要往下走 */
     size_t jsonArrLen = yyjson_arr_size(root);
-
-    fmt::print("size={}\n", jsonArrLen);
 
     if (jsonArrLen > 0) {
         array = env->NewLongArray(jsonArrLen);
@@ -133,7 +139,6 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_libhv_jni_json_Json__1getArray
 
         while ((val = yyjson_arr_iter_next(&iter))) {
             address[i] = (jlong)val;
-
             i++;
         }
         env->SetLongArrayRegion(array, 0, jsonArrLen, address);

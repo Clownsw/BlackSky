@@ -179,7 +179,7 @@ public class JsonTest {
         String jsonStr = "{\n" +
                 "\t\"infos\": [\n" +
                 "\t\t{\n" +
-                "\t\t\t\"names:\": [\n" +
+                "\t\t\t\"names\": [\n" +
                 "\t\t\t\t\"a\",\n" +
                 "\t\t\t\t\"b\",\n" +
                 "\t\t\t\t\"c\"\n" +
@@ -199,18 +199,64 @@ public class JsonTest {
         Json json = new Json(jsonStr);
 
         List<JsonObject> infos = json.getArrJsonObject("infos");
-        System.out.println("infos.size=" + infos.size());
 
-//        for (JsonObject info : infos) {
-//            List<JsonObject> names = info.getArrJsonObject("names");
-//            System.out.println(info.getAddress());
-//            System.out.println("names.size=" + names.size());
-//        }
+        for (JsonObject info : infos) {
+            List<JsonObject> names = info.getArrJsonObject("names");
+            for (JsonObject name : names) {
+                System.out.println(name.asString());
+            }
+        }
 
-//        System.out.println(infos.get(0).getArrJsonObject("names"));
+//        System.out.println(infos.get(0).getArrJsonObject("names").get(2).asString());
 
-        List<JsonObject> names = infos.get(1).getArrJsonObject("names");
-        System.out.println(names);
+        json.close();
+    }
+
+    @Test
+    public void getArrObjArrNthArgs() {
+        String jsonStr = "{\n" +
+                "\t\"infos\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"names\": [\n" +
+                "\t\t\t\t\"a\",\n" +
+                "\t\t\t\t\"b\",\n" +
+                "\t\t\t\t\"c\",\n" +
+                "\t\t\t\t1\n" +
+                "\t\t\t]\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"names\": [\n" +
+                "\t\t\t\t\"d\",\n" +
+                "\t\t\t\t\"e\",\n" +
+                "\t\t\t\t\"f\",\n" +
+                "\t\t\t\t\"g\",\n" +
+                "\t\t\t\t1.2\n" +
+                "\t\t\t]\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"double\": 1.2\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+
+        int i = json.getArrJsonObject("infos")
+                .get(0)
+                .getArrJsonObject("names")
+                .get(3)
+                .asInt();
+        System.out.println(i);
+
+        System.out.println(json.getArrJsonObject("infos")
+                .get(1)
+                .getArrJsonObject("names")
+                .get(4)
+                .asDouble());
+
+        System.out.println(json.getArrJsonObject("infos")
+                .get(2)
+                .getDouble("double"));
 
         json.close();
     }

@@ -22,14 +22,26 @@ public class JsonObject extends Json {
         return super.getString(name, address);
     }
 
+    public String asString() {
+        return super.asString(address);
+    }
+
     @Override
     public int getInt(String name) {
         return super.getInt(name, address);
     }
 
+    public int asInt() {
+        return super.asInt(address);
+    }
+
     @Override
     public double getDouble(String name) {
         return super.getDouble(name, address);
+    }
+
+    public double asDouble() {
+        return super.asDouble(address);
     }
 
     @Override

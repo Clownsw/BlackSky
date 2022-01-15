@@ -9,10 +9,6 @@ public class JsonObject extends Json {
 
     private long address;
 
-    public long getAddress() {
-        return address;
-    }
-
     public JsonObject(long address) {
         this.address = address;
     }
@@ -45,6 +41,15 @@ public class JsonObject extends Json {
     }
 
     @Override
+    public long getLong(String name) {
+        return super.getLong(name, address);
+    }
+
+    public long asLong() {
+        return super.asLong(address);
+    }
+
+    @Override
     public JsonObject getObject(String name) {
         return super.getObject(name, address);
     }
@@ -52,9 +57,5 @@ public class JsonObject extends Json {
     @Override
     public List<JsonObject> getArrJsonObject(String name) {
         return super.getArrJsonObject(name, address);
-    }
-
-    public void setAddress(long address) {
-        this.address = address;
     }
 }

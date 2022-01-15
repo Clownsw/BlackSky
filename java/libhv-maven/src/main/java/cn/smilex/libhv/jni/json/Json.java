@@ -75,6 +75,20 @@ public class Json {
         }
     }
 
+    public long getLong(String name) {
+        return Long.parseLong((String) _get(Json_Type.LONG.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
+    }
+
+    protected long asLong(long address) {
+        return Long.parseLong((String)_get(Json_Type.LONG.id, null, JSON_GET_METHOD.ADDRESS.id, address));
+    }
+
+    protected long getLong(String name, long address) {
+        synchronized (Json.class) {
+            return Long.parseLong((String)_get(Json_Type.LONG.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address));
+        }
+    }
+
     public JsonObject getObject(String name) {
         synchronized (Json.class) {
             String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.DEFAULT.id, 0);
@@ -129,7 +143,8 @@ public class Json {
         STRING(0),
         INTEGER(1),
         DOUBLE(2),
-        OBJECT(3);
+        LONG(3),
+        OBJECT(4);
 
         int id;
         Json_Type(int id) {

@@ -42,6 +42,25 @@ public class JsonTest {
     }
 
     @Test
+    public void getLongTest() {
+        String jsonStr = "{\n" +
+                "\t\"createTime\":1641453215534,\n" +
+                "\t\"obj\": {\n" +
+                "\t\t\"createTime\":1641453215534\n" +
+                "\t},\n" +
+                "\t\"arr\": [\n" +
+                "\t\t1641453215534\n" +
+                "\t]\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+        System.out.println(json.getLong("createTime"));
+        System.out.println(json.getObject("obj").getLong("createTime"));
+        System.out.println(json.getArrJsonObject("arr").get(0).asLong());
+        json.close();
+    }
+
+    @Test
     public void getObjectTest() {
         String jsonStr = "{\n" +
                 "\t\"info\": {\n" +

@@ -14,7 +14,8 @@ enum JSON_TYPE {
     JSON_TYPE_STRING = 0,
     JSON_TYPE_INTEGER = 1,
     JSON_TYPE_DOUBLE = 2,
-    JSON_TYPE_OBJECT = 3,
+    JSON_TYPE_LONG = 3,
+    JSON_TYPE_OBJECT = 4,
 };
 
 enum JSON_GET_METHOD {
@@ -81,6 +82,10 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
 
         case JSON_TYPE_DOUBLE: {
             return env->NewStringUTF(std::to_string(yyjson_get_real(root)).c_str());
+        }
+
+        case JSON_TYPE_LONG: {
+            return env->NewStringUTF(std::to_string(yyjson_get_sint(root)).c_str());
         }
 
         case JSON_TYPE_OBJECT: {

@@ -86,6 +86,66 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
 
 /*
  * Class:     cn_smilex_libhv_jni_json_Json
+ * Method:    _getArray
+ * Signature: (Ljava/lang/String;ZJ)[J
+ */
+JNIEXPORT jlongArray JNICALL Java_cn_smilex_libhv_jni_json_Json__1getArray
+    (JNIEnv* env, jobject obj, jstring name, jboolean isRoot, jlong address) {
+
+    const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
+
+    env->DeleteLocalRef(name);
+    env->DeleteLocalRef(obj);
+
+    yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
+
+
+    if (root == nullptr) {
+        return nullptr;
+    }
+
+    /* 判断是否是一个JSON数组 */
+    if (!yyjson_is_arr(root)) {
+        throwException(env, CLASSNAME_RuntimeException, "这不是一个JSON数组!");
+        return nullptr;
+    }
+
+    jlongArray array;
+
+    /* 判断一下数组长度, 如果长度=0, 就没必要往下走 */
+    size_t jsonArrLen = yyjson_arr_size(root);
+
+    fmt::print("size={}\n", jsonArrLen);
+
+    if (jsonArrLen > 0) {
+        array = env->NewLongArray(jsonArrLen);
+
+        if (array == nullptr) {
+            return nullptr;
+        }
+
+        yyjson_val *val;
+        yyjson_arr_iter iter;
+        yyjson_arr_iter_init(root, &iter);
+
+        int i = 0;
+        jlong address[jsonArrLen];
+
+        while ((val = yyjson_arr_iter_next(&iter))) {
+            address[i] = (jlong)val;
+
+            i++;
+        }
+        env->SetLongArrayRegion(array, 0, jsonArrLen, address);
+    } else {
+        env->NewLongArray(0);
+    }
+
+    return array;
+}
+
+/*
+ * Class:     cn_smilex_libhv_jni_json_Json
  * Method:    _close
  * Signature: (J)V
  */

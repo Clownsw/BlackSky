@@ -22,9 +22,12 @@
 #define CLASSNAME_HashMap                       "Ljava/util/HashMap;"
 #define CLASSNAME_Map$Entry                     "Ljava/util/Map$Entry;"
 #define CLASSNAME_Iterator                      "Ljava/util/Iterator;"
+
+/* 异常类 */
 #define CLASSNAME_NullPointerException          "Ljava/lang/NullPointerException;"
 #define CLASSNAME_RuntimeException              "Ljava/lang/RuntimeException;"
 
+/* 自定义类 */
 #define CLASSNAME_HttpRequest                   "Lcn/smilex/libhv/jni/http/HttpRequest;"
 #define CLASSNAME_HttpResponse                  "Lcn/smilex/libhv/jni/http/HttpResponse;"
 

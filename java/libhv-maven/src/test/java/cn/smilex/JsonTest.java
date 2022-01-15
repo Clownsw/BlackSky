@@ -4,6 +4,8 @@ import cn.smilex.libhv.jni.json.Json;
 import cn.smilex.libhv.jni.json.JsonObject;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author smilex
  */
@@ -105,6 +107,110 @@ public class JsonTest {
         JsonObject c = b.getObject("c");
 
         System.out.println(c.getString("name"));
+
+        json.close();
+    }
+
+    @Test
+    public void getArrTest() {
+        /*
+        {
+            "infos": [
+                {
+                    "name": "xuda1"
+                },
+                {
+                    "name": "xuda2"
+                },
+                {
+                    "name": "xuda3"
+                }
+            ]
+        }
+        */
+        String jsonStr = "{\n" +
+                "\t\"infos\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"xuda1\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"xuda2\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"name\": \"xuda3\"\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+
+        List<JsonObject> infos = json.getArrJsonObject("infos");
+        for (JsonObject info : infos) {
+            String name = info.getString("name");
+            System.out.println(name);
+        }
+
+        json.close();
+    }
+
+    @Test
+    public void getArrChildArr() {
+        /*
+            {
+                "infos": [
+                    {
+                        "names:": [
+                            "a",
+                            "b",
+                            "c"
+                        ]
+                    },
+                    {
+                        "names": [
+                            "d",
+                            "e",
+                            "f",
+                            "g"
+                        ]
+                    }
+                ]
+            }
+        */
+        String jsonStr = "{\n" +
+                "\t\"infos\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"names:\": [\n" +
+                "\t\t\t\t\"a\",\n" +
+                "\t\t\t\t\"b\",\n" +
+                "\t\t\t\t\"c\"\n" +
+                "\t\t\t]\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\t\"names\": [\n" +
+                "\t\t\t\t\"d\",\n" +
+                "\t\t\t\t\"e\",\n" +
+                "\t\t\t\t\"f\",\n" +
+                "\t\t\t\t\"g\"\n" +
+                "\t\t\t]\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+
+        List<JsonObject> infos = json.getArrJsonObject("infos");
+        System.out.println("infos.size=" + infos.size());
+
+//        for (JsonObject info : infos) {
+//            List<JsonObject> names = info.getArrJsonObject("names");
+//            System.out.println(info.getAddress());
+//            System.out.println("names.size=" + names.size());
+//        }
+
+//        System.out.println(infos.get(0).getArrJsonObject("names"));
+
+        List<JsonObject> names = infos.get(1).getArrJsonObject("names");
+        System.out.println(names);
 
         json.close();
     }

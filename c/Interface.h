@@ -125,6 +125,14 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
 
 /*
  * Class:     cn_smilex_libhv_jni_json_Json
+ * Method:    _getArray
+ * Signature: (Ljava/lang/String;ZJ)[J
+ */
+JNIEXPORT jlongArray JNICALL Java_cn_smilex_libhv_jni_json_Json__1getArray
+    (JNIEnv* env, jobject obj, jstring name, jboolean isRoot, jlong address);
+
+/*
+ * Class:     cn_smilex_libhv_jni_json_Json
  * Method:    _close
  * Signature: (J)V
  */

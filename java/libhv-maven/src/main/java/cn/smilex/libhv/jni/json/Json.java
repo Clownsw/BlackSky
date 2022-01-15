@@ -2,6 +2,9 @@ package cn.smilex.libhv.jni.json;
 
 import cn.smilex.libhv.jni.Info;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author smilex
  */
@@ -70,6 +73,37 @@ public class Json {
         }
     }
 
+    public List<JsonObject> getArrJsonObject(String name) {
+        synchronized (Json.class) {
+            long[] _addresses = _getArray(name, true, 0);
+            if (_addresses == null) {
+                return null;
+            }
+
+            List<JsonObject> jsonObjects = new ArrayList<>();
+            for (long address : _addresses) {
+                System.out.println(address);
+                jsonObjects.add(new JsonObject(address));
+            }
+            return jsonObjects;
+        }
+    }
+
+    protected List<JsonObject> getArrJsonObject(String name, long address) {
+        synchronized (Json.class) {
+            long[] _addresses = _getArray(name, false, address);
+            if (_addresses == null) {
+                return null;
+            }
+
+            List<JsonObject> jsonObjects = new ArrayList<>();
+            for (long _address : _addresses) {
+                jsonObjects.add(new JsonObject(_address));
+            }
+            return jsonObjects;
+        }
+    }
+
     protected JsonObject getObject(String name, long address) {
         synchronized (Json.class) {
             String _address = (String) _get(Json_Type.OBJECT.id, name, false, address);
@@ -95,6 +129,8 @@ public class Json {
     private native long _create(String jsonStr);
 
     private native Object _get(int type, String name, boolean isRoot, long address);
+
+    private native long[] _getArray(String name, boolean isRoot, long address);
 
     private native void _close(long address);
 }

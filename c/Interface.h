@@ -2,7 +2,7 @@
 // By: smilex
 //
 
-#include <jni.h>
+#include <jni/jni.h>
 
 #ifndef _Included_cn_smilex_libhv_jni_Requests
 #define _Included_cn_smilex_libhv_jni_Requests

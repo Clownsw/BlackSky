@@ -1,10 +1,10 @@
 
 CC_DEBUG = g++ -Wall -Wformat -s -g -fPIC -c
 CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -fPIC -c
-INCLUDE = -ID:/zulu-jdk11/include -ID:/zulu-jdk11/include/win32 -Iinclude
+INCLUDE = -Iinclude
 LIB = -Llib -lyyjson -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
-DEBUG_LINK = g++ -Wl,--gc-sections -shared -o libhv.dll
-RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o libhv.dll
+DEBUG_LINK = g++ -Wl,--gc-sections -shared -o blacksky.dll
+RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o blacksky.dll
 
 DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o  Sha.o Logger.o Json.o
 RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o

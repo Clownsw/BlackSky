@@ -7,7 +7,7 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-#include <jni.h>
+#include <jni/jni.h>
 #include <map>
 #include <string>
 #include <hv/requests.h>

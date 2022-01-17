@@ -157,17 +157,19 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
 /*
  * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _getPoint
- * Signature: (Ljava/lang/String;)J
+ * Signature: (JLjava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
-    (JNIEnv* env, jobject obj, jstring point) {
+    (JNIEnv* env, jobject obj, jlong address, jstring point) {
 
     const char* _point = env->GetStringUTFChars(point, JNI_FALSE);
 
     env->DeleteLocalRef(point);
     env->DeleteLocalRef(obj);
 
-    return (jlong) yyjson_get_pointer(val, _point);
+    return address == 0
+    ? (jlong) yyjson_get_pointer(val, _point)
+    : (jlong) (yyjson_get_pointer((yyjson_val*) address, _point));
 }
 
 /*

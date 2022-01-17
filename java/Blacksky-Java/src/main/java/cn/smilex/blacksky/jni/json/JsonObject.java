@@ -8,9 +8,32 @@ import java.util.List;
 public class JsonObject extends Json {
 
     private long address;
+    private long pointerAddress;
 
     public JsonObject(long address) {
         this.address = address;
+    }
+
+    @Override
+    public JsonObject getPoint(String point) {
+        pointerAddress = super._getPoint(address, point);
+        return this;
+    }
+
+    public String asPointerString() {
+        return super.asString(pointerAddress);
+    }
+
+    public int asPointerInt() {
+        return super.asInt(pointerAddress);
+    }
+
+    public double asPointerDouble() {
+        return super.asDouble(pointerAddress);
+    }
+
+    public long asPointerLong() {
+        return super.asLong(pointerAddress);
     }
 
     @Override

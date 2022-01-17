@@ -293,20 +293,55 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        System.out.println(json.getPoint("/size").asInt());
+        System.out.println(json.getPoint("/size").asPointerInt());
 
-        System.out.println(json.getPoint("/users/0/id").asInt());
-        System.out.println(json.getPoint("/users/1/id").asInt());
-        System.out.println(json.getPoint("/users/2/id").asInt());
+        System.out.println(json.getPoint("/users/0/id").asPointerInt());
+        System.out.println(json.getPoint("/users/1/id").asPointerInt());
+        System.out.println(json.getPoint("/users/2/id").asPointerInt());
 
-        System.out.println(json.getPoint("/users/0/name").asString());
-        System.out.println(json.getPoint("/users/1/name").asString());
-        System.out.println(json.getPoint("/users/2/name").asString());
+        System.out.println(json.getPoint("/users/0/name").asPointerString());
+        System.out.println(json.getPoint("/users/1/name").asPointerString());
+        System.out.println(json.getPoint("/users/2/name").asPointerString());
 
-        System.out.println(json.getPoint("/users/0/id").asLong());
-        System.out.println(json.getPoint("/users/1/id").asLong());
-        System.out.println(json.getPoint("/users/2/id").asLong());
+        System.out.println(json.getPoint("/users/0/id").asPointerLong());
+        System.out.println(json.getPoint("/users/1/id").asPointerLong());
+        System.out.println(json.getPoint("/users/2/id").asPointerLong());
 
+        json.close();
+    }
+
+    @Test
+    public void jsonPointTest2() {
+        String jsonStr = "{\n" +
+                "\t\"a\": {\n" +
+                "\t\t\"b\": [\n" +
+                "\t\t\t{\n" +
+                "\t\t\t\t\"name\": \"c1\",\n" +
+                "\t\t\t\t\"height\": 1.77\n" +
+                "\t\t\t},\n" +
+                "\t\t\t{\n" +
+                "\t\t\t\t\"name\": \"c2\",\n" +
+                "\t\t\t\t\"height\": 1.88\n" +
+                "\t\t\t}\n" +
+                "\t\t]\n" +
+                "\t}\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+
+        System.out.println(json.getPoint("/a/b/0/name").asPointerString());
+        System.out.println(json.getPoint("/a/b/1/name").asPointerString());
+
+        System.out.println(json.getObject("a").getPoint("/b/0/name").asPointerString());
+        System.out.println(json.getObject("a").getPoint("/b/1/name").asPointerString());
+
+        // a -> b -> 0 -> name
+        //           ^
+        //           |
+        System.out.println(json.getObject("a").getArrJsonObject("b").get(0).getPoint("/name").asPointerString());
+
+        System.out.println(json.getObject("a").getPoint("/b/0/height").asPointerDouble());
+        System.out.println(json.getObject("a").getPoint("/b/1/height").asPointerDouble());
         json.close();
     }
 }

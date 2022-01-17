@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Json {
 
-    private long root_address;
+    private long rootAddress;
     private long pointAddress;
 
     static {
@@ -24,31 +24,31 @@ public class Json {
     protected Json() {  }
 
     public Json(String jsonStr) {
-        root_address = _create(jsonStr);
+        rootAddress = _create(jsonStr);
     }
 
     public void close() {
-        _close(root_address);
+        _close(rootAddress);
     }
 
     public Json getPoint(String point) {
-        pointAddress = _getPoint(point);
+        pointAddress = _getPoint(0, point);
         return this;
     }
 
-    public int asInt() {
+    public int asPointerInt() {
         return Integer.parseInt((String) _get(Json_Type.INTEGER.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
     }
 
-    public String asString() {
+    public String asPointerString() {
         return (String) _get(Json_Type.STRING.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress);
     }
 
-    public double asDouble() {
+    public double asPointerDouble() {
         return Double.parseDouble((String) _get(Json_Type.DOUBLE.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
     }
 
-    public long asLong() {
+    public long asPointerLong() {
         return Long.parseLong((String) _get(Json_Type.LONG.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
     }
 
@@ -191,7 +191,7 @@ public class Json {
 
     private native long[] _getArray(String name, boolean isRoot, long address);
 
-    private native long _getPoint(String point);
+    protected native long _getPoint(long address, String point);
 
     private native void _close(long address);
 }

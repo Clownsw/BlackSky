@@ -134,10 +134,10 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
 /*
  * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _getPoint
- * Signature: (Ljava/lang/String;)J
+ * Signature: (JLjava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
-    (JNIEnv* env, jobject obj, jstring point);
+    (JNIEnv* env, jobject obj, jlong address, jstring point);
 
 /*
  * Class:     cn_smilex_blacksky_jni_json_Json

@@ -1,6 +1,6 @@
 package cn.smilex;
 
-import cn.smilex.libhv.jni.log.Logger;
+import cn.smilex.blacksky.jni.log.Logger;
 import org.junit.Test;
 
 public class LoggerTest {

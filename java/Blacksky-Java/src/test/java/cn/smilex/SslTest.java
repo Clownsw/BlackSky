@@ -1,6 +1,6 @@
 package cn.smilex;
 
-import cn.smilex.libhv.jni.ssl.Ssl;
+import cn.smilex.blacksky.jni.ssl.Ssl;
 import org.junit.Test;
 
 /**

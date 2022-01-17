@@ -8,11 +8,11 @@
 #include <openssl/md5.h>
 
 /*
- * Class:     cn_smilex_libhv_jni_ssl_MD5
+ * Class:     cn_smilex_blacksky_jni_ssl_MD5
  * Method:    getMD5
  * Signature: (Ljava/lang/String;I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_MD5_getMD5
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_ssl_MD5_getMD5
 (JNIEnv* env, jobject obj, jstring data, jint len) {
 
     std::string resultStr;

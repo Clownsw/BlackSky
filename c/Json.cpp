@@ -25,11 +25,11 @@ enum JSON_GET_METHOD {
 };
 
 /*
- * Class:     cn_smilex_libhv_jni_json_Json
+ * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _create
  * Signature: (Ljava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_cn_smilex_libhv_jni_json_Json__1create
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
     (JNIEnv* env, jobject obj, jstring jsonStr) {
 
     const char* _jsonStr = env->GetStringUTFChars(jsonStr, JNI_FALSE);
@@ -50,11 +50,11 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_libhv_jni_json_Json__1create
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_json_Json
+ * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _get
  * Signature: (ILjava/lang/String;IJ)Ljava/lang/Object;
  */
-JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
+JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_json_Json__1get
     (JNIEnv* env, jobject obj, jint type, jstring name, jint isRoot, jlong address) {
 
     const char* _name = name != nullptr ? env->GetStringUTFChars(name, JNI_FALSE) : nullptr;
@@ -99,11 +99,11 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_json_Json__1get
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_json_Json
+ * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _getArray
  * Signature: (Ljava/lang/String;ZJ)[J
  */
-JNIEXPORT jlongArray JNICALL Java_cn_smilex_libhv_jni_json_Json__1getArray
+JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
     (JNIEnv* env, jobject obj, jstring name, jboolean isRoot, jlong address) {
 
     const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
@@ -155,11 +155,11 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_libhv_jni_json_Json__1getArray
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_json_Json
+ * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _close
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_json_Json__1close
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_Json__1close
     (JNIEnv* env, jobject obj, jlong address) {
 
     yyjson_doc_free((yyjson_doc*)address);

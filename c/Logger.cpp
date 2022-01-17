@@ -13,11 +13,11 @@ inline static std::shared_ptr<spdlog::logger> realFileLogger;
 inline static bool isEnableFileLogger = false;
 
 /*
- * Class:     cn_smilex_libhv_jni_log_Logger
+ * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    log
  * Signature: (ILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_log
     (JNIEnv* env, jobject obj, jint loglevel, jstring message) {
 
     const char * msg = env->GetStringUTFChars(message, JNI_FALSE);
@@ -78,11 +78,11 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_log
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_log_Logger
+ * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    flush
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_flush
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_flush
     (JNIEnv* env, jobject obj) {
 
     realFileLogger->flush();
@@ -91,11 +91,11 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_flush
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_log_Logger
+ * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    createFileLogger
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_createFileLogger
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_createFileLogger
     (JNIEnv* env, jobject obj, jstring loggerName, jstring fileName) {
 
     const char * _loggerName = env->GetStringUTFChars(loggerName, JNI_FALSE);
@@ -117,11 +117,11 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_createFileLogger
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_log_Logger
+ * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    set_pattern
  * Signature: (Ljava/lang/String;I)V
  */
-JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1pattern
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_set_1pattern
     (JNIEnv* env, jobject obj, jboolean isFileLogger, jstring pattern, jint pattern_type) {
 
     const char* patternBuffer = env->GetStringUTFChars(pattern, JNI_FALSE);
@@ -153,11 +153,11 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1pattern
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_log_Logger
+ * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    set_level
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1level
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_set_1level
     (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level) {
 
     switch (level) {
@@ -221,11 +221,11 @@ JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_set_1level
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_log_Logger
+ * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    flush_on
  * Signature: (ZI)V
  */
-JNIEXPORT void JNICALL Java_cn_smilex_libhv_jni_log_Logger_flush_1on
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_flush_1on
     (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level) {
     switch (level) {
         default:

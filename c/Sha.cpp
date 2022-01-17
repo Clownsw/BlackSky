@@ -97,11 +97,11 @@ std::string sha512_string(const std::string&& str) {
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_ssl_Sha
+ * Class:     cn_smilex_blacksky_jni_ssl_Sha
  * Method:    sha
  * Signature: (ILjava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Sha_sha
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_ssl_Sha_sha
     (JNIEnv* env, jobject obj, jint type, jstring data) {
 
     const char* buffer;

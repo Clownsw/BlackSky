@@ -7,11 +7,11 @@
 #include <hv/base64.h>
 
 /*
- * Class:     cn_smilex_libhv_jni_ssl_Base64
+ * Class:     cn_smilex_blacksky_jni_ssl_Base64
  * Method:    base64_encode
  * Signature: (Ljava/lang/String;I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1encode
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_ssl_Base64_base64_1encode
     (JNIEnv* env, jobject obj, jstring data, jint len) {
 
     const char* charData = env->GetStringUTFChars(data, JNI_FALSE);
@@ -38,18 +38,18 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1encode
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_ssl_Base64
+ * Class:     cn_smilex_blacksky_jni_ssl_Base64
  * Method:    base64_decode
  * Signature: (Ljava/lang/String;I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_cn_smilex_libhv_jni_ssl_Base64_base64_1decode
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_ssl_Base64_base64_1decode
     (JNIEnv* env, jobject obj, jstring data, jint len) {
 
     const char* charData = env->GetStringUTFChars(data, JNI_FALSE);
 
     int size = BASE64_ENCODE_OUT_SIZE(len);
 
-    unsigned char* decoded = (unsigned char *) malloc(size);
+    auto* decoded = (unsigned char *) malloc(size);
 
     if (decoded == nullptr) {
         return nullptr;

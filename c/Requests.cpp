@@ -7,11 +7,11 @@
 
 /*
  * 通过HttpRequest类请求指定网站并返回HttpResponse
- * Class:     cn_smilex_libhv_jni_http_Requests
+ * Class:     cn_smilex_blacksky_jni_http_Requests
  * Method:    request
  * Signature: (Lcn/smilex/libhv/jni/http/HttpRequest;)Ljava/lang/String;
  */
-JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
+JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_request
 (JNIEnv* env, jobject obj, jobject request) {
 
     requests::Request req(new HttpRequest);
@@ -72,11 +72,11 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_request
 }
 
 /*
- * Class:     cn_smilex_libhv_jni_http_Requests
+ * Class:     cn_smilex_blacksky_jni_http_Requests
  * Method:    asyncRequest
  * Signature: (Lcn/smilex/libhv/jni/http/HttpRequest;)Lcn/smilex/libhv/jni/http/HttpResponse;
  */
-JNIEXPORT jobject JNICALL Java_cn_smilex_libhv_jni_http_Requests_asyncRequest
+JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_asyncRequest
     (JNIEnv* env, jobject obj, jobject request) {
 
     requests::Request req(new HttpRequest);

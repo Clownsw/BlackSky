@@ -28,8 +28,8 @@
 #define CLASSNAME_RuntimeException              "Ljava/lang/RuntimeException;"
 
 /* 自定义类 */
-#define CLASSNAME_HttpRequest                   "Lcn/smilex/libhv/jni/http/HttpRequest;"
-#define CLASSNAME_HttpResponse                  "Lcn/smilex/libhv/jni/http/HttpResponse;"
+#define CLASSNAME_HttpRequest                   "Lcn/smilex/blacksky/jni/http/HttpRequest;"
+#define CLASSNAME_HttpResponse                  "Lcn/smilex/blacksky/jni/http/HttpResponse;"
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
 

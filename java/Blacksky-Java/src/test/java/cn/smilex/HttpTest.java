@@ -1,13 +1,9 @@
 package cn.smilex;
 
-import cn.smilex.libhv.jni.http.HttpRequest;
-import cn.smilex.libhv.jni.http.HttpResponse;
-import cn.smilex.libhv.jni.http.Requests;
-import cn.smilex.libhv.jni.log.Logger;
-import cn.smilex.libhv.jni.ssl.Ssl;
+import cn.smilex.blacksky.jni.http.HttpRequest;
+import cn.smilex.blacksky.jni.http.HttpResponse;
+import cn.smilex.blacksky.jni.http.Requests;
 import org.junit.Test;
-
-import java.io.*;
 
 /**
  * Test Class

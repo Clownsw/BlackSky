@@ -75,4 +75,4 @@ clean:
 	del ShaRelease.o
 	del LoggerRelease.o
 	del JsonRelease.o
-	del libhv.dll
+	del blacksky.dll

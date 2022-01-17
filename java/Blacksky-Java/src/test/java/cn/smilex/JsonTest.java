@@ -1,7 +1,7 @@
 package cn.smilex;
 
-import cn.smilex.libhv.jni.json.Json;
-import cn.smilex.libhv.jni.json.JsonObject;
+import cn.smilex.blacksky.jni.json.Json;
+import cn.smilex.blacksky.jni.json.JsonObject;
 import org.junit.Test;
 
 import java.util.List;

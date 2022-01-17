@@ -135,15 +135,15 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
             return nullptr;
         }
 
-        yyjson_val *val;
+        yyjson_val *_val;
         yyjson_arr_iter iter;
         yyjson_arr_iter_init(root, &iter);
 
         int i = 0;
         jlong address[jsonArrLen];
 
-        while ((val = yyjson_arr_iter_next(&iter))) {
-            address[i] = (jlong)val;
+        while ((_val = yyjson_arr_iter_next(&iter))) {
+            address[i] = (jlong)_val;
             i++;
         }
         env->SetLongArrayRegion(array, 0, jsonArrLen, address);
@@ -152,6 +152,22 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
     }
 
     return array;
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_Json
+ * Method:    _getPoint
+ * Signature: (Ljava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
+    (JNIEnv* env, jobject obj, jstring point) {
+
+    const char* _point = env->GetStringUTFChars(point, JNI_FALSE);
+
+    env->DeleteLocalRef(point);
+    env->DeleteLocalRef(obj);
+
+    return (jlong) yyjson_get_pointer(val, _point);
 }
 
 /*

@@ -11,6 +11,7 @@ import java.util.List;
 public class Json {
 
     private long root_address;
+    private long pointAddress;
 
     static {
         synchronized (Json.class) {
@@ -28,6 +29,27 @@ public class Json {
 
     public void close() {
         _close(root_address);
+    }
+
+    public Json getPoint(String point) {
+        pointAddress = _getPoint(point);
+        return this;
+    }
+
+    public int asInt() {
+        return Integer.parseInt((String) _get(Json_Type.INTEGER.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
+    }
+
+    public String asString() {
+        return (String) _get(Json_Type.STRING.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress);
+    }
+
+    public double asDouble() {
+        return Double.parseDouble((String) _get(Json_Type.DOUBLE.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
+    }
+
+    public long asLong() {
+        return Long.parseLong((String) _get(Json_Type.LONG.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
     }
 
     public String getString(String name) {
@@ -168,6 +190,8 @@ public class Json {
     private native Object _get(int type, String name, int isRoot, long address);
 
     private native long[] _getArray(String name, boolean isRoot, long address);
+
+    private native long _getPoint(String point);
 
     private native void _close(long address);
 }

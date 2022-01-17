@@ -279,4 +279,34 @@ public class JsonTest {
 
         json.close();
     }
+
+    @Test
+    public void jsonPointTest() {
+        String jsonStr = "{\n" +
+                "    \"size\" : 3,\n" +
+                "    \"users\" : [\n" +
+                "        {\"id\": 1, \"name\": \"Harry\"},\n" +
+                "        {\"id\": 2, \"name\": \"Ron\"},\n" +
+                "        {\"id\": 3, \"name\": \"Hermione\"}\n" +
+                "    ]\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+
+        System.out.println(json.getPoint("/size").asInt());
+
+        System.out.println(json.getPoint("/users/0/id").asInt());
+        System.out.println(json.getPoint("/users/1/id").asInt());
+        System.out.println(json.getPoint("/users/2/id").asInt());
+
+        System.out.println(json.getPoint("/users/0/name").asString());
+        System.out.println(json.getPoint("/users/1/name").asString());
+        System.out.println(json.getPoint("/users/2/name").asString());
+
+        System.out.println(json.getPoint("/users/0/id").asLong());
+        System.out.println(json.getPoint("/users/1/id").asLong());
+        System.out.println(json.getPoint("/users/2/id").asLong());
+
+        json.close();
+    }
 }

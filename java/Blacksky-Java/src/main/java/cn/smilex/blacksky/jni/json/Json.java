@@ -62,6 +62,10 @@ public class Json {
         return Boolean.parseBoolean((String) _get(Json_Type.BOOLEAN.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
     }
 
+    public JsonObject asPointerObject() {
+        return new JsonObject(pointAddress);
+    }
+
     /*
     * String
     * */
@@ -196,7 +200,7 @@ public class Json {
         return new JsonObject(Long.parseLong(_address));
     }
     
-    private enum Json_Type {
+    protected enum Json_Type {
         STRING(0),
         INTEGER(1),
         DOUBLE(2),
@@ -210,7 +214,7 @@ public class Json {
         }
     }
 
-    private enum JSON_GET_METHOD {
+    protected enum JSON_GET_METHOD {
         DEFAULT(0),
         NAME_ADDRESS(1),
         ADDRESS(2);
@@ -221,13 +225,51 @@ public class Json {
         }
     }
 
+    protected String getType(long address) {
+        switch (_getType(address)) {
+            case 0: {
+                return "NONE";
+            }
+
+            case 2: {
+                return "NULL";
+            }
+
+            case 3: {
+                return "BOOL";
+            }
+
+            case 4: {
+                return "NUM";
+            }
+
+            case 5: {
+                return "STR";
+            }
+
+            case 6: {
+                return "ARR";
+            }
+
+            case 7: {
+                return "OBJ";
+            }
+
+            default: {
+                return "null";
+            }
+        }
+    }
+
     private native long _create(String jsonStr);
 
-    private native Object _get(int type, String name, int isRoot, long address);
+    protected native Object _get(int type, String name, int isRoot, long address);
 
     private native long[] _getArray(String name, boolean isRoot, long address);
 
     protected native long _getPoint(long address, String point);
 
     private native void _close(long address);
+
+    private native int _getType(long address);
 }

@@ -439,4 +439,30 @@ public class JsonTest {
 
         json.close();
     }
+
+    @Test
+    public void getPointerAsObject() {
+        String jsonStr = "{\n" +
+                "\t\"obj1\": {\n" +
+                "\t\t\"obj2\": {\n" +
+                "\t\t\t\"name\": \"xuda\"\n" +
+                "\t\t}\n" +
+                "\t}\n" +
+                "}";
+
+        Json json = new Json(jsonStr);
+
+        System.out.println(json.getPoint("/obj1")
+                .asPointerObject()
+                .getPointerObject("obj2")
+                .getPointString("name")
+        );
+
+        System.out.println(json.getPoint("/obj1/obj2")
+                .asPointerObject()
+                .getPoint("/name")
+                .asPointerString());
+
+        json.close();
+    }
 }

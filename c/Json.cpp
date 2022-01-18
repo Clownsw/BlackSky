@@ -201,3 +201,16 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_Json__1close
 
     env->DeleteLocalRef(obj);
 }
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_Json
+ * Method:    _getType
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getType
+    (JNIEnv* env, jobject obj, jlong address) {
+
+    env->DeleteLocalRef(obj);
+
+    return yyjson_get_type((yyjson_val*) address);
+}

@@ -24,6 +24,14 @@ public class JsonObject extends Json {
         }
     }
 
+    public JsonObject getPointerObject(String name) {
+        synchronized (JsonObject.class) {
+            String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address);
+            pointerAddress = Long.parseLong(_address);
+            return this;
+        }
+    }
+
     public String asPointerString() {
         return super.asString(pointerAddress);
     }
@@ -43,6 +51,10 @@ public class JsonObject extends Json {
     @Override
     public boolean asPointerBoolean() {
         return super.asBoolean(pointerAddress);
+    }
+
+    public String getPointString(String name) {
+        return super.getString(name, pointerAddress);
     }
 
     @Override

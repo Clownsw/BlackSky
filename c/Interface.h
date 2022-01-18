@@ -147,6 +147,14 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_Json__1close
     (JNIEnv* env, jobject obj, jlong address);
 
+/*
+ * Class:     cn_smilex_blacksky_jni_json_Json
+ * Method:    _getType
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getType
+    (JNIEnv* env, jobject obj, jlong address);
+
 #ifdef __cplusplus
 }
 #endif

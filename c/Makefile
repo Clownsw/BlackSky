@@ -4,7 +4,7 @@ CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto -fPIC -c
 INCLUDE = -Iinclude
 LIB = -Llib -lyyjson -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
 DEBUG_LINK = g++ -Wl,--gc-sections -shared -o blacksky.dll
-RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -Wl,--gc-sections -shared -o blacksky.dll
+RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -s -Wl,--gc-sections -shared -o blacksky.dll
 
 DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o  Sha.o Logger.o Json.o
 RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o

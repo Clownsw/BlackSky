@@ -15,7 +15,8 @@ enum JSON_TYPE {
     JSON_TYPE_INTEGER = 1,
     JSON_TYPE_DOUBLE = 2,
     JSON_TYPE_LONG = 3,
-    JSON_TYPE_OBJECT = 4,
+    JSON_TYPE_BOOLEAN = 4,
+    JSON_TYPE_OBJECT = 5,
 };
 
 enum JSON_GET_METHOD {
@@ -43,7 +44,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
     if (val == nullptr) {
         yyjson_doc_free(doc);
         throwException(env, CLASSNAME_RuntimeException, "JSON格式有误!");
-        return NULL;
+        return 0;
     }
 
     return (jlong)doc;
@@ -88,6 +89,10 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_json_Json__1get
             return env->NewStringUTF(std::to_string(yyjson_get_sint(root)).c_str());
         }
 
+        case JSON_TYPE_BOOLEAN: {
+            return env->NewStringUTF(yyjson_get_bool(root) ? "true" : "false");
+        }
+
         case JSON_TYPE_OBJECT: {
             return env->NewStringUTF(std::to_string((jlong)root).c_str());
         }
@@ -106,12 +111,22 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_json_Json__1get
 JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
     (JNIEnv* env, jobject obj, jstring name, jboolean isRoot, jlong address) {
 
-    const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
+    const char* _name = nullptr;
+
+    if (name != nullptr) {
+        _name = env->GetStringUTFChars(name, JNI_FALSE);
+    }
 
     env->DeleteLocalRef(name);
     env->DeleteLocalRef(obj);
 
-    yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
+//    yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
+
+    yyjson_val *root = _name == nullptr
+            ? yyjson_doc_get_root((yyjson_doc*) address)
+            : isRoot == JNI_FALSE
+            ? yyjson_obj_get((yyjson_val*) address, _name)
+            : yyjson_obj_get(val, _name);
 
     if (root == nullptr) {
         return nullptr;

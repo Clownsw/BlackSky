@@ -11,13 +11,17 @@ public class JsonObject extends Json {
     private long pointerAddress;
 
     public JsonObject(long address) {
-        this.address = address;
+        synchronized (JsonObject.class) {
+            this.address = address;
+        }
     }
 
     @Override
     public JsonObject getPoint(String point) {
-        pointerAddress = super._getPoint(address, point);
-        return this;
+        synchronized (JsonObject.class) {
+            pointerAddress = super._getPoint(address, point);
+            return this;
+        }
     }
 
     public String asPointerString() {
@@ -34,6 +38,11 @@ public class JsonObject extends Json {
 
     public long asPointerLong() {
         return super.asLong(pointerAddress);
+    }
+
+    @Override
+    public boolean asPointerBoolean() {
+        return super.asBoolean(pointerAddress);
     }
 
     @Override
@@ -70,6 +79,15 @@ public class JsonObject extends Json {
 
     public long asLong() {
         return super.asLong(address);
+    }
+
+    @Override
+    public boolean getBoolean(String name) {
+        return super.getBoolean(name, address);
+    }
+
+    public boolean asBoolean() {
+        return super.asBoolean(address);
     }
 
     @Override

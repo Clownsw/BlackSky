@@ -173,6 +173,59 @@ public class JsonTest {
     }
 
     @Test
+    public void getBooleanTest() {
+        String jsonStr1 = "{\n" +
+                "\t\"b1\": true,\n" +
+                "\t\"b2\": false\n" +
+                "}";
+
+        Json json1 = new Json(jsonStr1);
+        System.out.println(json1.getBoolean("b1"));
+        System.out.println(json1.getBoolean("b2"));
+        json1.close();
+
+
+        String jsonStr2 = "{\n" +
+                "\t\"obj\": {\n" +
+                "\t\t   \"b1\": true,\n" +
+                "\t\t\"b2\": false\n" +
+                "\t}\n" +
+                "}";
+
+        Json json2 = new Json(jsonStr2);
+
+        System.out.println(json2.getObject("obj").getBoolean("b1"));
+        System.out.println(json2.getObject("obj").getBoolean("b2"));
+
+        System.out.println(json2.getPoint("/obj/b1").asPointerBoolean());
+        System.out.println(json2.getPoint("/obj/b2").asPointerBoolean());
+
+        System.out.println(json2.getObject("obj").getPoint("/b1").asPointerBoolean());
+        System.out.println(json2.getObject("obj").getPoint("/b2").asPointerBoolean());
+
+        json2.close();
+
+        String jsonStr3 = "[\n" +
+                "\t{\n" +
+                "\t\t\"b1\": true\n" +
+                "\t},\n" +
+                "\t{\n" +
+                "\t\t\"b2\": false\n" +
+                "\t}\n" +
+                "]";
+
+        Json json3 = new Json(jsonStr3);
+
+        System.out.println(json3.asArrJsonObject().get(0).getBoolean("b1"));
+        System.out.println(json3.asArrJsonObject().get(1).getBoolean("b2"));
+
+        System.out.println(json3.asArrJsonObject().get(0).getPoint("/b1").asPointerBoolean());
+        System.out.println(json3.asArrJsonObject().get(1).getPoint("/b2").asPointerBoolean());
+
+        json3.close();
+    }
+
+    @Test
     public void getArrChildArr() {
         /*
             {
@@ -227,6 +280,29 @@ public class JsonTest {
         }
 
 //        System.out.println(infos.get(0).getArrJsonObject("names").get(2).asString());
+
+        json.close();
+    }
+
+    @Test
+    public void getRootAsArr() {
+        String jsonStr = "[\n" +
+                "  {\n" +
+                "    \"name\": \"xuda\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"name\": \"xuda1\"\n" +
+                "  }\n" +
+                "]";
+
+        Json json = new Json(jsonStr);
+
+        List<JsonObject> jsonObjects = json.asArrJsonObject();
+        System.out.println(jsonObjects.get(0).getString("name"));
+        System.out.println(jsonObjects.get(1).getString("name"));
+
+        System.out.println(jsonObjects.get(0).getPoint("/name").asPointerString());
+        System.out.println(jsonObjects.get(1).getPoint("/name").asPointerString());
 
         json.close();
     }
@@ -344,4 +420,5 @@ public class JsonTest {
         System.out.println(json.getObject("a").getPoint("/b/1/height").asPointerDouble());
         json.close();
     }
+
 }

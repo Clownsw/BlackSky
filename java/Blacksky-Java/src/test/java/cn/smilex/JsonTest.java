@@ -421,4 +421,22 @@ public class JsonTest {
         json.close();
     }
 
+    @Test
+    public void getPointTest02() {
+        String jsonStr = "[\n" +
+                "\t{\n" +
+                "\t\t\"obj\": {\n" +
+                "\t\t\t\"b1\": true,\n" +
+                "\t\t\t\"c2\": \"test\"\n" +
+                "\t\t}\n" +
+                "\t}\n" +
+                "]";
+
+        Json json = new Json(jsonStr);
+
+        System.out.println(json.asArrJsonObject().get(0).getPoint("/obj/b1").asPointerBoolean());
+        System.out.println(json.asArrJsonObject().get(0).getPoint("/obj/c2").asPointerString());
+
+        json.close();
+    }
 }

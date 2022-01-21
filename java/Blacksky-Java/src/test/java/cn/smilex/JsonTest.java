@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class JsonTest {
 
+    /**
+     * 测试: 创建和释放
+     */
     @Test
     public void createAndCloseTest() {
         String jsonStr = "{\"name\":\"Mash\",\"star\":4,\"hits\":[2,2,1,3]}";
@@ -21,6 +24,9 @@ public class JsonTest {
         json1.close();
     }
 
+    /**
+     * 测试: 获取字符串
+     */
     @Test
     public void getStringTest() {
         String jsonStr = "{\"name\":\"Mash1\",\"star\":4,\"hits\":[2,2,1,3]}";
@@ -31,6 +37,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取整数
+     */
     @Test
     public void getIntTest() {
         String jsonStr = "{\"name\":\"Mash1\",\"star\":4,\"hits\":[2,2,1,3]}";
@@ -41,6 +50,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取长整数
+     */
     @Test
     public void getLongTest() {
         String jsonStr = "{\n" +
@@ -60,6 +72,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取一个对象
+     */
     @Test
     public void getObjectTest() {
         String jsonStr = "{\n" +
@@ -86,6 +101,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取子节点的子节点对象
+     */
     @Test
     public void getChildChildTest() {
         /*
@@ -130,6 +148,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取数组
+     */
     @Test
     public void getArrTest() {
         /*
@@ -172,6 +193,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取布尔类型
+     */
     @Test
     public void getBooleanTest() {
         String jsonStr1 = "{\n" +
@@ -225,6 +249,9 @@ public class JsonTest {
         json3.close();
     }
 
+    /**
+     * 测试: 获取一个对象数组(每个对象各有一个names数组), 获取对象内的names数组
+     */
     @Test
     public void getArrChildArr() {
         /*
@@ -284,6 +311,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 如果根节点是数组则之间转换为数组
+     */
     @Test
     public void getRootAsArr() {
         String jsonStr = "[\n" +
@@ -307,6 +337,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取一个对象数组(每个对象各有一个names数组), 获取对象内的names数组的第n个对象内的数据
+     */
     @Test
     public void getArrObjArrNthArgs() {
         String jsonStr = "{\n" +
@@ -356,6 +389,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: json pointer
+     */
     @Test
     public void jsonPointTest() {
         String jsonStr = "{\n" +
@@ -386,6 +422,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 二次测试: json pointer
+     */
     @Test
     public void jsonPointTest2() {
         String jsonStr = "{\n" +
@@ -421,6 +460,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 根节点是一个数组获取这个数组的第0元素(对象), 并且以json pointer方式获取到对象内的对数据
+     */
     @Test
     public void getPointTest02() {
         String jsonStr = "[\n" +
@@ -440,6 +482,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: json pointer获取的到节点直接转换为对象
+     */
     @Test
     public void getPointerAsObject() {
         String jsonStr = "{\n" +
@@ -466,6 +511,9 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试: 获取一个对象内的对象数组的第n个对象内的names数组(使用json pointer)
+     */
     @Test
     public void getPointerAsArrObject() {
         String str = "{\n" +

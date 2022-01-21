@@ -8,6 +8,9 @@ import org.junit.Test;
  */
 public class SslTest {
 
+    /**
+     * 测试: sha系列
+     */
     @Test
     public void sha() {
         // ecb252044b5ea0f679ee78ec1a12904739e2904d

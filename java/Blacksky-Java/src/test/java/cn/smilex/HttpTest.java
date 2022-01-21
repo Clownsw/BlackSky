@@ -11,6 +11,9 @@ import org.junit.Test;
  */
 public class HttpTest {
 
+    /**
+     * 测试: 同步请求
+     */
     @Test
     public void send() {
         HttpRequest httpRequest =
@@ -22,6 +25,9 @@ public class HttpTest {
         System.out.println(response.getBody());
     }
 
+    /**
+     * 测试: 异步请求
+     */
     @Test
     public void asyncSend() {
         HttpRequest httpRequest =
@@ -33,6 +39,9 @@ public class HttpTest {
         System.out.println(response.getBody());
     }
 
+    /**
+     * 测试: 带参数同步请求
+     */
     @Test
     public void sendGetUrlTest() {
         HttpRequest httpRequest = HttpRequest.build()
@@ -45,6 +54,9 @@ public class HttpTest {
         HttpResponse httpResponse = Requests.send(httpRequest);
     }
 
+    /**
+     * 测试: 获取contentLength
+     */
     @Test
     public void testContentLength() {
         HttpRequest httpRequest = HttpRequest.build()

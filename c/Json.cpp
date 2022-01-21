@@ -4,6 +4,7 @@
 
 #include "Interface.h"
 #include "Tools.h"
+#include <xorstr/xorstr.hpp>
 #include <yyjson/yyjson.h>
 #include <string>
 
@@ -124,7 +125,7 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
 //    yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
 
     yyjson_val *root = nullptr;
-    if (name != nullptr && strcmp(_name, "__acJjzPifrs__") == 0) {
+    if (name != nullptr && strcmp(_name, xorstr_("__acJjzPifrs__")) == 0) {
         root = (yyjson_val*) address;
     } else {
         root = _name == nullptr

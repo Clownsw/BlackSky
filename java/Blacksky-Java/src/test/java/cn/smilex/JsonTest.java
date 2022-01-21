@@ -216,11 +216,11 @@ public class JsonTest {
 
         Json json3 = new Json(jsonStr3);
 
-        System.out.println(json3.asArrJsonObject().get(0).getBoolean("b1"));
-        System.out.println(json3.asArrJsonObject().get(1).getBoolean("b2"));
+        System.out.println(json3.asRootArrJsonObject().get(0).getBoolean("b1"));
+        System.out.println(json3.asRootArrJsonObject().get(1).getBoolean("b2"));
 
-        System.out.println(json3.asArrJsonObject().get(0).getPoint("/b1").asPointerBoolean());
-        System.out.println(json3.asArrJsonObject().get(1).getPoint("/b2").asPointerBoolean());
+        System.out.println(json3.asRootArrJsonObject().get(0).getPoint("/b1").asPointerBoolean());
+        System.out.println(json3.asRootArrJsonObject().get(1).getPoint("/b2").asPointerBoolean());
 
         json3.close();
     }
@@ -297,7 +297,7 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        List<JsonObject> jsonObjects = json.asArrJsonObject();
+        List<JsonObject> jsonObjects = json.asRootArrJsonObject();
         System.out.println(jsonObjects.get(0).getString("name"));
         System.out.println(jsonObjects.get(1).getString("name"));
 
@@ -434,8 +434,8 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        System.out.println(json.asArrJsonObject().get(0).getPoint("/obj/b1").asPointerBoolean());
-        System.out.println(json.asArrJsonObject().get(0).getPoint("/obj/c2").asPointerString());
+        System.out.println(json.asRootArrJsonObject().get(0).getPoint("/obj/b1").asPointerBoolean());
+        System.out.println(json.asRootArrJsonObject().get(0).getPoint("/obj/c2").asPointerString());
 
         json.close();
     }
@@ -462,6 +462,42 @@ public class JsonTest {
                 .asPointerObject()
                 .getPoint("/name")
                 .asPointerString());
+
+        json.close();
+    }
+
+    @Test
+    public void getPointerAsArrObject() {
+        String str = "{\n" +
+                "\t\"obj1\": {\n" +
+                "\t\t\"arr1\": [\n" +
+                "\t\t\t{\n" +
+                "\t\t\t\t\"names\": [\n" +
+                "\t\t\t\t\t\"a1\",\n" +
+                "\t\t\t\t\t\"a2\"\n" +
+                "\t\t\t\t]\n" +
+                "\t\t\t},\n" +
+                "\t\t\t{\n" +
+                "\t\t\t\t\"names\": [\n" +
+                "\t\t\t\t\t\"b1\",\n" +
+                "\t\t\t\t\t\"b2\"\n" +
+                "\t\t\t\t]\n" +
+                "\t\t\t}\t\t\n" +
+                "\t\t]\n" +
+                "\t}\n" +
+                "}";
+
+        Json json = new Json(str);
+
+        List<JsonObject> objs1 = json.getPoint("/obj1/arr1").asPointArrJsonObject();
+
+        for (JsonObject obj1 : objs1) {
+            List<JsonObject> objs2 = obj1.getPoint("/names").asPointArrJsonObject();
+
+            for (JsonObject obj2 : objs2) {
+                System.out.println(obj2.asPointerString());
+            }
+        }
 
         json.close();
     }

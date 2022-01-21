@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class Json {
 
+    private static final String key = "__acJjzPifrs__";
     private long rootAddress;
     private long pointAddress;
 
@@ -144,7 +145,7 @@ public class Json {
         return Boolean.parseBoolean((String)_get(Json_Type.BOOLEAN.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address));
     }
 
-    public List<JsonObject> asArrJsonObject() {
+    public List<JsonObject> asRootArrJsonObject() {
         long[] _addresses = _getArray(null, true, rootAddress);
 
         List<JsonObject> jsonObjects = new ArrayList<>();
@@ -152,6 +153,20 @@ public class Json {
             jsonObjects.add(new JsonObject(address));
         }
         return jsonObjects;
+    }
+
+    protected List<JsonObject> asPointArrJsonObject(long address) {
+        long[] _addresses = _getArray(key, true, address);
+
+        List<JsonObject> jsonObjects = new ArrayList<>();
+        for (long _address : _addresses) {
+            jsonObjects.add(new JsonObject(_address));
+        }
+        return jsonObjects;
+    }
+
+    public List<JsonObject> asPointArrJsonObject() {
+        return asPointArrJsonObject(pointAddress);
     }
 
     public JsonObject getObject(String name) {
@@ -259,6 +274,11 @@ public class Json {
                 return "null";
             }
         }
+    }
+
+    public void printType() {
+        System.out.println("address-type: " + getType(rootAddress));
+        System.out.println("pointAddress-type: " + getType(pointAddress));
     }
 
     private native long _create(String jsonStr);

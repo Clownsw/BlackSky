@@ -13,6 +13,7 @@ public class JsonObject extends Json {
     public JsonObject(long address) {
         synchronized (JsonObject.class) {
             this.address = address;
+            this.pointerAddress = address;
         }
     }
 
@@ -108,7 +109,18 @@ public class JsonObject extends Json {
     }
 
     @Override
+    public List<JsonObject> asPointArrJsonObject() {
+        return super.asPointArrJsonObject(pointerAddress);
+    }
+
+    @Override
     public List<JsonObject> getArrJsonObject(String name) {
         return super.getArrJsonObject(name, address);
+    }
+
+    @Override
+    public void printType() {
+        System.out.println("address-type: " + getType(address));
+        System.out.println("pointAddress-type: " + getType(pointerAddress));
     }
 }

@@ -34,7 +34,8 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
     (JNIEnv* env, jobject obj, jstring jsonStr) {
 
     const char* _jsonStr = env->GetStringUTFChars(jsonStr, JNI_FALSE);
-    doc = yyjson_read(_jsonStr, strlen(_jsonStr), 0);
+    yyjson_read_flag flag = YYJSON_READ_ALLOW_TRAILING_COMMAS | YYJSON_READ_ALLOW_COMMENTS;
+    doc = yyjson_read(_jsonStr, strlen(_jsonStr), flag);
 
     val = yyjson_doc_get_root(doc);
 

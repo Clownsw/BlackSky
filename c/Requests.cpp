@@ -134,9 +134,11 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_asyncRequest
 
     while (!finished) hv_sleep(1);
 
-    if (response != nullptr) {
-        objectHttpResponse = ResponseToHttpResponse(env, response);
+    if (response == nullptr) {
+        return nullptr;
     }
+
+    objectHttpResponse = ResponseToHttpResponse(env, response);
 
     env->DeleteLocalRef(obj);
     env->DeleteLocalRef(request);

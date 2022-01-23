@@ -1,6 +1,7 @@
 package cn.smilex;
 
 import cn.smilex.blacksky.jni.json.Json;
+import cn.smilex.blacksky.jni.json.JsonMut;
 import cn.smilex.blacksky.jni.json.JsonObject;
 import org.junit.Test;
 
@@ -548,5 +549,18 @@ public class JsonTest {
         }
 
         json.close();
+    }
+
+    @Test
+    public void testMut() {
+        JsonMut jsonMut = Json.createJsonAsObject();
+        jsonMut.addInt("int", 1)
+                .addLong("long", 123123123)
+                .addDouble("double", 1.33)
+                .addStr("string", "xuda")
+                .addBoolean("boolean", false)
+                .addBoolean("boolean1", true);
+        System.out.println(jsonMut.getJsonStr());
+        jsonMut.close();
     }
 }

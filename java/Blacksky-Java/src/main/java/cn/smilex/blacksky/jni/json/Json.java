@@ -215,7 +215,7 @@ public class Json {
         return new JsonObject(Long.parseLong(_address));
     }
     
-    protected enum Json_Type {
+    public enum Json_Type {
         STRING(0),
         INTEGER(1),
         DOUBLE(2),
@@ -279,6 +279,14 @@ public class Json {
     public void printType() {
         System.out.println("address-type: " + getType(rootAddress));
         System.out.println("pointAddress-type: " + getType(pointAddress));
+    }
+
+    public static JsonMut createJsonAsObject() {
+        return new JsonMut(JsonMut.JSON_MUT_TYPE.OBJ.type);
+    }
+
+    public static JsonMut createJsonAsArr() {
+        return new JsonMut(JsonMut.JSON_MUT_TYPE.ARR.type);
     }
 
     private native long _create(String jsonStr);

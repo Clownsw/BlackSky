@@ -10,6 +10,10 @@
 extern "C" {
 #endif
 
+////////////////////////////////////////////
+///////////////Request native///////////////
+////////////////////////////////////////////
+
 /*
  * 通过HttpRequest类请求指定网站并返回HttpResponse
  * Class:     cn_smilex_blacksky_jni_http_Requests
@@ -26,6 +30,10 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_request
  */
 JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_asyncRequest
     (JNIEnv* env, jobject obj, jobject request);
+
+////////////////////////////////////////////
+////////////////Ssl native//////////////////
+////////////////////////////////////////////
 
 /*
  * Class:     cn_smilex_blacksky_jni_ssl_MD5
@@ -52,6 +60,18 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_ssl_Base64_base64_1decode
     (JNIEnv* env, jobject obj, jstring data, jint len);
 
 /*
+ * Class:     cn_smilex_blacksky_jni_ssl_Sha
+ * Method:    sha
+ * Signature: (ILjava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_ssl_Sha_sha
+        (JNIEnv* env, jobject obj, jint type, jstring data);
+
+////////////////////////////////////////////
+///////////////Logger native////////////////
+////////////////////////////////////////////
+
+/*
  * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    log
  * Signature: (ILjava/lang/String;)V
@@ -76,14 +96,6 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_createFileLogger
     (JNIEnv* env, jobject obj, jstring loggerName, jstring fileName);
 
 /*
- * Class:     cn_smilex_blacksky_jni_ssl_Sha
- * Method:    sha
- * Signature: (ILjava/lang/String;)Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_ssl_Sha_sha
-    (JNIEnv* env, jobject obj, jint type, jstring data);
-
-/*
  * Class:     cn_smilex_blacksky_jni_log_Logger
  * Method:    set_pattern
  * Signature: (Ljava/lang/String;I)V
@@ -106,6 +118,11 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_set_1level
  */
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_flush_1on
     (JNIEnv* env, jobject obj, jboolean isFileLogger, jint level);
+
+
+////////////////////////////////////////////
+///////////////Json native//////////////////
+////////////////////////////////////////////
 
 /*
  * Class:     cn_smilex_blacksky_jni_json_Json
@@ -154,6 +171,42 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_Json__1close
  */
 JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getType
     (JNIEnv* env, jobject obj, jlong address);
+
+////////////////////////////////////////////
+//////////////JsonMut native////////////////
+////////////////////////////////////////////
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _createMut
+ * Signature: (I)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
+    (JNIEnv *env, jobject obj, jint type);
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _closeMut
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1closeMut
+    (JNIEnv *env, jobject obj);
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _writeString
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1writeString
+    (JNIEnv *env, jobject obj);
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _objAdd
+ * Signature: (IJLjava/lang/String;Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1objAdd
+    (JNIEnv *env, jobject obj, jint type, jlong address, jstring name, jobject data);
 
 #ifdef __cplusplus
 }

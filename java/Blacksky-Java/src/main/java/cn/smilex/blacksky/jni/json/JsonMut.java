@@ -23,6 +23,10 @@ public class JsonMut {
         }
     }
 
+    public JsonMut(long address) {
+        this.address = address;
+    }
+
     /**
      * 创建一个空JSON
      * @param type JSON_MUT_TYPE
@@ -113,6 +117,17 @@ public class JsonMut {
     }
 
     /**
+     * 创建并添加一个obj类型数据
+     * @param name name
+     * @return new obj
+     */
+    public JsonMut addObject(String name) {
+        synchronized (JsonMut.class) {
+            return new JsonMut(_addObj(address, name));
+        }
+    }
+
+    /**
      * 释放内存
      */
     public void close() {
@@ -124,6 +139,7 @@ public class JsonMut {
 
     private native long _createMut(int type);
     private native void _closeMut();
+    private native long _addObj(long address, String name);
     private native void _objAdd(int type, long address, String name, Object data);
     private native String _writeString();
 }

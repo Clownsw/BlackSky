@@ -202,6 +202,14 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1writeString
 
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _addObj
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1addObj
+    (JNIEnv *env, jobject obj, jlong address, jstring name);
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _objAdd
  * Signature: (IJLjava/lang/String;Ljava/lang/Object;)V
  */

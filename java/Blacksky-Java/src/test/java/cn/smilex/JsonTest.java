@@ -555,11 +555,28 @@ public class JsonTest {
     public void testMut() {
         JsonMut jsonMut = Json.createJsonAsObject();
         jsonMut.addInt("int", 1)
-                .addLong("long", 123123123)
+                .addLong("long", 1111111)
                 .addDouble("double", 1.33)
                 .addStr("string", "xuda")
                 .addBoolean("boolean", false)
                 .addBoolean("boolean1", true);
+
+        JsonMut obj = jsonMut.addObject("obj");
+        obj.addInt("obj-int", 2)
+                .addLong("long", 2222222)
+                .addDouble("double", 1.44)
+                .addStr("string", "xuda1")
+                .addBoolean("boolean", true)
+                .addBoolean("boolean1", false);
+
+        JsonMut obj2 = obj.addObject("obj2");
+        obj2.addInt("obj-int", 3)
+                .addLong("long", 3333333)
+                .addDouble("double", 1.55)
+                .addStr("string", "xuda1")
+                .addBoolean("boolean", true)
+                .addBoolean("boolean1", false);
+
         System.out.println(jsonMut.getJsonStr());
         jsonMut.close();
     }

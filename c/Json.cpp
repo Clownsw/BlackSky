@@ -298,6 +298,27 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1writeString
 
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _addObj
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1addObj
+    (JNIEnv *env, jobject obj, jlong address, jstring name) {
+
+    const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
+    auto *_address = (yyjson_mut_val*) address;
+
+    yyjson_mut_val *m_obj = yyjson_mut_obj(mutDoc);
+
+    yyjson_mut_obj_add(_address, yyjson_mut_str(mutDoc, _name), m_obj);
+
+    env->DeleteLocalRef(obj);
+    env->DeleteLocalRef(name);
+
+    return (jlong) m_obj;
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _objAdd
  * Signature: (IJLjava/lang/String;Ljava/lang/Object;)V
  */

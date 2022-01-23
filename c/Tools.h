@@ -41,11 +41,6 @@ static constexpr auto CLASSNAME_HttpResponse =              "Lcn/smilex/blacksky
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
 
-template <typename... T>
-const char* formatStr(const char* first, T &&... args) {
-    return fmt::format(first, args...).c_str();
-}
-
 template <typename T, typename... T2>
 void print(fmt::detail::color_type color, T first, T2 &&... args) {
     fmt::print(fmt::fg(color), first, args...);

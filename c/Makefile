@@ -16,10 +16,10 @@ release: ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaReleas
 	$(RELEASE_LINK) $(RELEASE_NAME) $(LIB)
 
 
-ToolsRelease.o: Tools.h Tools.cpp
+ToolsRelease.o: Tools.h Tools.cpp Error.hpp
 	$(CC_RELEASE) -o ToolsRelease.o Tools.cpp $(INCLUDE)
 
-RequestsRelease.o: Interface.h Requests.h Requests.cpp
+RequestsRelease.o: Interface.h Requests.h Requests.cpp Error.hpp
 	$(CC_RELEASE) -o RequestsRelease.o Requests.cpp $(INCLUDE)
 
 Md5Release.o: Interface.h Md5.cpp
@@ -39,10 +39,10 @@ JsonRelease.o: Interface.h Json.cpp
 
 
 
-Tools.o: Tools.h Tools.cpp
+Tools.o: Tools.h Tools.cpp Error.hpp
 	$(CC_DEBUG) -o Tools.o Tools.cpp $(INCLUDE)
 
-Requests.o: Interface.h Requests.h Requests.cpp
+Requests.o: Interface.h Requests.h Requests.cpp Error.hpp
 	$(CC_DEBUG) -o Requests.o Requests.cpp $(INCLUDE)
 
 Md5.o: Interface.h Md5.cpp

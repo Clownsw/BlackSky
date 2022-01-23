@@ -17,19 +17,19 @@
 
 #include "Requests.h"
 
-#define CLASSNAME_String                        "Ljava/lang/String;"
-#define CLASSNAME_Set                           "Ljava/util/Set;"
-#define CLASSNAME_HashMap                       "Ljava/util/HashMap;"
-#define CLASSNAME_Map$Entry                     "Ljava/util/Map$Entry;"
-#define CLASSNAME_Iterator                      "Ljava/util/Iterator;"
+static constexpr auto CLASSNAME_String =                    "Ljava/lang/String;";
+static constexpr auto CLASSNAME_Set =                       "Ljava/util/Set;";
+static constexpr auto CLASSNAME_HashMap =                   "Ljava/util/HashMap;";
+static constexpr auto CLASSNAME_Map$Entry =                 "Ljava/util/Map$Entry;";
+static constexpr auto CLASSNAME_Iterator =                  "Ljava/util/Iterator;";
 
 /* 异常类 */
-#define CLASSNAME_NullPointerException          "Ljava/lang/NullPointerException;"
-#define CLASSNAME_RuntimeException              "Ljava/lang/RuntimeException;"
+static constexpr auto CLASSNAME_NullPointerException =      "Ljava/lang/NullPointerException;";
+static constexpr auto CLASSNAME_RuntimeException =          "Ljava/lang/RuntimeException;";
 
 /* 自定义类 */
-#define CLASSNAME_HttpRequest                   "Lcn/smilex/blacksky/jni/http/HttpRequest;"
-#define CLASSNAME_HttpResponse                  "Lcn/smilex/blacksky/jni/http/HttpResponse;"
+static constexpr auto CLASSNAME_HttpRequest =               "Lcn/smilex/blacksky/jni/http/HttpRequest;";
+static constexpr auto CLASSNAME_HttpResponse =              "Lcn/smilex/blacksky/jni/http/HttpResponse;";
 
 std::map<std::string, std::string> parseMap(JNIEnv* env, jobject &obj);
 

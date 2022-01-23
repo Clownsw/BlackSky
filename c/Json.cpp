@@ -4,6 +4,7 @@
 
 #include "Interface.h"
 #include "Tools.h"
+#include "Error.hpp"
 #include <xorstr/xorstr.hpp>
 #include <yyjson/yyjson.h>
 #include <string>
@@ -141,7 +142,7 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
 
     /* 判断是否是一个JSON数组 */
     if (!yyjson_is_arr(root)) {
-        throwException(env, CLASSNAME_RuntimeException, "这不是一个JSON数组!");
+        throwException(env, CLASSNAME_RuntimeException, ERROR_JSON_NOT_ARR);
         return nullptr;
     }
 

@@ -4,6 +4,7 @@
 
 #include "Interface.h"
 #include "Tools.h"
+#include "Error.hpp"
 
 /*
  * 通过HttpRequest类请求指定网站并返回HttpResponse
@@ -22,7 +23,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_request
     if (javaHttpRequest == nullptr) {
         jclass classNullPointerException = env->FindClass(CLASSNAME_NullPointerException);
 
-        env->ThrowNew(classNullPointerException, "*** url is null ***");
+        env->ThrowNew(classNullPointerException, ERROR_REQ_URl_NULL);
         env->DeleteLocalRef(classNullPointerException);
         return nullptr;
     }
@@ -85,7 +86,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_asyncRequest
 
     // 如果未传入url则抛出异常
     if (javaHttpRequest == nullptr) {
-        throwException(env, CLASSNAME_NullPointerException, "*** url is null ***");
+        throwException(env, CLASSNAME_NullPointerException, ERROR_REQ_URl_NULL);
         return nullptr;
     }
 
@@ -134,11 +135,9 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_asyncRequest
 
     while (!finished) hv_sleep(1);
 
-    if (response == nullptr) {
-        return nullptr;
+    if (response != nullptr) {
+        objectHttpResponse = ResponseToHttpResponse(env, response);
     }
-
-    objectHttpResponse = ResponseToHttpResponse(env, response);
 
     env->DeleteLocalRef(obj);
     env->DeleteLocalRef(request);

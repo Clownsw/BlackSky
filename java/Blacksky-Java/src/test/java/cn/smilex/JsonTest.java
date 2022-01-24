@@ -552,7 +552,7 @@ public class JsonTest {
     }
 
     @Test
-    public void testMut() {
+    public void testJsonMut() {
         JsonMut jsonMut = Json.createJsonAsObject();
         jsonMut.addInt("int", 1)
                 .addLong("long", 1111111)
@@ -561,7 +561,7 @@ public class JsonTest {
                 .addBoolean("boolean", false)
                 .addBoolean("boolean1", true);
 
-        JsonMut obj = jsonMut.addObject("obj");
+        JsonMut obj = jsonMut.createObject("obj");
         obj.addInt("obj-int", 2)
                 .addLong("long", 2222222)
                 .addDouble("double", 1.44)
@@ -569,7 +569,7 @@ public class JsonTest {
                 .addBoolean("boolean", true)
                 .addBoolean("boolean1", false);
 
-        JsonMut obj2 = obj.addObject("obj2");
+        JsonMut obj2 = obj.createObject("obj2");
         obj2.addInt("obj-int", 3)
                 .addLong("long", 3333333)
                 .addDouble("double", 1.55)
@@ -579,5 +579,35 @@ public class JsonTest {
 
         System.out.println(jsonMut.getJsonStr());
         jsonMut.close();
+    }
+
+    @Test
+    public void testJsonMutAddArr() {
+        JsonMut root = Json.createJsonAsObject();
+        JsonMut testArr = root.createArr("testArr");
+        testArr.addArrInt(1)
+                .addArrInt(2)
+                .addArrInt(3)
+                .addArrInt(4);
+
+        System.out.println(root.getJsonStr());
+        root.close();
+    }
+
+    @Test
+    public void testJsonMutAddObjChildArr() {
+        JsonMut root = Json.createJsonAsObject();
+        JsonMut obj1 = root.createObject("obj1");
+        JsonMut obj2 = obj1.createObject("obj2");
+
+        JsonMut arr1 = obj2.createArr("arr1");
+        arr1.addArrInt(555)
+                .addArrStr("str")
+                .addArrDouble(1.77)
+                .addArrLong(1231231231)
+                .addArrBoolean(false);
+
+        System.out.println(root.getJsonStr());
+        root.close();
     }
 }

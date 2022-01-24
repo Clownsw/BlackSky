@@ -610,4 +610,54 @@ public class JsonTest {
         System.out.println(root.getJsonStr());
         root.close();
     }
+
+    @Test
+    public void testJsonCreateFreeObj() {
+        JsonMut root = Json.createJsonAsObject();
+
+        JsonMut obj1 = root.createFreeObject("obj1");
+        JsonMut arr1 = root.createFreeArr("arr1");
+
+        root.bind(obj1, "obj1");
+        obj1.bind(arr1, "arr1");
+
+        obj1.addInt("testInt", 123);
+
+
+        System.out.println(root.getJsonStr());
+
+        root.close();
+    }
+
+    @Test
+    public void testJsonBindArr() {
+        JsonMut root = Json.createJsonAsObject();
+
+        JsonMut arr1 = root.createArr("arr1");
+
+        JsonMut obj1 = arr1.createFreeObject("obj1");
+        arr1.bind(obj1);
+        obj1.addInt("id", 1);
+
+        JsonMut obj1Arr1 = obj1.createFreeArr("obj1Arr1");
+        obj1.bind(obj1Arr1, "obj1Arr1");
+
+        obj1Arr1.addArrInt(1)
+                .addArrInt(2)
+                .addArrInt(3);
+
+        JsonMut obj2 = arr1.createFreeObject("obj2");
+        arr1.bind(obj2);
+        obj2.addInt("id", 2);
+
+        JsonMut obj2Arr1 = obj2.createFreeArr("obj2Arr1");
+        obj2.bind(obj2Arr1, "obj2Arr1");
+
+        JsonMut obj2Arr1Obj1 = obj2Arr1.createFreeObject("obj2Arr1Obj1");
+        obj2Arr1.bind(obj2Arr1Obj1);
+
+        System.out.println(root.getJsonStr());
+
+        root.close();
+    }
 }

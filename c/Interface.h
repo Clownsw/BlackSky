@@ -203,10 +203,10 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1writeString
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _add
- * Signature: (JILjava/lang/String;)J
+ * Signature: (JILjava/lang/String;Z)J
  */
 JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
-    (JNIEnv *env, jobject obj, jlong address, jint type, jstring name);
+    (JNIEnv *env, jobject obj, jlong address, jint type, jstring name, jboolean isBind);
 
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
@@ -223,6 +223,14 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAdd
  */
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1objAdd
     (JNIEnv *env, jobject obj, jint type, jlong address, jstring name, jobject data);
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _bind
+ * Signature: (JJLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
+    (JNIEnv *env, jobject obj, jlong rootAddress, jlong address, jstring name);
 
 #ifdef __cplusplus
 }

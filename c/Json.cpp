@@ -265,6 +265,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
     }
 
     yyjson_mut_doc_set_root(mutDoc, data);
+
     return (jlong) data;
 }
 
@@ -299,10 +300,10 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1writeString
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _add
- * Signature: (JILjava/lang/String;)J
+ * Signature: (JILjava/lang/String;Z)J
  */
 JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
-    (JNIEnv *env, jobject obj, jlong address, jint type, jstring name) {
+    (JNIEnv *env, jobject obj, jlong address, jint type, jstring name, jboolean isBind) {
 
     const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
     auto *_address = (yyjson_mut_val*) address;
@@ -323,7 +324,9 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
         }
     }
 
-    yyjson_mut_obj_add(_address, yyjson_mut_str(mutDoc, _name), m_obj);
+    if (isBind == JNI_TRUE) {
+        yyjson_mut_obj_add(_address, yyjson_mut_str(mutDoc, _name), m_obj);
+    }
 
     env->DeleteLocalRef(obj);
     env->DeleteLocalRef(name);
@@ -423,4 +426,31 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAdd
 
     env->DeleteLocalRef(data);
     env->DeleteLocalRef(obj);
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _bind
+ * Signature: (JJLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
+    (JNIEnv *env, jobject obj, jlong rootAddress, jlong address, jstring name) {
+
+    auto *_rootAddress = (yyjson_mut_val*) rootAddress;
+    auto *_address = (yyjson_mut_val*) address;
+
+    env->DeleteLocalRef(obj);
+
+    if (yyjson_mut_is_arr(_rootAddress)) {
+        yyjson_mut_arr_add_val(_rootAddress, _address);
+    } else {
+        if (name == nullptr) {
+            throwException(env, CLASSNAME_NullPointerException, ERROR_REQ_PARAMS_NULL);
+            return;
+        }
+
+        auto _name = env->GetStringUTFChars(name, JNI_FALSE);
+        yyjson_mut_obj_add(_rootAddress, yyjson_mut_str(mutDoc, _name), _address);
+    }
+
 }

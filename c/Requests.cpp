@@ -23,7 +23,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_request
     if (javaHttpRequest == nullptr) {
         jclass classNullPointerException = env->FindClass(CLASSNAME_NullPointerException);
 
-        env->ThrowNew(classNullPointerException, ERROR_REQ_URl_NULL);
+        env->ThrowNew(classNullPointerException, ERROR_REQ_PARAMS_NULL);
         env->DeleteLocalRef(classNullPointerException);
         return nullptr;
     }
@@ -86,7 +86,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_http_Requests_asyncRequest
 
     // 如果未传入url则抛出异常
     if (javaHttpRequest == nullptr) {
-        throwException(env, CLASSNAME_NullPointerException, ERROR_REQ_URl_NULL);
+        throwException(env, CLASSNAME_NullPointerException, ERROR_REQ_PARAMS_NULL);
         return nullptr;
     }
 

@@ -24,7 +24,13 @@ public class JsonMut {
     }
 
     public JsonMut(long address) {
-        this.address = address;
+        synchronized (JsonMut.class) {
+            this.address = address;
+        }
+    }
+
+    public long getAddress() {
+        return address;
     }
 
     /**
@@ -123,7 +129,18 @@ public class JsonMut {
      */
     public JsonMut createObject(String name) {
         synchronized (JsonMut.class) {
-            return new JsonMut(_add(address, JSON_MUT_TYPE.OBJ.type, name));
+            return new JsonMut(_add(address, JSON_MUT_TYPE.OBJ.type, name, true));
+        }
+    }
+
+    /**
+     * 向obj创建并添加一个obj类型数据(非自动绑定)
+     * @param name name
+     * @return new obj
+     */
+    public JsonMut createFreeObject(String name) {
+        synchronized (JsonMut.class) {
+            return new JsonMut(_add(address, JSON_MUT_TYPE.OBJ.type, name, false));
         }
     }
 
@@ -134,7 +151,18 @@ public class JsonMut {
      */
     public JsonMut createArr(String name) {
         synchronized (JsonMut.class) {
-            return new JsonMut(_add(address, JSON_MUT_TYPE.ARR.type, name));
+            return new JsonMut(_add(address, JSON_MUT_TYPE.ARR.type, name, true));
+        }
+    }
+
+    /**
+     * 创建并添加一个arr类型数据(非自动绑定)
+     * @param name name
+     * @return new obj
+     */
+    public JsonMut createFreeArr(String name) {
+        synchronized (JsonMut.class) {
+            return new JsonMut(_add(address, JSON_MUT_TYPE.ARR.type, name, false));
         }
     }
 
@@ -196,6 +224,21 @@ public class JsonMut {
             _arrAdd(Json.Json_Type.BOOLEAN.id, address, data);
             return this;
         }
+
+    }
+
+    public JsonMut bind(JsonMut obj) {
+        synchronized (JsonMut.class) {
+            _bind(address, obj.getAddress(), null);
+            return this;
+        }
+    }
+
+    public JsonMut bind(JsonMut obj, String name) {
+        synchronized (JsonMut.class) {
+            _bind(address, obj.getAddress(), name);
+            return this;
+        }
     }
 
     /**
@@ -210,8 +253,9 @@ public class JsonMut {
 
     private native long _createMut(int type);
     private native void _closeMut();
-    private native long _add(long address, int type, String name);
+    private native long _add(long address, int type, String name, boolean isBind);
     private native void _objAdd(int type, long address, String name, Object data);
     private native void _arrAdd(int type, long address, Object data);
+    private native void _bind(long rootAddress, long address, String name);
     private native String _writeString();
 }

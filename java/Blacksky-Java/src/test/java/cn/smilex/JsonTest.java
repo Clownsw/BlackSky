@@ -660,4 +660,24 @@ public class JsonTest {
 
         root.close();
     }
+
+    @Test
+    public void testJsonMutArrRootAdd() {
+        JsonMut root = Json.createJsonAsArr();
+
+        JsonMut obj1 = root.createFreeObject("obj1");
+        root.bind(obj1);
+
+        JsonMut obj2 = root.createFreeObject("obj2");
+        root.bind(obj2);
+
+        obj1.addInt("testInt", 1);
+
+        JsonMut obj1Arr1 = obj1.createFreeArr("obj1Arr1");
+        obj1.bind(obj1Arr1, "obj1Arr1");
+
+        System.out.println(root.getJsonStr());
+
+        root.close();
+    }
 }

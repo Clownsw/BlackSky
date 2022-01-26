@@ -56,7 +56,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
 
     if (val == nullptr) {
         yyjson_doc_free(doc);
-        throwException(env, CLASSNAME_RuntimeException, "JSON格式有误!");
+        throwException(env, CLASSNAME_RuntimeException, ERROR_JSON_FORMAT_ERROR);
         return 0;
     }
 
@@ -213,9 +213,12 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_Json__1close
     (JNIEnv* env, jobject obj, jlong address) {
 
-    yyjson_doc_free((yyjson_doc*)address);
+    if (address != 0) {
+//        yyjson_doc_free((yyjson_doc*)address);
+        yyjson_doc_free(doc);
 
-    val = nullptr;
+        val = nullptr;
+    }
 
     env->DeleteLocalRef(obj);
 }
@@ -230,7 +233,12 @@ JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getType
 
     env->DeleteLocalRef(obj);
 
-    return yyjson_get_type((yyjson_val*) address);
+    if (address == 0) {
+        throwException(env, CLASSNAME_NullPointerException, ERROR_PARAMS_NULL);
+        return 0;
+    }
+
+    return yyjson_get_type((yyjson_val*) address) ;
 }
 
 ////////////////////////////////////////////
@@ -249,6 +257,11 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
 
     mutDoc = yyjson_mut_doc_new(nullptr);
 
+    if (mutDoc == nullptr) {
+        throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
+        return NULL;
+    }
+
     yyjson_mut_val *data;
 
     switch (type) {
@@ -262,6 +275,11 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
             data = yyjson_mut_arr(mutDoc);
             break;
         }
+    }
+
+    if (data == nullptr) {
+        throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
+        return NULL;
     }
 
     yyjson_mut_doc_set_root(mutDoc, data);
@@ -308,6 +326,9 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
     const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
     auto *_address = (yyjson_mut_val*) address;
 
+    env->DeleteLocalRef(obj);
+    env->DeleteLocalRef(name);
+
     yyjson_mut_val *m_obj = nullptr;
 
     switch (type) {
@@ -324,12 +345,14 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
         }
     }
 
+    if (m_obj == nullptr) {
+        throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
+        return NULL;
+    }
+
     if (isBind == JNI_TRUE) {
         yyjson_mut_obj_add(_address, yyjson_mut_str(mutDoc, _name), m_obj);
     }
-
-    env->DeleteLocalRef(obj);
-    env->DeleteLocalRef(name);
 
     return (jlong) m_obj;
 }
@@ -445,7 +468,7 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
         yyjson_mut_arr_add_val(_rootAddress, _address);
     } else {
         if (name == nullptr) {
-            throwException(env, CLASSNAME_NullPointerException, ERROR_REQ_PARAMS_NULL);
+            throwException(env, CLASSNAME_NullPointerException, ERROR_PARAMS_NULL);
             return;
         }
 

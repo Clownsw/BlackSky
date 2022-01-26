@@ -213,12 +213,9 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_Json__1close
     (JNIEnv* env, jobject obj, jlong address) {
 
-    if (address != 0) {
-//        yyjson_doc_free((yyjson_doc*)address);
-        yyjson_doc_free(doc);
+    yyjson_doc_free((yyjson_doc*)address);
 
-        val = nullptr;
-    }
+    val = nullptr;
 
     env->DeleteLocalRef(obj);
 }

@@ -1,5 +1,7 @@
 package cn.smilex.blacksky.jni.json;
 
+import java.lang.reflect.Field;
+
 /**
  * @author smilex
  */
@@ -28,10 +30,6 @@ public class JsonMut {
         synchronized (JsonMut.class) {
             this.address = address;
         }
-    }
-
-    public long getAddress() {
-        return address;
     }
 
     /**
@@ -232,17 +230,41 @@ public class JsonMut {
 
     }
 
+    /**
+     * 用于数组绑定数据
+     * @param obj 数据
+     * @return this
+     */
     public JsonMut bind(JsonMut obj) {
         synchronized (JsonMut.class) {
-            _bind(address, obj.getAddress(), null);
+            long objAddress = JsonMut.getObjAddress(obj);
+            _bind(address, objAddress, null);
             return this;
         }
     }
 
+    /**
+     * 用于对象绑定属性
+     * @param obj 数据
+     * @param name 名称
+     * @return this
+     */
     public JsonMut bind(JsonMut obj, String name) {
         synchronized (JsonMut.class) {
-            _bind(address, obj.getAddress(), name);
+            long objAddress = JsonMut.getObjAddress(obj);
+            _bind(address, objAddress, name);
             return this;
+        }
+    }
+
+    private static long getObjAddress(JsonMut jsonMut) {
+        Class<JsonMut> jsonMutClass = JsonMut.class;
+        try {
+            Field address = jsonMutClass.getDeclaredField("address");
+            address.setAccessible(true);
+            return (long) address.get(jsonMut);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

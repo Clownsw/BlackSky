@@ -5,6 +5,7 @@ package cn.smilex.blacksky.jni.json;
  */
 public class JsonMut {
 
+    private long _address;
     private long address;
 
     public enum JSON_MUT_TYPE {
@@ -42,7 +43,11 @@ public class JsonMut {
             if (address > 0) {
                 close();
             }
-            address = _createMut(type);
+            String s = _createMut(type);
+            String a = s.substring(0, s.indexOf("+"));
+            _address = Long.parseLong(a);
+            String b = s.substring(a.length() + 1);
+            address = Long.parseLong(b);
         }
     }
 
@@ -51,10 +56,10 @@ public class JsonMut {
      * @return JSON字符串
      */
     public String getJsonStr() {
-        if (address == 0) {
+        if (_address == 0) {
             return null;
         }
-        return _writeString();
+        return _writeString(_address);
     }
 
     /**
@@ -246,16 +251,17 @@ public class JsonMut {
      */
     public void close() {
         synchronized (JsonMut.class) {
-            _closeMut();
+            _closeMut(_address);
+            this._address = 0;
             this.address = 0;
         }
     }
 
-    private native long _createMut(int type);
-    private native void _closeMut();
+    private native String _createMut(int type);
+    private native void _closeMut(long address);
     private native long _add(long address, int type, String name, boolean isBind);
     private native void _objAdd(int type, long address, String name, Object data);
     private native void _arrAdd(int type, long address, Object data);
     private native void _bind(long rootAddress, long address, String name);
-    private native String _writeString();
+    private native String _writeString(long address);
 }

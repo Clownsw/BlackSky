@@ -680,4 +680,20 @@ public class JsonTest {
 
         root.close();
     }
+
+    @Test
+    public void testTwoJsonMutClose() {
+        JsonMut root1 = Json.createJsonAsObject();
+        JsonMut root2 = Json.createJsonAsArr();
+
+        root1.addInt("testInt", 1);
+
+        root2.addArrInt(2);
+
+        System.out.println(root1.getJsonStr());
+        System.out.println(root2.getJsonStr());
+
+        root1.close();
+        root2.close();
+    }
 }

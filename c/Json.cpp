@@ -245,9 +245,9 @@ JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getType
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _createMut
- * Signature: (I)J
+ * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
     (JNIEnv *env, jobject obj, jint type) {
 
     env->DeleteLocalRef(obj);
@@ -256,7 +256,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
 
     if (mutDoc == nullptr) {
         throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
-        return NULL;
+        return 0;
     }
 
     yyjson_mut_val *data;
@@ -276,40 +276,43 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
 
     if (data == nullptr) {
         throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
-        return NULL;
+        return 0;
     }
 
     yyjson_mut_doc_set_root(mutDoc, data);
 
-    return (jlong) data;
+    return env->NewStringUTF(fmt::format("{}+{}", (jlong) mutDoc, (jlong) data).c_str());
 }
 
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _closeMut
- * Signature: ()V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1closeMut
-    (JNIEnv *env, jobject obj) {
+    (JNIEnv *env, jobject obj, jlong address) {
 
     env->DeleteLocalRef(obj);
 
-    if (mutDoc != nullptr) {
-        yyjson_mut_doc_free(mutDoc);
+    if (address != 0) {
+        yyjson_mut_doc_free((yyjson_mut_doc *) address);
+        mutDoc = nullptr;
     }
 }
 
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _writeString
- * Signature: ()Ljava/lang/String;
+ * Signature: (J)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1writeString
-    (JNIEnv *env, jobject obj) {
+    (JNIEnv *env, jobject obj, jlong address) {
 
     env->DeleteLocalRef(obj);
 
-    return env->NewStringUTF(reinterpret_cast<const char*>(yyjson_mut_write(mutDoc, YYJSON_WRITE_PRETTY, nullptr)));
+    return env->NewStringUTF(reinterpret_cast<const char*>(
+            yyjson_mut_write((yyjson_mut_doc *) address, YYJSON_WRITE_PRETTY, nullptr)
+            ));
 }
 
 /*
@@ -344,7 +347,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
 
     if (m_obj == nullptr) {
         throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
-        return NULL;
+        return 0;
     }
 
     if (isBind == JNI_TRUE) {

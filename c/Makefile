@@ -1,10 +1,10 @@
 
-CC_DEBUG = g++ -Wall -Wformat -s -g -fPIC -c
-CC_RELEASE = g++ -Wall -O2 -s -static -DNDEBUG -flto -fPIC -c
+CC_DEBUG = g++ -Wall -std=c++17 -Wformat -s -g -fPIC -c
+CC_RELEASE = g++ -Wall -std=c++17 -O2 -s -static -DNDEBUG -flto -fPIC -c
 INCLUDE = -Iinclude
-LIB = -Llib -lyyjson -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
+LIB = -Llib -lyyjson -lspdlog -lhv -lssl -lcrypto -lpthread
 DEBUG_LINK = g++ -Wl,--gc-sections -shared -o blacksky.dll
-RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -O2 -flto -s -Wl,--gc-sections -shared -o blacksky.dll
+RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -O2 -flto -s -Wl,--gc-sections -shared -o libblacksky.so
 
 DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o  Sha.o Logger.o Json.o
 RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o
@@ -61,18 +61,18 @@ Json.o: Interface.h Json.cpp
 	$(CC_DEBUG) -o Json.o Json.cpp $(INCLUDE)
 
 clean:
-	del Tools.o
-	del Md5.o
-	del Base64.o
-	del Requests.o
-	del Sha.o
-	del Logger.o
-	del Json.o
-	del ToolsRelease.o
-	del RequestsRelease.o
-	del Md5Release.o
-	del Base64Release.o
-	del ShaRelease.o
-	del LoggerRelease.o
-	del JsonRelease.o
-	del blacksky.dll
+	rm -rf Tools.o
+	rm -rf Md5.o
+	rm -rf Base64.o
+	rm -rf Requests.o
+	rm -rf Sha.o
+	rm -rf Logger.o
+	rm -rf Json.o
+	rm -rf ToolsRelease.o
+	rm -rf RequestsRelease.o
+	rm -rf Md5Release.o
+	rm -rf Base64Release.o
+	rm -rf ShaRelease.o
+	rm -rf LoggerRelease.o
+	rm -rf JsonRelease.o
+	rm -rf libblacksky.so

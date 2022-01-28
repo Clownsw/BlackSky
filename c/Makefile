@@ -2,7 +2,7 @@
 CC_DEBUG = g++ -Wall -Wformat -s -g -fPIC -c
 CC_RELEASE = g++ -Wall -O2 -s -static -DNDEBUG -flto -fPIC -c
 INCLUDE = -Iinclude
-LIB = -Llib -lyyjson -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread
+LIB = -Llib -lyyjson-static -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread -lbcrypt
 DEBUG_LINK = g++ -Wl,--gc-sections -shared -o blacksky.dll
 RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -O2 -flto -s -Wl,--gc-sections -shared -o blacksky.dll
 

@@ -1,10 +1,10 @@
 
-CC_DEBUG = g++ -Wall -std=c++17 -Wformat -s -g -fPIC -c
+CC_DEBUG = g++ -Wall -std=c++17 -Wformat -s -fPIC -g -c
 CC_RELEASE = g++ -Wall -std=c++17 -O2 -s -static -DNDEBUG -flto -fPIC -c
 INCLUDE = -Iinclude
 LIB = -Llib -lyyjson -lspdlog -lhv -lssl -lcrypto -lpthread
-DEBUG_LINK = g++ -Wl,--gc-sections -shared -o blacksky.dll
-RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -O2 -flto -s -Wl,--gc-sections -shared -o libblacksky.so
+DEBUG_LINK = g++ -Wl,--gc-sections -shared -o libblacksky.so
+RELEASE_LINK = g++ -static-libgcc -static-libstdc++ -O2 -flto -s -Wl,--gc-sections -shared -o libblacksky.so
 
 DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o  Sha.o Logger.o Json.o
 RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o

@@ -45,7 +45,7 @@ yyjson_mut_doc *mutDoc = nullptr;
 JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
     (JNIEnv* env, jobject obj, jstring jsonStr) {
 
-    const char* _jsonStr = env->GetStringUTFChars(jsonStr, JNI_FALSE);
+    auto _jsonStr = env->GetStringUTFChars(jsonStr, JNI_FALSE);
     yyjson_read_flag flag = YYJSON_READ_ALLOW_TRAILING_COMMAS | YYJSON_READ_ALLOW_COMMENTS;
     doc = yyjson_read(_jsonStr, strlen(_jsonStr), flag);
 
@@ -135,7 +135,7 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
 
 //    yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
 
-    yyjson_val *root = nullptr;
+    yyjson_val *root;
     if (name != nullptr && strcmp(_name, xorstr_("__acJjzPifrs__")) == 0) {
         root = (yyjson_val*) address;
     } else {
@@ -256,7 +256,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
 
     if (mutDoc == nullptr) {
         throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
-        return 0;
+        return NULL;
     }
 
     yyjson_mut_val *data;
@@ -276,7 +276,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
 
     if (data == nullptr) {
         throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
-        return 0;
+        return NULL;
     }
 
     yyjson_mut_doc_set_root(mutDoc, data);
@@ -398,6 +398,8 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1objAdd
             yyjson_mut_obj_add_bool(mutDoc, _address, _name, _data == JNI_TRUE);
             break;
         }
+
+        default: {}
     }
 
     env->DeleteLocalRef(obj);
@@ -445,6 +447,8 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAdd
             yyjson_mut_arr_add_bool(mutDoc, _address, _data == JNI_TRUE);
             break;
         }
+
+        default: {}
     }
 
     env->DeleteLocalRef(data);
@@ -459,21 +463,22 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAdd
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
     (JNIEnv *env, jobject obj, jlong rootAddress, jlong address, jstring name) {
 
-    auto *_rootAddress = (yyjson_mut_val*) rootAddress;
-    auto *_address = (yyjson_mut_val*) address;
-
     env->DeleteLocalRef(obj);
 
-    if (yyjson_mut_is_arr(_rootAddress)) {
-        yyjson_mut_arr_add_val(_rootAddress, _address);
-    } else {
-        if (name == nullptr) {
-            throwException(env, CLASSNAME_NullPointerException, ERROR_PARAMS_NULL);
-            return;
+    if (rootAddress > 0 && address > 0) {
+        auto *_rootAddress = (yyjson_mut_val*) rootAddress;
+        auto *_address = (yyjson_mut_val*) address;
+
+        if (yyjson_mut_is_arr(_rootAddress)) {
+            yyjson_mut_arr_add_val(_rootAddress, _address);
+        } else {
+            if (name == nullptr) {
+                throwException(env, CLASSNAME_NullPointerException, ERROR_PARAMS_NULL);
+                return;
+            }
+
+            auto _name = env->GetStringUTFChars(name, JNI_FALSE);
+            yyjson_mut_obj_add(_rootAddress, yyjson_mut_str(mutDoc, _name), _address);
         }
-
-        auto _name = env->GetStringUTFChars(name, JNI_FALSE);
-        yyjson_mut_obj_add(_rootAddress, yyjson_mut_str(mutDoc, _name), _address);
     }
-
 }

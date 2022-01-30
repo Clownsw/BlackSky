@@ -1,5 +1,7 @@
 package cn.smilex.blacksky.jni.json;
 
+import cn.smilex.blacksky.jni.Info;
+
 import java.lang.reflect.Field;
 
 /**
@@ -9,6 +11,36 @@ public class JsonMut {
 
     private long _address;
     private long address;
+    private Object root;
+
+    static {
+        synchronized (Json.class) {
+            if (!Info.isInit) {
+                Info.init();
+            }
+        }
+    }
+
+    protected JsonMut() {
+    }
+
+    public JsonMut(int type) {
+        root = type == JSON_MUT_TYPE.OBJ.type
+                ? buildJsonMutObject()
+                : buildJsonMutArr();
+    }
+
+    public Object getRoot() {
+        return root;
+    }
+
+    public static JsonMut buildObject() {
+        return new JsonMut(JSON_MUT_TYPE.OBJ.type);
+    }
+
+    public static JsonMut buildArr() {
+        return new JsonMut(JSON_MUT_TYPE.ARR.type);
+    }
 
     public enum JSON_MUT_TYPE {
         OBJ(0),
@@ -17,18 +49,6 @@ public class JsonMut {
         int type;
         JSON_MUT_TYPE(int type) {
             this.type = type;
-        }
-    }
-
-    public JsonMut(int type) {
-        synchronized (JsonMut.class) {
-            create(type);
-        }
-    }
-
-    public JsonMut(long address) {
-        synchronized (JsonMut.class) {
-            this.address = address;
         }
     }
 
@@ -49,11 +69,25 @@ public class JsonMut {
         }
     }
 
+    private JsonMutObject buildJsonMutObject() {
+        synchronized (JsonMut.class) {
+            create(JSON_MUT_TYPE.OBJ.type);
+            return new JsonMutObject(address);
+        }
+    }
+
+    private JsonMutArr buildJsonMutArr() {
+        synchronized (JsonMut.class) {
+            create(JSON_MUT_TYPE.ARR.type);
+            return new JsonMutArr(address);
+        }
+    }
+
     /**
      * 获取JSON字符串
      * @return JSON字符串
      */
-    public String getJsonStr() {
+    public final String getJsonStr() {
         if (_address == 0) {
             return null;
         }
@@ -61,173 +95,45 @@ public class JsonMut {
     }
 
     /**
-     * 向obj添加一个String类型数据
+     * 创建一个自动绑定的可变JSON对象
      * @param name name
-     * @param data 数据
-     * @return this
+     * @return 可变JSON对象
      */
-    public JsonMut addStr(String name, String data) {
+    public JsonMutObject createJsonMutObject(String name) {
         synchronized (JsonMut.class) {
-            _objAdd(Json.Json_Type.STRING.id, address, name, data);
-            return this;
+            return new JsonMutObject(_add(address, JSON_MUT_TYPE.OBJ.type, name, true));
         }
     }
 
     /**
-     * 向obj添加一个int类型数据
+     * 创建一个未绑定的可变JSON对象
      * @param name name
-     * @param data 数据
-     * @return this
+     * @return 可变JSON对象
      */
-    public JsonMut addInt(String name, int data) {
+    public JsonMutObject createFreeJsonMutObject(String name) {
         synchronized (JsonMut.class) {
-            _objAdd(Json.Json_Type.INTEGER.id, address, name, data);
-            return this;
+            return new JsonMutObject(_add(address, JSON_MUT_TYPE.OBJ.type, name, false));
         }
     }
 
     /**
-     * 向obj添加一个double类型数据
-     * @param name name
-     * @param data 数据
-     * @return this
+     * 创建一个自动绑定的可变JSON数组
+     * @return 可变JSON数组
      */
-    public JsonMut addDouble(String name, double data) {
+    public JsonMutArr createJsonMutArr(String name) {
         synchronized (JsonMut.class) {
-            _objAdd(Json.Json_Type.DOUBLE.id, address, name, data);
-            return this;
+            return new JsonMutArr(_add(address, JSON_MUT_TYPE.ARR.type, name, true));
         }
     }
 
     /**
-     * 向obj添加一个long类型数据
-     * @param name name
-     * @param data 数据
-     * @return this
+     * 创建一个未绑定的可变JSON数组
+     * @return 可变JSON数组
      */
-    public JsonMut addLong(String name, long data) {
+    public JsonMutArr createFreeJsonMutArr(String name) {
         synchronized (JsonMut.class) {
-            _objAdd(Json.Json_Type.LONG.id, address, name, data);
-            return this;
+            return new JsonMutArr(_add(address, JSON_MUT_TYPE.ARR.type, name, false));
         }
-    }
-
-    /**
-     * 向obj添加一个boolean类型数据
-     * @param name name
-     * @param data 数据
-     * @return this
-     */
-    public JsonMut addBoolean(String name, boolean data) {
-        synchronized (JsonMut.class) {
-            _objAdd(Json.Json_Type.BOOLEAN.id, address, name, data);
-            return this;
-        }
-    }
-
-    /**
-     * 向obj创建并添加一个obj类型数据
-     * @param name name
-     * @return new obj
-     */
-    public JsonMut createObject(String name) {
-        synchronized (JsonMut.class) {
-            return new JsonMut(_add(address, JSON_MUT_TYPE.OBJ.type, name, true));
-        }
-    }
-
-    /**
-     * 向obj创建并添加一个obj类型数据(非自动绑定)
-     * @param name name
-     * @return new obj
-     */
-    public JsonMut createFreeObject(String name) {
-        synchronized (JsonMut.class) {
-            return new JsonMut(_add(address, JSON_MUT_TYPE.OBJ.type, name, false));
-        }
-    }
-
-    /**
-     * 创建并添加一个arr类型数据
-     * @param name name
-     * @return new obj
-     */
-    public JsonMut createArr(String name) {
-        synchronized (JsonMut.class) {
-            return new JsonMut(_add(address, JSON_MUT_TYPE.ARR.type, name, true));
-        }
-    }
-
-    /**
-     * 创建并添加一个arr类型数据(非自动绑定)
-     * @param name name
-     * @return new obj
-     */
-    public JsonMut createFreeArr(String name) {
-        synchronized (JsonMut.class) {
-            return new JsonMut(_add(address, JSON_MUT_TYPE.ARR.type, name, false));
-        }
-    }
-
-    /**
-     * 向arr添加一个int类型数据
-     * @param data 数据
-     * @return this
-     */
-    public JsonMut addArrStr(String data) {
-        synchronized (JsonMut.class) {
-            _arrAdd(Json.Json_Type.STRING.id, address, data);
-            return this;
-        }
-    }
-
-    /**
-     * 向arr添加一个int类型数据
-     * @param data 数据
-     * @return this
-     */
-    public JsonMut addArrInt(int data) {
-        synchronized (JsonMut.class) {
-            _arrAdd(Json.Json_Type.INTEGER.id, address, data);
-            return this;
-        }
-    }
-
-    /**
-     * 向arr添加一个double类型数据
-     * @param data 数据
-     * @return this
-     */
-    public JsonMut addArrDouble(double data) {
-        synchronized (JsonMut.class) {
-            _arrAdd(Json.Json_Type.DOUBLE.id, address, data);
-            return this;
-        }
-    }
-
-    /**
-     * 向arr添加一个long类型数据
-     * @param data 数据
-     * @return this
-     */
-    public JsonMut addArrLong(long data) {
-        synchronized (JsonMut.class) {
-            _arrAdd(Json.Json_Type.LONG.id, address, data);
-            return this;
-        }
-    }
-
-    /**
-     * 向arr添加一个boolean类型数据
-     * @param data 数据
-     * @return this
-     */
-    public JsonMut addArrBoolean(boolean data) {
-        synchronized (JsonMut.class) {
-            _arrAdd(Json.Json_Type.BOOLEAN.id, address, data);
-            return this;
-        }
-
     }
 
     /**
@@ -257,12 +163,12 @@ public class JsonMut {
         }
     }
 
-    private static long getObjAddress(JsonMut jsonMut) {
-        Class<JsonMut> jsonMutClass = JsonMut.class;
+    protected static long getObjAddress(Object obj) {
+        Class<?> aClass = obj.getClass();
         try {
-            Field address = jsonMutClass.getDeclaredField("address");
+            Field address = aClass.getDeclaredField("address");
             address.setAccessible(true);
-            return (long) address.get(jsonMut);
+            return (long) address.get(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -279,11 +185,11 @@ public class JsonMut {
         }
     }
 
-    private native String _createMut(int type);
-    private native void _closeMut(long address);
-    private native long _add(long address, int type, String name, boolean isBind);
-    private native void _objAdd(int type, long address, String name, Object data);
-    private native void _arrAdd(int type, long address, Object data);
-    private native void _bind(long rootAddress, long address, String name);
-    private native String _writeString(long address);
+    protected native String _createMut(int type);
+    protected native void _closeMut(long address);
+    protected native long _add(long address, int type, String name, boolean isBind);
+    protected native void _objAdd(int type, long address, String name, Object data);
+    protected native void _arrAdd(int type, long address, Object data);
+    protected native void _bind(long rootAddress, long address, String name);
+    protected native String _writeString(long address);
 }

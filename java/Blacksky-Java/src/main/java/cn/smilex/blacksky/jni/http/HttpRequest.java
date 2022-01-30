@@ -1,13 +1,10 @@
 package cn.smilex.blacksky.jni.http;
 
-import lombok.Getter;
-
 import java.util.HashMap;
 
 /**
  * @author smilex
  */
-@Getter
 public class HttpRequest {
     public enum HTTP_METHOD {
         HTTP_METHOD_GET(1),
@@ -79,5 +76,29 @@ public class HttpRequest {
     public HttpRequest setParams(String key, String value) {
         params.put(key, value);
         return this;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public int getMethod() {
+        return method;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public HashMap<String, String> getHeaders() {
+        return headers;
+    }
+
+    public HashMap<String, String> getParams() {
+        return params;
     }
 }

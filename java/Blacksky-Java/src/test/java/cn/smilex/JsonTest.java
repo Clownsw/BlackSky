@@ -1,8 +1,6 @@
 package cn.smilex;
 
-import cn.smilex.blacksky.jni.json.Json;
-import cn.smilex.blacksky.jni.json.JsonMut;
-import cn.smilex.blacksky.jni.json.JsonObject;
+import cn.smilex.blacksky.jni.json.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -551,149 +549,106 @@ public class JsonTest {
         json.close();
     }
 
+    /**
+     * 测试多个可变JSON释放
+     * @author smilex
+     */
     @Test
-    public void testJsonMut() {
-        JsonMut jsonMut = Json.createJsonAsObject();
-        jsonMut.addInt("int", 1)
-                .addLong("long", 1111111)
-                .addDouble("double", 1.33)
-                .addStr("string", "xuda")
-                .addBoolean("boolean", false)
-                .addBoolean("boolean1", true);
+    public void testTwoJsonMutClose() {
 
-        JsonMut obj = jsonMut.createObject("obj");
-        obj.addInt("obj-int", 2)
-                .addLong("long", 2222222)
-                .addDouble("double", 1.44)
-                .addStr("string", "xuda1")
-                .addBoolean("boolean", true)
-                .addBoolean("boolean1", false);
+        JsonMut json = JsonMut.buildObject();
+        JsonMutObject root = (JsonMutObject) json.getRoot();
 
-        JsonMut obj2 = obj.createObject("obj2");
-        obj2.addInt("obj-int", 3)
-                .addLong("long", 3333333)
-                .addDouble("double", 1.55)
-                .addStr("string", "xuda1")
-                .addBoolean("boolean", true)
-                .addBoolean("boolean1", false);
+        JsonMut json2 = JsonMut.buildArr();
+        JsonMutArr root2 = (JsonMutArr) json2.getRoot();
 
-        System.out.println(jsonMut.getJsonStr());
-        jsonMut.close();
+        root.addStr("testStr", "Hello, 你好")
+                .addInt("testInt", Integer.MAX_VALUE)
+                .addDouble("testDouble", Double.MAX_VALUE)
+                .addLong("testLong", Long.MAX_VALUE)
+                .addBoolean("testBooleanTrue", true)
+                .addBoolean("testBooleanFalse", false);
+
+        root2.addArrStr("testStr")
+                .addArrInt(Integer.MAX_VALUE)
+                .addArrDouble(Double.MAX_VALUE)
+                .addArrLong(Long.MAX_VALUE)
+                .addArrBoolean(true)
+                .addArrBoolean(false);
+
+
+        System.out.println(json.getJsonStr());
+        System.out.println(json2.getJsonStr());
+
+        json.close();
+        json2.close();
     }
 
     @Test
-    public void testJsonMutAddArr() {
+    public void testJsonMutObjectAndJsonMutArrBind() {
         JsonMut root = Json.createJsonAsObject();
-        JsonMut testArr = root.createArr("testArr");
-        testArr.addArrInt(1)
-                .addArrInt(2)
-                .addArrInt(3)
-                .addArrInt(4);
 
-        System.out.println(root.getJsonStr());
+        JsonMutObject testObj = root.createFreeJsonMutObject("testObj");
+        JsonMutArr testArr = root.createFreeJsonMutArr("testArr");
+
+        root.bind(testObj, "testObj");
+        root.bind(testArr, "testArr");
+
+        JsonMutObject testObj2 = testObj.createFreeJsonMutObject("testObj2");
+        testObj.bind(testObj2, "testObj2");
+
+        JsonMutObject testArrTestObj1 = testArr.createFreeJsonMutObject("testArrTestObj1");
+        testArr.bind(testArrTestObj1);
+
+        String jsonStr = root.getJsonStr();
+        System.out.println(jsonStr);
+
         root.close();
     }
 
+    /**
+     * 测试可变对象的添加
+     * @author smilex
+     */
     @Test
-    public void testJsonMutAddObjChildArr() {
+    public void testJsonMutObjectAdd() {
         JsonMut root = Json.createJsonAsObject();
-        JsonMut obj1 = root.createObject("obj1");
-        JsonMut obj2 = obj1.createObject("obj2");
 
-        JsonMut arr1 = obj2.createArr("arr1");
-        arr1.addArrInt(555)
-                .addArrStr("str")
-                .addArrDouble(1.77)
-                .addArrLong(1231231231)
+        JsonMutObject obj = root.createFreeJsonMutObject("obj");
+        root.bind(obj, "obj");
+
+        obj.addStr("testStr", "Hello, 你好")
+                .addInt("testInt", Integer.MAX_VALUE)
+                .addDouble("testDouble", Double.MAX_VALUE)
+                .addLong("testLong", Long.MAX_VALUE)
+                .addBoolean("testBooleanTrue", true)
+                .addBoolean("testBooleanFalse", false);
+
+        System.out.println(root.getJsonStr());
+
+        root.close();
+    }
+
+    /**
+     * 测试可变数组的添加
+     * @author smilex
+     */
+    @Test
+    public void testJsonMutArrAdd() {
+        JsonMut root = Json.createJsonAsArr();
+
+        JsonMutArr arr = root.createFreeJsonMutArr("arr");
+        root.bind(arr);
+
+        arr.addArrStr("testStr")
+                .addArrInt(Integer.MAX_VALUE)
+                .addArrDouble(Double.MAX_VALUE)
+                .addArrLong(Long.MAX_VALUE)
+                .addArrBoolean(true)
                 .addArrBoolean(false);
 
         System.out.println(root.getJsonStr());
-        root.close();
-    }
-
-    @Test
-    public void testJsonCreateFreeObj() {
-        JsonMut root = Json.createJsonAsObject();
-
-        JsonMut obj1 = root.createFreeObject("obj1");
-        JsonMut arr1 = root.createFreeArr("arr1");
-
-        root.bind(obj1, "obj1");
-        obj1.bind(arr1, "arr1");
-
-        obj1.addInt("testInt", 123);
-
-
-        System.out.println(root.getJsonStr());
 
         root.close();
-    }
-
-    @Test
-    public void testJsonBindArr() {
-        JsonMut root = Json.createJsonAsObject();
-
-        JsonMut arr1 = root.createArr("arr1");
-
-        JsonMut obj1 = arr1.createFreeObject("obj1");
-        arr1.bind(obj1);
-        obj1.addInt("id", 1);
-
-        JsonMut obj1Arr1 = obj1.createFreeArr("obj1Arr1");
-        obj1.bind(obj1Arr1, "obj1Arr1");
-
-        obj1Arr1.addArrInt(1)
-                .addArrInt(2)
-                .addArrInt(3);
-
-        JsonMut obj2 = arr1.createFreeObject("obj2");
-        arr1.bind(obj2);
-        obj2.addInt("id", 2);
-
-        JsonMut obj2Arr1 = obj2.createFreeArr("obj2Arr1");
-        obj2.bind(obj2Arr1, "obj2Arr1");
-
-        JsonMut obj2Arr1Obj1 = obj2Arr1.createFreeObject("obj2Arr1Obj1");
-        obj2Arr1.bind(obj2Arr1Obj1);
-
-        System.out.println(root.getJsonStr());
-
-        root.close();
-    }
-
-    @Test
-    public void testJsonMutArrRootAdd() {
-        JsonMut root = Json.createJsonAsArr();
-
-        JsonMut obj1 = root.createFreeObject("obj1");
-        root.bind(obj1);
-
-        JsonMut obj2 = root.createFreeObject("obj2");
-        root.bind(obj2);
-
-        obj1.addInt("testInt", 1);
-
-        JsonMut obj1Arr1 = obj1.createFreeArr("obj1Arr1");
-        obj1.bind(obj1Arr1, "obj1Arr1");
-
-        System.out.println(root.getJsonStr());
-
-        root.close();
-    }
-
-    @Test
-    public void testTwoJsonMutClose() {
-        JsonMut root1 = Json.createJsonAsObject();
-        JsonMut root2 = Json.createJsonAsArr();
-
-        root1.addInt("testInt", 1);
-
-        root2.addArrInt(2);
-
-        System.out.println(root1.getJsonStr());
-        System.out.println(root2.getJsonStr());
-
-        root1.close();
-        root2.close();
     }
 }

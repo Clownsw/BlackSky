@@ -86,13 +86,30 @@ public class JsonMutObject extends JsonMut {
     }
 
     /**
+     * 创建一个自动绑定的可变JSON对象
+     * @param name name
+     * @return 可变JSON对象
+     */
+    public JsonMutObject createJsonMutObject(String name) {
+        return super.createJsonMutObject(name, address);
+    }
+
+    /**
+     * 创建一个自动绑定的可变JSON数组
+     * @param name name
+     * @return 可变JSON数组
+     */
+    public JsonMutArr createJsonMutArr(String name) {
+        return super.createJsonMutArr(name, address);
+    }
+
+    /**
      * 绑定一个对象或数组
-     * @param obj 对象或数组
      * @param name 名称
+     * @param obj 对象或数组
      * @return this
      */
-    @Override
-    public JsonMutObject bind(JsonMut obj, String name) {
+    public JsonMutObject bind(String name, JsonMut obj) {
         synchronized (JsonMutObject.class) {
             long objAddress = JsonMut.getObjAddress(obj);
             _bind(address, objAddress, name);

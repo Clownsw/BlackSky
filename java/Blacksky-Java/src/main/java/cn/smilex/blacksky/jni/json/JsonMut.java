@@ -97,9 +97,10 @@ public class JsonMut {
     /**
      * 创建一个自动绑定的可变JSON对象
      * @param name name
+     * @param address address
      * @return 可变JSON对象
      */
-    public JsonMutObject createJsonMutObject(String name) {
+    protected JsonMutObject createJsonMutObject(String name, long address) {
         synchronized (JsonMut.class) {
             return new JsonMutObject(_add(address, JSON_MUT_TYPE.OBJ.type, name, true));
         }
@@ -118,9 +119,11 @@ public class JsonMut {
 
     /**
      * 创建一个自动绑定的可变JSON数组
+     * @param name name
+     * @param address address
      * @return 可变JSON数组
      */
-    public JsonMutArr createJsonMutArr(String name) {
+    protected JsonMutArr createJsonMutArr(String name, long address) {
         synchronized (JsonMut.class) {
             return new JsonMutArr(_add(address, JSON_MUT_TYPE.ARR.type, name, true));
         }
@@ -133,33 +136,6 @@ public class JsonMut {
     public JsonMutArr createFreeJsonMutArr(String name) {
         synchronized (JsonMut.class) {
             return new JsonMutArr(_add(address, JSON_MUT_TYPE.ARR.type, name, false));
-        }
-    }
-
-    /**
-     * 用于数组绑定数据
-     * @param obj 数据
-     * @return this
-     */
-    public JsonMut bind(JsonMut obj) {
-        synchronized (JsonMut.class) {
-            long objAddress = JsonMut.getObjAddress(obj);
-            _bind(address, objAddress, null);
-            return this;
-        }
-    }
-
-    /**
-     * 用于对象绑定属性
-     * @param obj 数据
-     * @param name 名称
-     * @return this
-     */
-    public JsonMut bind(JsonMut obj, String name) {
-        synchronized (JsonMut.class) {
-            long objAddress = JsonMut.getObjAddress(obj);
-            _bind(address, objAddress, name);
-            return this;
         }
     }
 

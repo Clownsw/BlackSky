@@ -281,10 +281,6 @@ public class Json {
         System.out.println("pointAddress-type: " + getType(pointAddress));
     }
 
-    public static JsonMut createJsonAsObject() {
-        return new JsonMut(JsonMut.JSON_MUT_TYPE.OBJ.type);
-    }
-
     public static JsonMut createJsonAsArr() {
         return new JsonMut(JsonMut.JSON_MUT_TYPE.ARR.type);
     }

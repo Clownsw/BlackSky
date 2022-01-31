@@ -478,13 +478,13 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
     env->DeleteLocalRef(obj);
 
     if (rootAddress > 0 && address > 0) {
-        auto *_rootAddress = (yyjson_mut_val*) rootAddress;
-        auto *_address = (yyjson_mut_val*) address;
+        auto *_rootAddress = (yyjson_mut_val *) rootAddress;
+        auto *_address = (yyjson_mut_val *) address;
 
         if (yyjson_mut_is_arr(_rootAddress)) {
             yyjson_mut_arr_add_val(_rootAddress, _address);
         } else {
-            if (name == nullptr) {
+            if (name == nullptr || address <= 100) {
                 throwException(env, CLASSNAME_NullPointerException, ERROR_PARAMS_NULL);
                 return;
             }
@@ -563,4 +563,62 @@ JNIEXPORT jboolean JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAction
     }
 
     return JNI_FALSE;
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _createType
+ * Signature: (JILjava/lang/Object;)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createType
+    (JNIEnv *env, jobject obj, jlong address, jint type, jobject value) {
+
+    env->DeleteLocalRef(obj);
+
+    if (address == 0 || value == nullptr) {
+        throwException(env, CLASSNAME_NullPointerException, ERROR_PARAMS_NULL);
+
+        env->DeleteLocalRef(value);
+
+    } else {
+        auto _address = (yyjson_mut_doc *) address;
+        jstring strValue = jObjectTojString(env, value);
+
+        switch (type) {
+            case JSON_TYPE_STRING: {
+                const char* _value = env->GetStringUTFChars(strValue, JNI_FALSE);
+                env->DeleteLocalRef(value);
+                return (jlong) yyjson_mut_str(_address, _value);
+            }
+
+            case JSON_TYPE_INTEGER: {
+                jint _value = jStringTojInt(env, strValue);
+                env->DeleteLocalRef(value);
+                return (jlong) yyjson_mut_int(_address, _value);
+            }
+
+            case JSON_TYPE_DOUBLE: {
+                jdouble _value = jStringToDouble(env, strValue);
+                env->DeleteLocalRef(value);
+                return (jlong) yyjson_mut_real(_address, _value);
+            }
+
+            case JSON_TYPE_LONG: {
+                jlong _value = jStringTojLong(env, strValue);
+                env->DeleteLocalRef(value);
+                return (jlong) yyjson_mut_uint(_address, _value);
+            }
+
+            case JSON_TYPE_BOOLEAN: {
+                jboolean _value = jStringTojBoolean(env, strValue);
+                env->DeleteLocalRef(value);
+                return (jlong) yyjson_mut_bool(_address, _value == JNI_TRUE);
+            }
+
+            default: {
+                env->DeleteLocalRef(strValue);
+                return 0;
+            }
+        }
+    }
 }

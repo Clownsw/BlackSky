@@ -1,6 +1,8 @@
 package cn.smilex.blacksky.jni.json;
 
 import cn.smilex.blacksky.jni.Info;
+import cn.smilex.blacksky.jni.json.type.JsonType;
+import cn.smilex.blacksky.jni.json.type.JsonTypeStr;
 
 /**
  * @author smilex
@@ -110,6 +112,14 @@ public class JsonMutObject extends JsonMut {
      * @return this
      */
     public JsonMutObject bind(String name, JsonMut obj) {
+        synchronized (JsonMutObject.class) {
+            long objAddress = JsonMut.getObjAddress(obj);
+            _bind(address, objAddress, name);
+            return this;
+        }
+    }
+
+    public JsonMutObject bind(String name, JsonType obj) {
         synchronized (JsonMutObject.class) {
             long objAddress = JsonMut.getObjAddress(obj);
             _bind(address, objAddress, name);

@@ -1,6 +1,7 @@
 package cn.smilex;
 
 import cn.smilex.blacksky.jni.json.*;
+import cn.smilex.blacksky.jni.json.type.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -710,6 +711,10 @@ public class JsonTest {
         mut.close();
     }
 
+    /**
+     * 可变JSON数组删除测试
+     * @author smilex
+     */
     @Test
     public void jsonMutArrRemoveTest() {
         JsonMut mut = JsonMut.buildObject();
@@ -734,8 +739,12 @@ public class JsonTest {
         mut.close();
     }
 
+    /**
+     * 可变JSON数组插入测试
+     * @author smilex
+     */
     @Test
-    public void jsonMutInsertTest() {
+    public void jsonMutArrInsertTest() {
         JsonMut mut = JsonMut.buildObject();
         JsonMutObject root = (JsonMutObject) mut.getRoot();
 
@@ -752,6 +761,34 @@ public class JsonTest {
         testArr.prependArr(testObj);
 
         System.out.println(mut.getJsonStr());
+        mut.close();
+    }
+
+    @Test
+    public void jsonMutCreateJsonTypeTest() {
+        JsonMut mut = JsonMut.buildObject();
+        JsonMutObject root = (JsonMutObject) mut.getRoot();
+
+        JsonTypeStr jsonTypeStr = mut.createJsonTypeStr("Hello, 你好");
+        root.bind("str", jsonTypeStr);
+
+        JsonTypeInt jsonTypeInt = mut.createJsonTypeInt(Integer.MAX_VALUE);
+        root.bind("int", jsonTypeInt);
+
+        JsonTypeLong jsonTypeLong = mut.createJsonTypeLong(Long.MAX_VALUE);
+        root.bind("long", jsonTypeLong);
+
+        JsonTypeDouble jsonTypeDouble = mut.createJsonTypeDouble(Double.MAX_VALUE);
+        root.bind("double", jsonTypeDouble);
+
+        JsonTypeBoolean jsonTypeBooleanTrue = mut.createJsonTypeBoolean(true);
+        root.bind("true", jsonTypeBooleanTrue);
+
+        JsonTypeBoolean jsonTypeBooleanFalse = mut.createJsonTypeBoolean(true);
+        root.bind("false", jsonTypeBooleanFalse);
+
+        System.out.println(mut.getJsonStr());
+
         mut.close();
     }
 }

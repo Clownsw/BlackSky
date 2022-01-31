@@ -1,6 +1,7 @@
 package cn.smilex.blacksky.jni.json;
 
 import cn.smilex.blacksky.jni.Info;
+import cn.smilex.blacksky.jni.json.type.*;
 
 import java.lang.reflect.Field;
 
@@ -139,6 +140,65 @@ public class JsonMut {
         }
     }
 
+    /**
+     * 创建一个jsonTypeStr
+     * @param value value
+     * @return jsonTypeStr
+     */
+    public JsonTypeStr createJsonTypeStr(String value) {
+        return (JsonTypeStr) createType(Json.Json_Type.STRING, value);
+    }
+
+    public JsonTypeInt createJsonTypeInt(int value) {
+        return (JsonTypeInt) createType(Json.Json_Type.INTEGER, value);
+    }
+
+    public JsonTypeLong createJsonTypeLong(long value) {
+        return (JsonTypeLong) createType(Json.Json_Type.LONG, value);
+    }
+
+    public JsonTypeDouble createJsonTypeDouble(double value) {
+        return (JsonTypeDouble) createType(Json.Json_Type.DOUBLE, value);
+    }
+
+    public JsonTypeBoolean createJsonTypeBoolean(boolean value) {
+        return (JsonTypeBoolean) createType(Json.Json_Type.BOOLEAN, value);
+    }
+
+    private JsonType createType(Json.Json_Type type, Object value) {
+        synchronized (JsonMut.class) {
+            if (value == null) {
+                return null;
+            }
+
+            switch (type) {
+                case STRING: {
+                    return new JsonTypeStr(_createType(_address, Json.Json_Type.STRING.id, value));
+                }
+
+                case INTEGER: {
+                    return new JsonTypeInt(_createType(_address, Json.Json_Type.INTEGER.id, value));
+                }
+
+                case DOUBLE: {
+                    return new JsonTypeDouble(_createType(_address, Json.Json_Type.DOUBLE.id, value));
+                }
+
+                case LONG: {
+                    return new JsonTypeLong(_createType(_address, Json.Json_Type.LONG.id, value));
+                }
+
+                case BOOLEAN: {
+                    return new JsonTypeBoolean(_createType(_address, Json.Json_Type.BOOLEAN.id, value));
+                }
+
+                default: {
+                    return null;
+                }
+            }
+        }
+    }
+
     protected static long getObjAddress(Object obj) {
         Class<?> aClass = obj.getClass();
         try {
@@ -164,6 +224,7 @@ public class JsonMut {
     protected native String _createMut(int type);
     protected native void _closeMut(long address);
     protected native long _add(long address, int type, String name, boolean isBind);
+    protected native long _createType(long address, int type, Object value);
     protected native void _objAdd(int type, long address, String name, Object data);
     protected native void _arrAdd(int type, long address, Object data);
     protected native boolean _arrAction(int type, long arr, long data, int index, int len);

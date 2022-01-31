@@ -166,6 +166,7 @@ public class JsonMut {
     protected native long _add(long address, int type, String name, boolean isBind);
     protected native void _objAdd(int type, long address, String name, Object data);
     protected native void _arrAdd(int type, long address, Object data);
+    protected native boolean _arrAction(int type, long arr, long data, int index, int len);
     protected native void _bind(long rootAddress, long address, String name);
     protected native String _writeString(long address);
 }

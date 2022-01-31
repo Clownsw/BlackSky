@@ -29,6 +29,18 @@ enum JSON_MUT_TYPE {
     JSON_MUT_ARR = 1,
 };
 
+enum JSON_MUT_ARR_ACTION {
+    JSON_MUT_ARR_ACTION_INSERT = 0,
+    JSON_MUT_ARR_ACTION_APPEND = 1,
+    JSON_MUT_ARR_ACTION_PREPEND = 2,
+    JSON_MUT_ARR_ACTION_REMOVE = 3,
+    JSON_MUT_ARR_ACTION_REPLACE = 4,
+    JSON_MUT_ARR_ACTION_REMOVE_FIRST = 5,
+    JSON_MUT_ARR_ACTION_REMOVE_LAST = 6,
+    JSON_MUT_ARR_ACTION_REMOVE_RANGE = 7,
+    JSON_MUT_ARR_ACTION_CLEAN = 8,
+};
+
 yyjson_doc *doc = nullptr;
 yyjson_val *val = nullptr;
 yyjson_mut_doc *mutDoc = nullptr;
@@ -481,4 +493,74 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
             yyjson_mut_obj_add(_rootAddress, yyjson_mut_str(mutDoc, _name), _address);
         }
     }
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _arrAction
+ * Signature: (IJJII)Z
+ */
+JNIEXPORT jboolean JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAction
+    (JNIEnv *env, jobject obj, jint type, jlong arr, jlong data, jint index, jint len) {
+
+    env->DeleteLocalRef(obj);
+
+    if (arr == 0) {
+        throwException(env, CLASSNAME_NullPointerException, ERROR_PARAMS_NULL);
+    }
+    else if (!yyjson_mut_is_arr((yyjson_mut_val *) arr)) {
+        throwException(env, CLASSNAME_NullPointerException, ERROR_JSON_NOT_ARR);
+    }
+    else {
+        auto _arr = (yyjson_mut_val *) arr;
+        auto _data = (yyjson_mut_val *) data;
+
+        switch (type) {
+
+            case JSON_MUT_ARR_ACTION_INSERT: {
+                return data == 0
+                       ? JNI_FALSE
+                       : yyjson_mut_arr_insert(_arr, _data, index) ? JNI_TRUE : JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_APPEND: {
+                return data == 0
+                       ? JNI_FALSE
+                       : yyjson_mut_arr_append(_arr, _data) ? JNI_TRUE : JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_PREPEND: {
+                return data == 0
+                        ? JNI_FALSE
+                        : yyjson_mut_arr_prepend(_arr, _data) ? JNI_TRUE : JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_REPLACE: {
+                return JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_REMOVE: {
+                return yyjson_mut_arr_remove(_arr, index) ? JNI_TRUE : JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_REMOVE_FIRST: {
+                return yyjson_mut_arr_remove_first(_arr) ? JNI_TRUE : JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_REMOVE_LAST: {
+                return yyjson_mut_arr_remove_last(_arr) ? JNI_TRUE : JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_REMOVE_RANGE: {
+                return yyjson_mut_arr_remove_range(_arr, index, len) ? JNI_TRUE : JNI_FALSE;
+            }
+
+            case JSON_MUT_ARR_ACTION_CLEAN: {
+                return yyjson_mut_arr_clear(_arr) ? JNI_TRUE : JNI_FALSE;
+            }
+            default: {  }
+        }
+    }
+
+    return JNI_FALSE;
 }

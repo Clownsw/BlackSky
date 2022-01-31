@@ -709,4 +709,49 @@ public class JsonTest {
 
         mut.close();
     }
+
+    @Test
+    public void jsonMutArrRemoveTest() {
+        JsonMut mut = JsonMut.buildObject();
+        JsonMutObject root = (JsonMutObject) mut.getRoot();
+
+        JsonMutArr testArr = root.createJsonMutArr("testArr");
+
+        testArr.addArrInt(1)
+                .addArrInt(2)
+                .addArrInt(3)
+                .addArrInt(4)
+                .addArrInt(5)
+                .addArrInt(6);
+
+//        System.out.println(testArr.removeArr(4));
+//        System.out.println(testArr.removeArrFirst());
+//        System.out.println(testArr.removeArrLast());
+//        System.out.println(testArr.removeArrRange(1, 4));
+
+        System.out.println(mut.getJsonStr());
+
+        mut.close();
+    }
+
+    @Test
+    public void jsonMutInsertTest() {
+        JsonMut mut = JsonMut.buildObject();
+        JsonMutObject root = (JsonMutObject) mut.getRoot();
+
+        JsonMutArr testArr = root.createJsonMutArr("testArr");
+
+        testArr.addArrInt(1)
+                .addArrInt(2)
+                .addArrInt(3);
+
+        JsonMutObject testObj = testArr.createFreeJsonMutObject("testObj");
+
+//        testArr.insertArr(testObj, 1);
+//        testArr.appendArr(testObj);
+        testArr.prependArr(testObj);
+
+        System.out.println(mut.getJsonStr());
+        mut.close();
+    }
 }

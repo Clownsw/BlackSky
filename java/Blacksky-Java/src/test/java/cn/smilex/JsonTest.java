@@ -584,6 +584,10 @@ public class JsonTest {
         json2.close();
     }
 
+    /**
+     * 测试可变JSON对象和可变JSON数组绑定
+     * @author smilex
+     */
     @Test
     public void testJsonMutObjectAndJsonMutArrBind() {
         JsonMut jsonMut = JsonMut.buildObject();

@@ -1,23 +1,20 @@
 
 CC_DEBUG = g++ -Wall -Wformat -s -g -fPIC -c
-CC_RELEASE = g++ -Wall -O2 -s -static -DNDEBUG -flto -fPIC -c
+CC_RELEASE = g++ -Wall -Ofast -s -static -DNDEBUG -flto 	-fPIC -c
 INCLUDE = -Iinclude
 LIB = -Llib -lyyjson-static -lspdlog -lhv -lssl -lcrypto -lws2_32 -lwsock32 -lpthread -lbcrypt
 DEBUG_LINK = g++ -Wl,--gc-sections -shared -o blacksky.dll
 RELEASE_LINK = g++ -static -static-libgcc -static-libstdc++ -O2 -flto -s -Wl,--gc-sections -shared -o blacksky.dll
 
-DEBUG_NAME = Tools.o Requests.o Md5.o Base64.o  Sha.o Logger.o Json.o
-RELEASE_NAME = ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o
+DEBUG_NAME = Requests.o Md5.o Base64.o  Sha.o Logger.o Json.o
+RELEASE_NAME = RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o
 
-all: Tools.o Requests.o Md5.o Base64.o Sha.o Logger.o Json.o
+all: Requests.o Md5.o Base64.o Sha.o Logger.o Json.o
 	$(DEBUG_LINK) $(DEBUG_NAME) $(LIB)
 	
-release: ToolsRelease.o RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o
+release: RequestsRelease.o Md5Release.o Base64Release.o ShaRelease.o LoggerRelease.o JsonRelease.o
 	$(RELEASE_LINK) $(RELEASE_NAME) $(LIB)
 
-
-ToolsRelease.o: Tools.h Tools.cpp Error.hpp
-	$(CC_RELEASE) -o ToolsRelease.o Tools.cpp $(INCLUDE)
 
 RequestsRelease.o: Interface.h Requests.h Requests.cpp Error.hpp
 	$(CC_RELEASE) -o RequestsRelease.o Requests.cpp $(INCLUDE)
@@ -38,10 +35,6 @@ JsonRelease.o: Interface.h Json.cpp
 	$(CC_RELEASE) -o JsonRelease.o Json.cpp $(INCLUDE)
 
 
-
-Tools.o: Tools.h Tools.cpp Error.hpp
-	$(CC_DEBUG) -o Tools.o Tools.cpp $(INCLUDE)
-
 Requests.o: Interface.h Requests.h Requests.cpp Error.hpp
 	$(CC_DEBUG) -o Requests.o Requests.cpp $(INCLUDE)
 
@@ -61,14 +54,12 @@ Json.o: Interface.h Json.cpp
 	$(CC_DEBUG) -o Json.o Json.cpp $(INCLUDE)
 
 clean:
-	del Tools.o
 	del Md5.o
 	del Base64.o
 	del Requests.o
 	del Sha.o
 	del Logger.o
 	del Json.o
-	del ToolsRelease.o
 	del RequestsRelease.o
 	del Md5Release.o
 	del Base64Release.o

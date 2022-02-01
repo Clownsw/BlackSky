@@ -743,6 +743,7 @@ public class JsonTest {
 //        System.out.println(testArr.removeArrFirst());
 //        System.out.println(testArr.removeArrLast());
         System.out.println(testArr.removeArrRange(1, 4));
+//        System.out.println(testArr.cleanArr());
 
         System.out.println(mut.getJsonStr());
 

@@ -5,6 +5,7 @@ package cn.smilex.blacksky.jni;
  */
 public class Info {
     public static boolean isInit;
+    public static final String LIBRARY_NAME = "blacksky";
 
     static {
         synchronized (Info.class) {
@@ -14,17 +15,10 @@ public class Info {
 
     public static void init() {
         synchronized (Info.class) {
-            String osName = System.getProperty("os.name");
-            String libraryName;
-
-            if (osName.contains("Windows")) {
-                libraryName = "blacksky";
-            } else {
-                libraryName = "blacksky";
+            if (!isInit) {
+                System.loadLibrary(LIBRARY_NAME);
+                isInit = true;
             }
-
-            System.loadLibrary(libraryName);
-            isInit = true;
         }
     }
 }

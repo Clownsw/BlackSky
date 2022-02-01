@@ -10,6 +10,7 @@ public class Info {
     static {
         synchronized (Info.class) {
             isInit = false;
+            init();
         }
     }
 

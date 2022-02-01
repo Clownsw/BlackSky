@@ -88,6 +88,10 @@ public class JsonMut {
         }
     }
 
+    /**
+     * 构建一个JsonMutObject
+     * @return JsonMutObject
+     */
     private JsonMutObject buildJsonMutObject() {
         synchronized (JsonMut.class) {
             create(JSON_MUT_TYPE.OBJ.type);
@@ -95,6 +99,10 @@ public class JsonMut {
         }
     }
 
+    /**
+     * 构建一个JsonMutArr
+     * @return JsonMutArr
+     */
     private JsonMutArr buildJsonMutArr() {
         synchronized (JsonMut.class) {
             create(JSON_MUT_TYPE.ARR.type);
@@ -203,6 +211,12 @@ public class JsonMut {
         return (JsonTypeBoolean) createType(Json.Json_Type.BOOLEAN, value);
     }
 
+    /**
+     * 创建JSONType
+     * @param type 类型
+     * @param value 值
+     * @return JSONType
+     */
     private JsonType createType(Json.Json_Type type, Object value) {
         synchronized (JsonMut.class) {
             if (value == null) {
@@ -498,15 +512,8 @@ public class JsonMut {
         public boolean insertArr(JsonMutInter data, int index) {
             synchronized (JsonMutArr.class) {
                 if (data != null) {
-                    long objAddress;
+                    long objAddress = JsonMut.getObjAddress(data);
 
-                    if (data instanceof JsonMutObject) {
-                        var _data = (JsonMutObject) data;
-                        objAddress = JsonMut.getObjAddress(_data);
-                    } else {
-                        var _data = (JsonMutArr) data;
-                        objAddress = JsonMut.getObjAddress(_data);
-                    }
                     return _arrAction(JSON_MUT_ARR_ACTION.JSON_MUT_ARR_ACTION_INSERT.id, address, objAddress, index, 0);
                 }
                 return false;
@@ -522,15 +529,8 @@ public class JsonMut {
             synchronized (JsonMutArr.class) {
 
                 if (data != null) {
-                    long objAddress;
+                    long objAddress = JsonMut.getObjAddress(data);
 
-                    if (data instanceof JsonMutObject) {
-                        var _data = (JsonMutObject) data;
-                        objAddress = JsonMut.getObjAddress(_data);
-                    } else {
-                        var _data = (JsonMutArr) data;
-                        objAddress = JsonMut.getObjAddress(_data);
-                    }
                     return _arrAction(JSON_MUT_ARR_ACTION.JSON_MUT_ARR_ACTION_APPEND.id, address, objAddress, 0, 0);
                 }
                 return false;
@@ -546,16 +546,47 @@ public class JsonMut {
             synchronized (JsonMutArr.class) {
 
                 if (data != null) {
-                    long objAddress;
+                    long objAddress = JsonMut.getObjAddress(data);
 
-                    if (data instanceof JsonMutObject) {
-                        var _data = (JsonMutObject) data;
-                        objAddress = JsonMut.getObjAddress(_data);
-                    } else {
-                        var _data = (JsonMutArr) data;
-                        objAddress = JsonMut.getObjAddress(_data);
-                    }
-                    return _arrAction(JSON_MUT_ARR_ACTION.JSON_MUT_ARR_ACTION_PREPEND.id, address, objAddress, 0, 0);
+                    return objAddress > 0
+                            &&
+                            _arrAction(JSON_MUT_ARR_ACTION.JSON_MUT_ARR_ACTION_PREPEND.id, address, objAddress, 0, 0);
+                }
+                return false;
+            }
+        }
+
+        /**
+         * 替换数组中指定位置的内容
+         * @param data 内容
+         * @param index 位置
+         * @return 是否成功
+         */
+        public boolean replaceArr(JsonType data, int index) {
+            synchronized (JsonMutArr.class) {
+                if (data != null) {
+                    long objAddress = JsonMut.getObjAddress(data);
+                    return objAddress > 0
+                            &&
+                            _arrAction(JSON_MUT_ARR_ACTION.JSON_MUT_ARR_ACTION_REPLACE.id, address, objAddress, index, 0);
+                }
+                return false;
+            }
+        }
+
+        /**
+         * 替换数组中指定位置的内容
+         * @param data 内容
+         * @param index 位置
+         * @return 是否成功
+         */
+        public boolean replaceArr(JsonMutInter data, int index) {
+            synchronized (JsonMutArr.class) {
+                if (data != null) {
+                    long objAddress = JsonMut.getObjAddress(data);
+                    return objAddress > 0
+                            &&
+                            _arrAction(JSON_MUT_ARR_ACTION.JSON_MUT_ARR_ACTION_REPLACE.id, address, objAddress, index, 0);
                 }
                 return false;
             }

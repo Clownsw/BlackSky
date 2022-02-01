@@ -536,7 +536,9 @@ JNIEXPORT jboolean JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAction
             }
 
             case JSON_MUT_ARR_ACTION_REPLACE: {
-                return JNI_FALSE;
+                return data == 0
+                        ? JNI_FALSE
+                        : yyjson_mut_arr_replace(_arr, index, _data) ? JNI_TRUE : JNI_FALSE;
             }
 
             case JSON_MUT_ARR_ACTION_REMOVE: {

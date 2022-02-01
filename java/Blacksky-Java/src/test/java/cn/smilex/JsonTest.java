@@ -767,9 +767,17 @@ public class JsonTest {
 
         JsonMut.JsonMutObject testObj = mut.createFreeJsonMutObject("testObj");
 
-//        testArr.insertArr(testObj, 1);
+        testArr.insertArr(testObj, 1);
 //        testArr.appendArr(testObj);
-        testArr.prependArr(testObj);
+//        testArr.prependArr(testObj);
+
+//        JsonTypeStr hello = mut.createJsonTypeStr("Hello");
+//        testArr.replaceArr(hello, 1);
+
+        var testObj2 = mut.createFreeJsonMutObject("testObj2");
+        testObj2.addInt("testInt", Integer.MAX_VALUE);
+
+        testArr.replaceArr(testObj2, 1);
 
         System.out.println(mut.getJsonStr());
         mut.close();

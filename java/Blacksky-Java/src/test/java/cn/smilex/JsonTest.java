@@ -557,11 +557,11 @@ public class JsonTest {
     @Test
     public void testTwoJsonMutClose() {
 
-        JsonMut json = JsonMut.buildObject();
-        JsonMutObject root = (JsonMutObject) json.getRoot();
+        JsonMut mut1 = JsonMut.buildObject();
+        var root = (JsonMut.JsonMutObject) mut1.getRoot();
 
-        JsonMut json2 = JsonMut.buildArr();
-        JsonMutArr root2 = (JsonMutArr) json2.getRoot();
+        JsonMut mut2 = JsonMut.buildArr();
+        var root2 = (JsonMut.JsonMutArr) mut2.getRoot();
 
         root.addStr("testStr", "Hello, 你好")
                 .addInt("testInt", Integer.MAX_VALUE)
@@ -578,11 +578,11 @@ public class JsonTest {
                 .addArrBoolean(false);
 
 
-        System.out.println(json.getJsonStr());
-        System.out.println(json2.getJsonStr());
+        System.out.println(mut1.getJsonStr());
+        System.out.println(mut2.getJsonStr());
 
-        json.close();
-        json2.close();
+        mut1.close();
+        mut2.close();
     }
 
     /**
@@ -591,24 +591,24 @@ public class JsonTest {
      */
     @Test
     public void testJsonMutObjectAndJsonMutArrBind() {
-        JsonMut jsonMut = JsonMut.buildObject();
-        JsonMutObject root = (JsonMutObject) jsonMut.getRoot();
+        JsonMut mut = JsonMut.buildObject();
+        JsonMut.JsonMutObject root = (JsonMut.JsonMutObject) mut.getRoot();
 
-        JsonMutObject testObj = root.createFreeJsonMutObject("testObj");
-        JsonMutArr testArr = root.createFreeJsonMutArr("testArr");
+        JsonMut.JsonMutObject testObj = mut.createFreeJsonMutObject("testObj");
+        JsonMut.JsonMutArr testArr = mut.createFreeJsonMutArr("testArr");
 
         root.bind("testObj", testObj);
         root.bind("testArr", testArr);
 
-        JsonMutObject testObj2 = testObj.createFreeJsonMutObject("testObj2");
+        JsonMut.JsonMutObject testObj2 = mut.createFreeJsonMutObject("testObj2");
         testObj.bind("testObj2", testObj2);
 
-        JsonMutObject testArrTestObj1 = testArr.createFreeJsonMutObject("testArrTestObj1");
+        JsonMut.JsonMutObject testArrTestObj1 = mut.createFreeJsonMutObject("testArrTestObj1");
         testArr.bind(testArrTestObj1);
 
-        System.out.println(jsonMut.getJsonStr());
+        System.out.println(mut.getJsonStr());
 
-        jsonMut.close();
+        mut.close();
     }
 
     /**
@@ -617,22 +617,32 @@ public class JsonTest {
      */
     @Test
     public void testJsonMutObjectAdd() {
-        JsonMut jsonMut = JsonMut.buildObject();
-        JsonMutObject root = (JsonMutObject) jsonMut.getRoot();
 
-        JsonMutObject obj = root.createFreeJsonMutObject("obj");
-        root.bind("obj", obj);
+        JsonMut mut = JsonMut.buildObject();
+        JsonMut.JsonMutObject root = (JsonMut.JsonMutObject) mut.getRoot();
 
-        obj.addStr("testStr", "Hello, 你好")
+        root.addStr("testStr", "Hello, 你好!")
                 .addInt("testInt", Integer.MAX_VALUE)
-                .addDouble("testDouble", Double.MAX_VALUE)
                 .addLong("testLong", Long.MAX_VALUE)
+                .addDouble("testDouble", Double.MAX_VALUE)
                 .addBoolean("testBooleanTrue", true)
-                .addBoolean("testBooleanFalse", false);
+                .addBoolean("testBooleanTrue", false);
 
-        System.out.println(jsonMut.getJsonStr());
+        JsonMut.JsonMutObject testObj1 = mut.createFreeJsonMutObject("testObj1");
+        root.bind("testObj1", testObj1);
 
-        jsonMut.close();
+        testObj1.addStr("testStr", "Hello, 你好!")
+                .addInt("testInt", Integer.MAX_VALUE)
+                .addLong("testLong", Long.MAX_VALUE)
+                .addDouble("testDouble", Double.MAX_VALUE)
+                .addBoolean("testBooleanTrue", true)
+                .addBoolean("testBooleanTrue", false);
+
+        JsonTypeStr testStr = mut.createJsonTypeStr("testStr");
+        root.bind("str", testStr);
+
+        System.out.println(mut.getJsonStr());
+        mut.close();
     }
 
     /**
@@ -641,10 +651,10 @@ public class JsonTest {
      */
     @Test
     public void testJsonMutArrAdd() {
-        JsonMut jsonMut = JsonMut.buildArr();
-        JsonMutArr root = (JsonMutArr) jsonMut.getRoot();
+        JsonMut mut = JsonMut.buildArr();
+        JsonMut.JsonMutArr root = (JsonMut.JsonMutArr) mut.getRoot();
 
-        JsonMutArr arr = root.createFreeJsonMutArr("arr");
+        JsonMut.JsonMutArr arr = mut.createFreeJsonMutArr("arr");
         root.bind(arr);
 
         arr.addArrStr("testStr")
@@ -654,9 +664,9 @@ public class JsonTest {
                 .addArrBoolean(true)
                 .addArrBoolean(false);
 
-        System.out.println(jsonMut.getJsonStr());
+        System.out.println(mut.getJsonStr());
 
-        jsonMut.close();
+        mut.close();
     }
 
     /**
@@ -666,9 +676,9 @@ public class JsonTest {
     @Test
     public void testUseJsonMutObjectAndJsonMutArr() {
         JsonMut mut = JsonMut.buildObject();
-        JsonMutObject root = (JsonMutObject) mut.getRoot();
+        JsonMut.JsonMutObject root = (JsonMut.JsonMutObject) mut.getRoot();
 
-        JsonMutObject testObj1 = root.createJsonMutObject("testObj1");
+        JsonMut.JsonMutObject testObj1 = root.createJsonMutObject("testObj1");
         testObj1.addStr("testStr", "Hello, 你好")
                 .addInt("testInt", Integer.MAX_VALUE)
                 .addDouble("testDouble", Double.MAX_VALUE)
@@ -676,18 +686,18 @@ public class JsonTest {
                 .addBoolean("testBooleanTrue", true)
                 .addBoolean("testBooleanFalse", false);
 
-        JsonMutArr testArr1 = root.createJsonMutArr("testArr1");
+        JsonMut.JsonMutArr testArr1 = root.createJsonMutArr("testArr1");
 
-        JsonMutObject testArr1Obj1 = testArr1.createFreeJsonMutObject("testArr1Obj1");
-        JsonMutObject testArr1Obj2 = testArr1.createFreeJsonMutObject("testArr1Obj2");
-        JsonMutObject testArr1Obj3 = testArr1.createFreeJsonMutObject("testArr1Obj3");
+        JsonMut.JsonMutObject testArr1Obj1 = mut.createFreeJsonMutObject("testArr1Obj1");
+        JsonMut.JsonMutObject testArr1Obj2 = mut.createFreeJsonMutObject("testArr1Obj2");
+        JsonMut.JsonMutObject testArr1Obj3 = mut.createFreeJsonMutObject("testArr1Obj3");
 
         testArr1.bind(testArr1Obj1);
         testArr1.bind(testArr1Obj2);
         testArr1.bind(testArr1Obj3);
 
-        JsonMutObject[] jsonMutObjects = {testArr1Obj1, testArr1Obj2, testArr1Obj3};
-        for (JsonMutObject jsonMutObject : jsonMutObjects) {
+        JsonMut.JsonMutObject[] jsonMutObjects = {testArr1Obj1, testArr1Obj2, testArr1Obj3};
+        for (JsonMut.JsonMutObject jsonMutObject : jsonMutObjects) {
             jsonMutObject.addStr("testStr", "Hello, 你好")
                     .addInt("testInt", Integer.MAX_VALUE)
                     .addDouble("testDouble", Double.MAX_VALUE)
@@ -696,7 +706,7 @@ public class JsonTest {
                     .addBoolean("testBooleanFalse", false);
         }
 
-        JsonMutArr testArr1Obj1Arr1 = testArr1Obj1.createFreeJsonMutArr("testArr1Obj1Arr1");
+        JsonMut.JsonMutArr testArr1Obj1Arr1 = mut.createFreeJsonMutArr("testArr1Obj1Arr1");
         testArr1Obj1.bind("testArr1Obj1Arr1", testArr1Obj1Arr1);
 
         testArr1Obj1Arr1.addArrStr("testStr")
@@ -718,9 +728,9 @@ public class JsonTest {
     @Test
     public void jsonMutArrRemoveTest() {
         JsonMut mut = JsonMut.buildObject();
-        JsonMutObject root = (JsonMutObject) mut.getRoot();
+        JsonMut.JsonMutObject root = (JsonMut.JsonMutObject) mut.getRoot();
 
-        JsonMutArr testArr = root.createJsonMutArr("testArr");
+        JsonMut.JsonMutArr testArr = root.createJsonMutArr("testArr");
 
         testArr.addArrInt(1)
                 .addArrInt(2)
@@ -732,7 +742,7 @@ public class JsonTest {
 //        System.out.println(testArr.removeArr(4));
 //        System.out.println(testArr.removeArrFirst());
 //        System.out.println(testArr.removeArrLast());
-//        System.out.println(testArr.removeArrRange(1, 4));
+        System.out.println(testArr.removeArrRange(1, 4));
 
         System.out.println(mut.getJsonStr());
 
@@ -746,15 +756,15 @@ public class JsonTest {
     @Test
     public void jsonMutArrInsertTest() {
         JsonMut mut = JsonMut.buildObject();
-        JsonMutObject root = (JsonMutObject) mut.getRoot();
+        JsonMut.JsonMutObject root = (JsonMut.JsonMutObject) mut.getRoot();
 
-        JsonMutArr testArr = root.createJsonMutArr("testArr");
+        JsonMut.JsonMutArr testArr = root.createJsonMutArr("testArr");
 
         testArr.addArrInt(1)
                 .addArrInt(2)
                 .addArrInt(3);
 
-        JsonMutObject testObj = testArr.createFreeJsonMutObject("testObj");
+        JsonMut.JsonMutObject testObj = mut.createFreeJsonMutObject("testObj");
 
 //        testArr.insertArr(testObj, 1);
 //        testArr.appendArr(testObj);
@@ -764,10 +774,14 @@ public class JsonTest {
         mut.close();
     }
 
+    /**
+     * 测试创建JSONType
+     * @author smilex
+     */
     @Test
     public void jsonMutCreateJsonTypeTest() {
         JsonMut mut = JsonMut.buildObject();
-        JsonMutObject root = (JsonMutObject) mut.getRoot();
+        JsonMut.JsonMutObject root = (JsonMut.JsonMutObject) mut.getRoot();
 
         JsonTypeStr jsonTypeStr = mut.createJsonTypeStr("Hello, 你好");
         root.bind("str", jsonTypeStr);

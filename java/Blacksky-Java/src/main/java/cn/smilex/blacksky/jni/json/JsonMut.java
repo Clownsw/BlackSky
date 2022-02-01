@@ -477,6 +477,19 @@ public class JsonMut {
         }
 
         /**
+         * 绑定一个JSONType
+         * @param obj JSONType
+         * @return this
+         */
+        public JsonMutArr bind(JsonType obj) {
+            synchronized (JsonMutArr.class) {
+                long objAddress = JsonMut.getObjAddress(obj);
+                _bind(address, objAddress, null);
+                return this;
+            }
+        }
+
+        /**
          * 在数组的指定位置插入一个内容
          * @param data 内容
          * @param index 位置

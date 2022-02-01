@@ -806,4 +806,28 @@ public class JsonTest {
 
         mut.close();
     }
+
+    /**
+     * 测试绑定JSONType
+     * @author smilex
+     */
+    @Test
+    public void testJsonMutBindJsonType() {
+        JsonMut mut = JsonMut.buildObject();
+        var root = (JsonMut.JsonMutObject) mut.getRoot();
+
+        JsonTypeInt testInt = mut.createJsonTypeInt(Integer.MAX_VALUE);
+        /* JSON对象绑定JSONType */
+        root.bind("testInt", testInt);
+
+        var testArr = root.createJsonMutArr("testArr");
+
+        var testLong = mut.createJsonTypeLong(Long.MAX_VALUE);
+        /* JSON数组绑定JSONType */
+        testArr.bind(testLong);
+
+        System.out.println(mut.getJsonStr());
+
+        mut.close();
+    }
 }

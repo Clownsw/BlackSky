@@ -43,7 +43,6 @@ enum JSON_MUT_ARR_ACTION {
 
 yyjson_doc *doc = nullptr;
 yyjson_val *val = nullptr;
-yyjson_mut_doc *mutDoc = nullptr;
 
 ////////////////////////////////////////////
 ///////////////Json native//////////////////
@@ -257,24 +256,26 @@ JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getType
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _createMut
- * Signature: (I)Ljava/lang/String;
+ * Signature: (ILjava/lang/String;)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
-    (JNIEnv *env, jobject obj, jint type) {
+    (JNIEnv *env, jobject obj, jint type, jstring str) {
 
+    const char *_str = str != nullptr ? env->GetStringUTFChars(str, JNI_FALSE) : nullptr;
+
+    env->DeleteLocalRef(str);
     env->DeleteLocalRef(obj);
 
-    mutDoc = yyjson_mut_doc_new(nullptr);
+    auto mutDoc = yyjson_mut_doc_new(nullptr);
 
     if (mutDoc == nullptr) {
         throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
-        return NULL;
+        return nullptr;
     }
 
     yyjson_mut_val *data;
 
     switch (type) {
-        default:
         case JSON_MUT_OBJ: {
             data = yyjson_mut_obj(mutDoc);
             break;
@@ -284,11 +285,24 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
             data = yyjson_mut_arr(mutDoc);
             break;
         }
+
+        default: {
+            yyjson_read_flag flag = YYJSON_READ_ALLOW_TRAILING_COMMAS | YYJSON_READ_ALLOW_COMMENTS;
+            yyjson_doc *_doc = yyjson_read(_str, strlen(_str), flag);
+
+            yyjson_mut_doc_free(mutDoc);
+
+            mutDoc = yyjson_doc_mut_copy(_doc, nullptr);
+            data = yyjson_mut_doc_get_root(mutDoc);
+
+            yyjson_doc_free(_doc);
+            break;
+        }
     }
 
     if (data == nullptr) {
         throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
-        return NULL;
+        return nullptr;
     }
 
     yyjson_mut_doc_set_root(mutDoc, data);
@@ -308,7 +322,6 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1closeMut
 
     if (address != 0) {
         yyjson_mut_doc_free((yyjson_mut_doc *) address);
-        mutDoc = nullptr;
     }
 }
 
@@ -330,13 +343,14 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1writeString
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _add
- * Signature: (JILjava/lang/String;Z)J
+ * Signature: (JJILjava/lang/String;Z)J
  */
 JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
-    (JNIEnv *env, jobject obj, jlong address, jint type, jstring name, jboolean isBind) {
+    (JNIEnv *env, jobject obj, jlong __address, jlong address, jint type, jstring name, jboolean isBind) {
 
     const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
-    auto *_address = (yyjson_mut_val*) address;
+    auto *_mutDoc = (yyjson_mut_doc *) __address;
+    auto *_address = (yyjson_mut_val *) address;
 
     env->DeleteLocalRef(obj);
     env->DeleteLocalRef(name);
@@ -345,12 +359,12 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
 
     switch (type) {
         case JSON_MUT_OBJ: {
-            m_obj = yyjson_mut_obj(mutDoc);
+            m_obj = yyjson_mut_obj(_mutDoc);
             break;
         }
 
         case JSON_MUT_ARR: {
-            m_obj = yyjson_mut_arr(mutDoc);
+            m_obj = yyjson_mut_arr(_mutDoc);
             break;
         }
         default: {
@@ -363,7 +377,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
     }
 
     if (isBind == JNI_TRUE) {
-        yyjson_mut_obj_add(_address, yyjson_mut_str(mutDoc, _name), m_obj);
+        yyjson_mut_obj_add(_address, yyjson_mut_str(_mutDoc, _name), m_obj);
     }
 
     return (jlong) m_obj;
@@ -372,42 +386,43 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _objAdd
- * Signature: (IJLjava/lang/String;Ljava/lang/Object;)V
+ * Signature: (IJJLjava/lang/String;Ljava/lang/Object;)V
  */
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1objAdd
-    (JNIEnv *env, jobject obj, jint type, jlong address, jstring name, jobject data) {
+    (JNIEnv *env, jobject obj, jint type, jlong __address, jlong address, jstring name, jobject data) {
 
     const char* _name = env->GetStringUTFChars(name, JNI_FALSE);
     jstring dataStr = jObjectTojString(env, data);
-    auto * _address = (yyjson_mut_val*) address;
+    auto *_mutDoc = (yyjson_mut_doc *) __address;
+    auto *_address = (yyjson_mut_val *) address;
 
     switch (type) {
         case JSON_TYPE_STRING: {
-            yyjson_mut_obj_add_str(mutDoc, _address, _name, env->GetStringUTFChars(dataStr, JNI_FALSE));
+            yyjson_mut_obj_add_str(_mutDoc, _address, _name, env->GetStringUTFChars(dataStr, JNI_FALSE));
             break;
         }
 
         case JSON_TYPE_INTEGER: {
             jint _data = jStringTojInt(env, dataStr);
-            yyjson_mut_obj_add_int(mutDoc, _address, _name, _data);
+            yyjson_mut_obj_add_int(_mutDoc, _address, _name, _data);
             break;
         }
 
         case JSON_TYPE_DOUBLE: {
             double _data = jStringToDouble(env, dataStr);
-            yyjson_mut_obj_add_real(mutDoc, _address, _name, _data);
+            yyjson_mut_obj_add_real(_mutDoc, _address, _name, _data);
             break;
         }
 
         case JSON_TYPE_LONG: {
             jlong _data = jStringTojLong(env, dataStr);
-            yyjson_mut_obj_add_uint(mutDoc, _address, _name, _data);
+            yyjson_mut_obj_add_uint(_mutDoc, _address, _name, _data);
             break;
         }
 
         case JSON_TYPE_BOOLEAN: {
             jboolean _data = jStringTojBoolean(env, dataStr);
-            yyjson_mut_obj_add_bool(mutDoc, _address, _name, _data == JNI_TRUE);
+            yyjson_mut_obj_add_bool(_mutDoc, _address, _name, _data == JNI_TRUE);
             break;
         }
 
@@ -425,38 +440,39 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1objAdd
  * Signature: (IJLjava/lang/Object;)V
  */
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAdd
-    (JNIEnv *env, jobject obj, jint type, jlong address, jobject data) {
+    (JNIEnv *env, jobject obj, jint type, jlong __address, jlong address, jobject data) {
 
-    auto *_address = (yyjson_mut_val*) address;
+    auto *_mutDoc = (yyjson_mut_doc *) __address;
+    auto *_address = (yyjson_mut_val *) address;
     auto dataStr = jObjectTojString(env, data);
 
     switch (type) {
         case JSON_TYPE_STRING: {
-            yyjson_mut_arr_add_str(mutDoc, _address, env->GetStringUTFChars(dataStr, JNI_FALSE));
+            yyjson_mut_arr_add_str(_mutDoc, _address, env->GetStringUTFChars(dataStr, JNI_FALSE));
             break;
         }
 
         case JSON_TYPE_INTEGER: {
             jint _data = jStringTojInt(env, dataStr);
-            yyjson_mut_arr_add_int(mutDoc, _address, _data);
+            yyjson_mut_arr_add_int(_mutDoc, _address, _data);
             break;
         }
 
         case JSON_TYPE_DOUBLE: {
             jdouble _data = jStringToDouble(env, dataStr);
-            yyjson_mut_arr_add_real(mutDoc, _address, _data);
+            yyjson_mut_arr_add_real(_mutDoc, _address, _data);
             break;
         }
 
         case JSON_TYPE_LONG: {
             jlong _data = jStringTojLong(env, dataStr);
-            yyjson_mut_arr_add_uint(mutDoc, _address, _data);
+            yyjson_mut_arr_add_uint(_mutDoc, _address, _data);
             break;
         }
 
         case JSON_TYPE_BOOLEAN: {
             jboolean _data = jStringTojBoolean(env, dataStr);
-            yyjson_mut_arr_add_bool(mutDoc, _address, _data == JNI_TRUE);
+            yyjson_mut_arr_add_bool(_mutDoc, _address, _data == JNI_TRUE);
             break;
         }
 
@@ -470,12 +486,14 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1arrAdd
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _bind
- * Signature: (JJLjava/lang/String;)V
+ * Signature: (JJJLjava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
-    (JNIEnv *env, jobject obj, jlong rootAddress, jlong address, jstring name) {
+    (JNIEnv *env, jobject obj, jlong _address, jlong rootAddress, jlong address, jstring name) {
 
     env->DeleteLocalRef(obj);
+
+    auto *_mutDoc = (yyjson_mut_doc *) _address;
 
     if (rootAddress > 0 && address > 0) {
         auto *_rootAddress = (yyjson_mut_val *) rootAddress;
@@ -490,7 +508,7 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1bind
             }
 
             auto _name = env->GetStringUTFChars(name, JNI_FALSE);
-            yyjson_mut_obj_add(_rootAddress, yyjson_mut_str(mutDoc, _name), _address);
+            yyjson_mut_obj_add(_rootAddress, yyjson_mut_str(_mutDoc, _name), _address);
         }
     }
 }
@@ -623,4 +641,17 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createType
             }
         }
     }
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _getType
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1getType
+    (JNIEnv *env, jobject obj, jlong address) {
+
+    env->DeleteLocalRef(obj);
+
+    return yyjson_mut_get_type((yyjson_mut_val *) address);
 }

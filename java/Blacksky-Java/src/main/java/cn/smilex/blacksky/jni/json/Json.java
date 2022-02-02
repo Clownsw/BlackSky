@@ -281,10 +281,6 @@ public class Json {
         System.out.println("pointAddress-type: " + getType(pointAddress));
     }
 
-    public static JsonMut createJsonAsArr() {
-        return new JsonMut(JsonMut.JSON_MUT_TYPE.ARR.type);
-    }
-
     private native long _create(String jsonStr);
 
     protected native Object _get(int type, String name, int isRoot, long address);

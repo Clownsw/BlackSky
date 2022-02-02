@@ -560,15 +560,18 @@ public class JsonTest {
         JsonMut mut1 = JsonMut.buildObject();
         var root = (JsonMut.JsonMutObject) mut1.getRoot();
 
-        JsonMut mut2 = JsonMut.buildArr();
-        var root2 = (JsonMut.JsonMutArr) mut2.getRoot();
-
         root.addStr("testStr", "Hello, 你好")
                 .addInt("testInt", Integer.MAX_VALUE)
                 .addDouble("testDouble", Double.MAX_VALUE)
                 .addLong("testLong", Long.MAX_VALUE)
                 .addBoolean("testBooleanTrue", true)
                 .addBoolean("testBooleanFalse", false);
+
+        System.out.println(mut1.getJsonStr());
+        mut1.close();
+
+        JsonMut mut2 = JsonMut.buildArr();
+        var root2 = (JsonMut.JsonMutArr) mut2.getRoot();
 
         root2.addArrStr("testStr")
                 .addArrInt(Integer.MAX_VALUE)
@@ -578,10 +581,8 @@ public class JsonTest {
                 .addArrBoolean(false);
 
 
-        System.out.println(mut1.getJsonStr());
         System.out.println(mut2.getJsonStr());
 
-        mut1.close();
         mut2.close();
     }
 
@@ -838,4 +839,44 @@ public class JsonTest {
 
         mut.close();
     }
+
+    /**
+     * 测试通过JSON字符串创建可变JSON
+     * @author smilex
+     */
+    @Test
+    public void testCreateJsonMutByJsonStr() {
+
+//        String str = "{\n" +
+//                "\t\"data\": {\n" +
+//                "\t\t\"name\": \"test\"\n" +
+//                "\t}\n" +
+//                "}";
+//
+//        JsonMut mut = JsonMut.buildByJsonStr(str);
+//        var root = (JsonMut.JsonMutObject) mut.getRoot();
+//
+//        var data = mut.createFreeJsonMutObject("data");
+//        data.addStr("name", "Hello");
+//
+//        root.bind("data", data);
+//
+//        System.out.println(mut.getJsonStr());
+//        mut.close();
+
+        String str = "[\n" +
+                "\t{}\n" +
+                "]";
+
+        JsonMut mut = JsonMut.buildByJsonStr(str);
+        var root = (JsonMut.JsonMutArr) mut.getRoot();
+
+        root.addArrInt(1)
+                .addArrInt(2)
+                .addArrInt(3);
+
+        System.out.println(mut.getJsonStr());
+        mut.close();
+    }
+
 }

@@ -11,6 +11,7 @@ import java.util.List;
 public class Json {
 
     private static final String key = "__acJjzPifrs__";
+    private long _address;
     private long rootAddress;
     private long pointAddress;
 
@@ -22,23 +23,30 @@ public class Json {
         }
     }
 
-    protected Json() {  }
+    private void _parse(String s) {
+        String a = s.substring(0, s.indexOf("+"));
+        _address = Long.parseLong(a);
+        String b = s.substring(a.length() + 1);
+        rootAddress = Long.parseLong(b);
+    }
+
+    private Json() {  }
 
     public Json(String jsonStr) {
         synchronized (Json.class) {
-            rootAddress = _create(jsonStr);
+            _parse(_create(jsonStr));
         }
     }
 
     public void close() {
         synchronized (Json.class) {
-            _close(rootAddress);
+            _close(_address);
         }
     }
 
     public Json getPoint(String point) {
         synchronized (Json.class) {
-            pointAddress = _getPoint(0, point);
+            pointAddress = _getPoint(rootAddress, point);
             return this;
         }
     }
@@ -73,7 +81,7 @@ public class Json {
      * @return V
      */
     public String getString(String name) {
-        return (String) _get(Json_Type.STRING.id, name, JSON_GET_METHOD.DEFAULT.id, 0);
+        return (String) _get(Json_Type.STRING.id, name, JSON_GET_METHOD.DEFAULT.id, rootAddress);
     }
 
     protected String _asString(long address) {
@@ -91,7 +99,7 @@ public class Json {
     * Int
     * */
     public int getInt(String name) {
-        return Integer.parseInt((String)_get(Json_Type.INTEGER.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
+        return Integer.parseInt((String)_get(Json_Type.INTEGER.id, name, JSON_GET_METHOD.DEFAULT.id, rootAddress));
     }
 
     protected int _asInt(long address) {
@@ -106,7 +114,7 @@ public class Json {
     * Double
     * */
     public double getDouble(String name) {
-        return Double.parseDouble((String)_get(Json_Type.DOUBLE.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
+        return Double.parseDouble((String)_get(Json_Type.DOUBLE.id, name, JSON_GET_METHOD.DEFAULT.id, rootAddress));
     }
 
     protected double _asDouble(long address) {
@@ -121,7 +129,7 @@ public class Json {
     * Long
     * */
     public long getLong(String name) {
-        return Long.parseLong((String) _get(Json_Type.LONG.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
+        return Long.parseLong((String) _get(Json_Type.LONG.id, name, JSON_GET_METHOD.DEFAULT.id, rootAddress));
     }
 
     protected long _asLong(long address) {
@@ -136,7 +144,7 @@ public class Json {
     * Boolean
     * */
     public boolean getBoolean(String name) {
-        return Boolean.parseBoolean((String) _get(Json_Type.BOOLEAN.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
+        return Boolean.parseBoolean((String) _get(Json_Type.BOOLEAN.id, name, JSON_GET_METHOD.DEFAULT.id, rootAddress));
     }
 
     protected boolean _asBoolean(long address) {
@@ -148,7 +156,7 @@ public class Json {
     }
 
     public List<JsonObject> asRootArrJsonObject() {
-        long[] _addresses = _getArray(null, true, rootAddress);
+        long[] _addresses = _getArray(null, true, _address);
 
         List<JsonObject> jsonObjects = new ArrayList<>();
         for (long address : _addresses) {
@@ -172,7 +180,7 @@ public class Json {
     }
 
     public JsonObject getObject(String name) {
-        String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.DEFAULT.id, 0);
+        String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.DEFAULT.id, rootAddress);
         if (_address == null) {
             return null;
         }
@@ -181,7 +189,7 @@ public class Json {
 
     public List<JsonObject> getArrJsonObject(String name) {
         synchronized (Json.class) {
-            long[] _addresses = _getArray(name, true, 0);
+            long[] _addresses = _getArray(name, true, _address);
             if (_addresses == null) {
                 return null;
             }
@@ -387,15 +395,10 @@ public class Json {
 
     }
 
-    private native long _create(String jsonStr);
-
-    protected native Object _get(int type, String name, int isRoot, long address);
-
+    private native String _create(String jsonStr);
+    private native Object _get(int type, String name, int isRoot, long address);
     private native long[] _getArray(String name, boolean isRoot, long address);
-
-    protected native long _getPoint(long address, String point);
-
+    private native long _getPoint(long address, String point);
     private native void _close(long address);
-
     private native int _getType(long address);
 }

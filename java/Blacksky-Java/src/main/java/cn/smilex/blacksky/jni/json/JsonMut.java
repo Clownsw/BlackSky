@@ -94,7 +94,6 @@ public class JsonMut {
         address = Long.parseLong(b);
     }
 
-
     /**
      * 创建一个空的可变JSON
      * @param type JSON_MUT_TYPE

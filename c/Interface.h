@@ -127,9 +127,9 @@ JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_log_Logger_flush_1on
 /*
  * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _create
- * Signature: (Ljava/lang/String;)I
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
     (JNIEnv* env, jobject obj, jstring jsonStr);
 
 /*

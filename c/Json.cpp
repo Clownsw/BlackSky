@@ -41,9 +41,6 @@ enum JSON_MUT_ARR_ACTION {
     JSON_MUT_ARR_ACTION_CLEAN = 8,
 };
 
-yyjson_doc *doc = nullptr;
-yyjson_val *val = nullptr;
-
 ////////////////////////////////////////////
 ///////////////Json native//////////////////
 ////////////////////////////////////////////
@@ -51,16 +48,16 @@ yyjson_val *val = nullptr;
 /*
  * Class:     cn_smilex_blacksky_jni_json_Json
  * Method:    _create
- * Signature: (Ljava/lang/String;)J
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
+JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
     (JNIEnv* env, jobject obj, jstring jsonStr) {
 
     auto _jsonStr = env->GetStringUTFChars(jsonStr, JNI_FALSE);
     yyjson_read_flag flag = YYJSON_READ_ALLOW_TRAILING_COMMAS | YYJSON_READ_ALLOW_COMMENTS;
-    doc = yyjson_read(_jsonStr, strlen(_jsonStr), flag);
+    auto doc = yyjson_read(_jsonStr, strlen(_jsonStr), flag);
 
-    val = yyjson_doc_get_root(doc);
+    auto val = yyjson_doc_get_root(doc);
 
     env->DeleteLocalRef(jsonStr);
     env->DeleteLocalRef(obj);
@@ -68,10 +65,10 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1create
     if (val == nullptr) {
         yyjson_doc_free(doc);
         throwException(env, CLASSNAME_RuntimeException, ERROR_JSON_FORMAT_ERROR);
-        return 0;
+        return nullptr;
     }
 
-    return (jlong) doc;
+    return env->NewStringUTF(fmt::format("{}+{}", (jlong) doc, (jlong) val).c_str());
 }
 
 /*
@@ -88,7 +85,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_json_Json__1get
     env->DeleteLocalRef(obj);
 
     yyjson_val *root =
-            isRoot == JSON_GET_METHOD_DEFAULT ? yyjson_obj_get(val, _name)
+            isRoot == JSON_GET_METHOD_DEFAULT ? yyjson_obj_get((yyjson_val *) address, _name)
             : isRoot == JSON_GET_METHOD_NAME_ADDRESS ? yyjson_obj_get((yyjson_val*) address, _name)
             : (yyjson_val *) address;
 
@@ -148,13 +145,13 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
 
     yyjson_val *root;
     if (name != nullptr && strcmp(_name, xorstr_("__acJjzPifrs__")) == 0) {
-        root = (yyjson_val*) address;
+        root = (yyjson_val *) address;
     } else {
         root = _name == nullptr
-                           ? yyjson_doc_get_root((yyjson_doc*) address)
+                           ? yyjson_doc_get_root((yyjson_doc *) address)
                            : isRoot == JNI_FALSE
-                             ? yyjson_obj_get((yyjson_val*) address, _name)
-                             : yyjson_obj_get(val, _name);
+                             ? yyjson_obj_get((yyjson_val *) address, _name)
+                             : yyjson_obj_get(yyjson_doc_get_root((yyjson_doc *) address), _name);
     }
 
     if (root == nullptr) {
@@ -211,9 +208,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
     env->DeleteLocalRef(point);
     env->DeleteLocalRef(obj);
 
-    return address == 0
-    ? (jlong) yyjson_get_pointer(val, _point)
-    : (jlong) (yyjson_get_pointer((yyjson_val*) address, _point));
+    return (jlong) (yyjson_get_pointer((yyjson_val *) address, _point));
 }
 
 /*
@@ -224,9 +219,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getPoint
 JNIEXPORT void JNICALL Java_cn_smilex_blacksky_jni_json_Json__1close
     (JNIEnv* env, jobject obj, jlong address) {
 
-    yyjson_doc_free((yyjson_doc*)address);
-
-    val = nullptr;
+    yyjson_doc_free((yyjson_doc *) address);
 
     env->DeleteLocalRef(obj);
 }

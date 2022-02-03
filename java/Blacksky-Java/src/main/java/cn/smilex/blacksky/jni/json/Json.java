@@ -67,18 +67,20 @@ public class Json {
         return new JsonObject(pointAddress);
     }
 
-    /*
-    * String
-    * */
+    /**
+     * 通过K 获取 V(String)
+     * @param name K
+     * @return V
+     */
     public String getString(String name) {
         return (String) _get(Json_Type.STRING.id, name, JSON_GET_METHOD.DEFAULT.id, 0);
     }
 
-    protected String asString(long address) {
+    protected String _asString(long address) {
         return (String) _get(Json_Type.STRING.id, null, JSON_GET_METHOD.ADDRESS.id, address);
     }
 
-    protected String getString(String name, long address) {
+    protected String _getString(String name, long address) {
         if (address == 0) {
             return null;
         }
@@ -92,11 +94,11 @@ public class Json {
         return Integer.parseInt((String)_get(Json_Type.INTEGER.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
     }
 
-    protected int asInt(long address) {
+    protected int _asInt(long address) {
         return Integer.parseInt((String)_get(Json_Type.INTEGER.id, null, JSON_GET_METHOD.ADDRESS.id, address));
     }
 
-    protected int getInt(String name, long address) {
+    protected int _getInt(String name, long address) {
         return Integer.parseInt((String) _get(Json_Type.INTEGER.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address));
     }
 
@@ -107,11 +109,11 @@ public class Json {
         return Double.parseDouble((String)_get(Json_Type.DOUBLE.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
     }
 
-    protected double asDouble(long address) {
+    protected double _asDouble(long address) {
         return Double.parseDouble((String)_get(Json_Type.DOUBLE.id, null, JSON_GET_METHOD.ADDRESS.id, address));
     }
 
-    protected double getDouble(String name, long address) {
+    protected double _getDouble(String name, long address) {
         return Double.parseDouble((String) _get(Json_Type.DOUBLE.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address));
     }
 
@@ -122,11 +124,11 @@ public class Json {
         return Long.parseLong((String) _get(Json_Type.LONG.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
     }
 
-    protected long asLong(long address) {
+    protected long _asLong(long address) {
         return Long.parseLong((String)_get(Json_Type.LONG.id, null, JSON_GET_METHOD.ADDRESS.id, address));
     }
 
-    protected long getLong(String name, long address) {
+    protected long _getLong(String name, long address) {
         return Long.parseLong((String)_get(Json_Type.LONG.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address));
     }
 
@@ -137,11 +139,11 @@ public class Json {
         return Boolean.parseBoolean((String) _get(Json_Type.BOOLEAN.id, name, JSON_GET_METHOD.DEFAULT.id, 0));
     }
 
-    protected boolean asBoolean(long address) {
+    protected boolean _asBoolean(long address) {
         return Boolean.parseBoolean((String)_get(Json_Type.BOOLEAN.id, null, JSON_GET_METHOD.ADDRESS.id, address));
     }
 
-    protected boolean getBoolean(String name, long address) {
+    protected boolean _getBoolean(String name, long address) {
         return Boolean.parseBoolean((String)_get(Json_Type.BOOLEAN.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address));
     }
 
@@ -155,7 +157,7 @@ public class Json {
         return jsonObjects;
     }
 
-    protected List<JsonObject> asPointArrJsonObject(long address) {
+    protected List<JsonObject> _asPointArrJsonObject(long address) {
         long[] _addresses = _getArray(key, true, address);
 
         List<JsonObject> jsonObjects = new ArrayList<>();
@@ -166,7 +168,7 @@ public class Json {
     }
 
     public List<JsonObject> asPointArrJsonObject() {
-        return asPointArrJsonObject(pointAddress);
+        return _asPointArrJsonObject(pointAddress);
     }
 
     public JsonObject getObject(String name) {
@@ -192,7 +194,7 @@ public class Json {
         }
     }
 
-    protected List<JsonObject> getArrJsonObject(String name, long address) {
+    protected List<JsonObject> _getArrJsonObject(String name, long address) {
         synchronized (Json.class) {
             long[] _addresses = _getArray(name, false, address);
             if (_addresses == null) {
@@ -207,7 +209,7 @@ public class Json {
         }
     }
 
-    protected JsonObject getObject(String name, long address) {
+    protected JsonObject _getObject(String name, long address) {
         String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address);
         if (_address == null) {
             return null;
@@ -279,6 +281,110 @@ public class Json {
     public void printType() {
         System.out.println("address-type: " + getType(rootAddress));
         System.out.println("pointAddress-type: " + getType(pointAddress));
+    }
+
+    public class JsonObject {
+        private long address;
+        private long pointerAddress;
+
+        public JsonObject(long address) {
+            synchronized (JsonObject.class) {
+                this.address = address;
+                this.pointerAddress = address;
+            }
+        }
+
+        public JsonObject getPoint(String point) {
+            synchronized (JsonObject.class) {
+                pointerAddress = _getPoint(address, point);
+                return this;
+            }
+        }
+
+        public JsonObject getPointerObject(String name) {
+            synchronized (JsonObject.class) {
+                String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address);
+                pointerAddress = Long.parseLong(_address);
+                return this;
+            }
+        }
+
+        public String asPointerString() {
+            return _asString(pointerAddress);
+        }
+
+        public int asPointerInt() {
+            return _asInt(pointerAddress);
+        }
+
+        public double asPointerDouble() {
+            return _asDouble(pointerAddress);
+        }
+
+        public long asPointerLong() {
+            return _asLong(pointerAddress);
+        }
+
+        public boolean asPointerBoolean() {
+            return _asBoolean(pointerAddress);
+        }
+
+        public String getPointString(String name) {
+            return _getString(name, pointerAddress);
+        }
+
+        public String getString(String name) {
+            return _getString(name, address);
+        }
+
+        public String asString() {
+            return _asString(address);
+        }
+
+        public int getInt(String name) {
+            return _getInt(name, address);
+        }
+
+        public int asInt() {
+            return _asInt(address);
+        }
+
+        public double getDouble(String name) {
+            return _getDouble(name, address);
+        }
+
+        public double asDouble() {
+            return _asDouble(address);
+        }
+
+        public long getLong(String name) {
+            return _getLong(name, address);
+        }
+
+        public long asLong() {
+            return _asLong(address);
+        }
+
+        public boolean getBoolean(String name) {
+            return _getBoolean(name, address);
+        }
+
+        public boolean asBoolean() {
+            return _asBoolean(address);
+        }
+
+        public JsonObject getObject(String name) {
+            return _getObject(name, address);
+        }
+
+        public List<JsonObject> asPointArrJsonObject() {
+            return _asPointArrJsonObject(pointerAddress);
+        }
+
+        public List<JsonObject> getArrJsonObject(String name) {
+            return _getArrJsonObject(name, address);
+        }
+
     }
 
     private native long _create(String jsonStr);

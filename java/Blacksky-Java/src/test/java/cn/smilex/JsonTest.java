@@ -86,7 +86,7 @@ public class JsonTest {
                 "\t}\n" +
                 "}";
         Json json = new Json(jsonStr);
-        JsonObject info = json.getObject("info");
+        Json.JsonObject info = json.getObject("info");
 
         String name = info.getString("name");
         int age = info.getInt("age");
@@ -133,15 +133,15 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        JsonObject a = json.getObject("a");
+        Json.JsonObject a = json.getObject("a");
 
         System.out.println(a.getString("name"));
 
-        JsonObject b = json.getObject("a").getObject("b");
+        Json.JsonObject b = json.getObject("a").getObject("b");
 
         System.out.println(b.getString("name"));
 
-        JsonObject c = b.getObject("c");
+        Json.JsonObject c = b.getObject("c");
 
         System.out.println(c.getString("name"));
 
@@ -184,8 +184,8 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        List<JsonObject> infos = json.getArrJsonObject("infos");
-        for (JsonObject info : infos) {
+        List<Json.JsonObject> infos = json.getArrJsonObject("infos");
+        for (Json.JsonObject info : infos) {
             String name = info.getString("name");
             System.out.println(name);
         }
@@ -297,11 +297,11 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        List<JsonObject> infos = json.getArrJsonObject("infos");
+        List<Json.JsonObject> infos = json.getArrJsonObject("infos");
 
-        for (JsonObject info : infos) {
-            List<JsonObject> names = info.getArrJsonObject("names");
-            for (JsonObject name : names) {
+        for (Json.JsonObject info : infos) {
+            List<Json.JsonObject> names = info.getArrJsonObject("names");
+            for (Json.JsonObject name : names) {
                 System.out.println(name.asString());
             }
         }
@@ -327,7 +327,7 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        List<JsonObject> jsonObjects = json.asRootArrJsonObject();
+        List<Json.JsonObject> jsonObjects = json.asRootArrJsonObject();
         System.out.println(jsonObjects.get(0).getString("name"));
         System.out.println(jsonObjects.get(1).getString("name"));
 
@@ -537,12 +537,12 @@ public class JsonTest {
 
         Json json = new Json(str);
 
-        List<JsonObject> objs1 = json.getPoint("/obj1/arr1").asPointArrJsonObject();
+        List<Json.JsonObject> objs1 = json.getPoint("/obj1/arr1").asPointArrJsonObject();
 
-        for (JsonObject obj1 : objs1) {
-            List<JsonObject> objs2 = obj1.getPoint("/names").asPointArrJsonObject();
+        for (Json.JsonObject obj1 : objs1) {
+            List<Json.JsonObject> objs2 = obj1.getPoint("/names").asPointArrJsonObject();
 
-            for (JsonObject obj2 : objs2) {
+            for (Json.JsonObject obj2 : objs2) {
                 System.out.println(obj2.asPointerString());
             }
         }

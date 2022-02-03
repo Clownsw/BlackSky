@@ -59,7 +59,7 @@ public class JsonMut {
         return new JsonMut(str);
     }
 
-    public enum JSON_MUT_TYPE {
+    private enum JSON_MUT_TYPE {
         OBJ(0),
         ARR(1);
 
@@ -69,7 +69,7 @@ public class JsonMut {
         }
     }
 
-    public enum JSON_MUT_ARR_ACTION {
+    private enum JSON_MUT_ARR_ACTION {
         JSON_MUT_ARR_ACTION_INSERT(0),
         JSON_MUT_ARR_ACTION_APPEND(1),
         JSON_MUT_ARR_ACTION_PREPEND(2),
@@ -83,6 +83,17 @@ public class JsonMut {
         int id;
 
         JSON_MUT_ARR_ACTION(int id) {
+            this.id = id;
+        }
+    }
+
+    private enum JSON_MUT_OBJ_ACTION {
+        JSON_MUT_OBJ_ACTION_REMOVE(0),
+        JSON_MUT_OBJ_ACTION_CLEAN(1);
+
+        int id;
+
+        JSON_MUT_OBJ_ACTION(int id) {
             this.id = id;
         }
     }
@@ -462,6 +473,27 @@ public class JsonMut {
                 return this;
             }
         }
+
+        /**
+         * 删除对象内指定内容
+         * @param key key
+         * @return 是否成功
+         */
+        public boolean removeObj(String key) {
+            synchronized (JsonMutObject.class) {
+                return _objAction(JSON_MUT_OBJ_ACTION.JSON_MUT_OBJ_ACTION_REMOVE.id, address, key);
+            }
+        }
+
+        /**
+         * 清空对象内所有内容
+         * @return 是否成功
+         */
+        public boolean cleanObj() {
+            synchronized (JsonMutObject.class) {
+                return _objAction(JSON_MUT_OBJ_ACTION.JSON_MUT_OBJ_ACTION_CLEAN.id, address, null);
+            }
+        }
     }
 
     public class JsonMutArr implements JsonMutInter {
@@ -725,6 +757,7 @@ public class JsonMut {
     private native void _objAdd(int type, long _address, long address, String name, Object data);
     private native void _arrAdd(int type, long _address, long address, Object data);
     private native boolean _arrAction(int type, long arr, long data, int index, int len);
+    private native boolean _objAction(int type, long obj, String key);
     private native void _bind(long _address, long rootAddress, long address, String name);
     private native String _writeString(long address);
     private static native int _getType(long address);

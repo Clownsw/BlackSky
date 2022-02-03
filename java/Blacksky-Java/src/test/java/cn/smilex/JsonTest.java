@@ -752,6 +752,28 @@ public class JsonTest {
     }
 
     /**
+     * 可变JSON对象删除测试
+     * @author smilex
+     */
+    @Test
+    public void jsonMutObjRemoveTest() {
+
+        JsonMut mut = JsonMut.buildObject();
+        var root = (JsonMut.JsonMutObject) mut.getRoot();
+
+        var obj = root.createJsonMutObject("obj");
+
+        obj.addInt("a", 1)
+                .addInt("b", 2);
+
+//        obj.cleanObj();
+        obj.removeObj("a");
+
+        System.out.println(mut.getJsonStr());
+        mut.close();
+    }
+
+    /**
      * 可变JSON数组插入测试
      * @author smilex
      */

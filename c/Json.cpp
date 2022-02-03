@@ -41,6 +41,11 @@ enum JSON_MUT_ARR_ACTION {
     JSON_MUT_ARR_ACTION_CLEAN = 8,
 };
 
+enum JSON_MUT_OBJ_ACTION {
+    JSON_MUT_OBJ_ACTION_REMOVE = 0,
+    JSON_MUT_OBJ_ACTION_CLEAN = 1
+};
+
 ////////////////////////////////////////////
 ///////////////Json native//////////////////
 ////////////////////////////////////////////
@@ -647,4 +652,36 @@ JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1getType
     env->DeleteLocalRef(obj);
 
     return yyjson_mut_get_type((yyjson_mut_val *) address);
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _objAction
+ * Signature: (IJLjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1objAction
+    (JNIEnv *env, jobject obj, jint type, jlong _obj, jstring key) {
+
+    const char *_key = key != nullptr
+            ? env->GetStringUTFChars(key, JNI_FALSE)
+            : nullptr;
+    auto *__obj = (yyjson_mut_val *) _obj;
+
+    env->DeleteLocalRef(key);
+    env->DeleteLocalRef(obj);
+
+    switch (type) {
+        case JSON_MUT_OBJ_ACTION_REMOVE: {
+            return yyjson_mut_obj_remove_str(__obj, _key) ? JNI_TRUE : JNI_FALSE;
+        }
+
+        case JSON_MUT_OBJ_ACTION_CLEAN: {
+            return yyjson_mut_obj_clear(__obj) ? JNI_TRUE : JNI_FALSE;
+        }
+
+        default: {
+            return JNI_FALSE;
+        }
+    }
+
 }

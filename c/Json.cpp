@@ -46,6 +46,11 @@ enum JSON_MUT_OBJ_ACTION {
     JSON_MUT_OBJ_ACTION_CLEAN = 1
 };
 
+static void throwApplyMemoryError(JNIEnv *&env) {
+    throwException(env, CLASSNAME_RuntimeException, ERROR_APPLY_MEMORY_ERROR);
+}
+
+
 ////////////////////////////////////////////
 ///////////////Json native//////////////////
 ////////////////////////////////////////////
@@ -145,8 +150,6 @@ JNIEXPORT jlongArray JNICALL Java_cn_smilex_blacksky_jni_json_Json__1getArray
 
     env->DeleteLocalRef(name);
     env->DeleteLocalRef(obj);
-
-//    yyjson_val* root = (isRoot == JNI_FALSE ? yyjson_obj_get((yyjson_val*) address, _name) : yyjson_obj_get(val, _name));
 
     yyjson_val *root;
     if (name != nullptr && strcmp(_name, xorstr_("__acJjzPifrs__")) == 0) {
@@ -267,7 +270,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
     auto mutDoc = yyjson_mut_doc_new(nullptr);
 
     if (mutDoc == nullptr) {
-        throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
+        throwApplyMemoryError(env);
         return nullptr;
     }
 
@@ -299,7 +302,7 @@ JNIEXPORT jstring JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1createMut
     }
 
     if (data == nullptr) {
-        throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
+        throwApplyMemoryError(env);
         return nullptr;
     }
 
@@ -370,7 +373,7 @@ JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1add
     }
 
     if (m_obj == nullptr) {
-        throwException(env, CLASSNAME_NullPointerException, ERROR_APPLY_MEMORY_ERROR);
+        throwApplyMemoryError(env);
         return 0;
     }
 

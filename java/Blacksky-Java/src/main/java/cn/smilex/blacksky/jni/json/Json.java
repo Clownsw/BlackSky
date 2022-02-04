@@ -1,6 +1,7 @@
 package cn.smilex.blacksky.jni.json;
 
 import cn.smilex.blacksky.jni.Info;
+import cn.smilex.blacksky.jni.util.BlackSkyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Json {
     private static final String key = "__acJjzPifrs__";
     private long _address;
     private long rootAddress;
-    private long pointAddress;
+    private long pointerAddress;
 
     static {
         synchronized (Json.class) {
@@ -44,35 +45,35 @@ public class Json {
         }
     }
 
-    public Json getPoint(String point) {
+    public Json getPointer(String point) {
         synchronized (Json.class) {
-            pointAddress = _getPoint(rootAddress, point);
+            pointerAddress = _getPoint(rootAddress, point);
             return this;
         }
     }
 
     public int asPointerInt() {
-        return Integer.parseInt((String) _get(Json_Type.INTEGER.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
+        return Integer.parseInt((String) _get(Json_Type.INTEGER.id, null, JSON_GET_METHOD.ADDRESS.id, pointerAddress));
     }
 
     public String asPointerString() {
-        return (String) _get(Json_Type.STRING.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress);
+        return (String) _get(Json_Type.STRING.id, null, JSON_GET_METHOD.ADDRESS.id, pointerAddress);
     }
 
     public double asPointerDouble() {
-        return Double.parseDouble((String) _get(Json_Type.DOUBLE.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
+        return Double.parseDouble((String) _get(Json_Type.DOUBLE.id, null, JSON_GET_METHOD.ADDRESS.id, pointerAddress));
     }
 
     public long asPointerLong() {
-        return Long.parseLong((String) _get(Json_Type.LONG.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
+        return Long.parseLong((String) _get(Json_Type.LONG.id, null, JSON_GET_METHOD.ADDRESS.id, pointerAddress));
     }
 
     public boolean asPointerBoolean() {
-        return Boolean.parseBoolean((String) _get(Json_Type.BOOLEAN.id, null, JSON_GET_METHOD.ADDRESS.id, pointAddress));
+        return Boolean.parseBoolean((String) _get(Json_Type.BOOLEAN.id, null, JSON_GET_METHOD.ADDRESS.id, pointerAddress));
     }
 
     public JsonObject asPointerObject() {
-        return new JsonObject(pointAddress);
+        return new JsonObject(pointerAddress);
     }
 
     /**
@@ -175,8 +176,8 @@ public class Json {
         return jsonObjects;
     }
 
-    public List<JsonObject> asPointArrJsonObject() {
-        return _asPointArrJsonObject(pointAddress);
+    public List<JsonObject> asPointerArrJsonObject() {
+        return _asPointArrJsonObject(pointerAddress);
     }
 
     public JsonObject getObject(String name) {
@@ -251,44 +252,7 @@ public class Json {
     }
 
     protected String getType(long address) {
-        switch (_getType(address)) {
-            case 0: {
-                return "NONE";
-            }
-
-            case 2: {
-                return "NULL";
-            }
-
-            case 3: {
-                return "BOOL";
-            }
-
-            case 4: {
-                return "NUM";
-            }
-
-            case 5: {
-                return "STR";
-            }
-
-            case 6: {
-                return "ARR";
-            }
-
-            case 7: {
-                return "OBJ";
-            }
-
-            default: {
-                return "null";
-            }
-        }
-    }
-
-    public void printType() {
-        System.out.println("address-type: " + getType(rootAddress));
-        System.out.println("pointAddress-type: " + getType(pointAddress));
+        return BlackSkyUtil.getType(_getType(address));
     }
 
     public class JsonObject {
@@ -302,17 +266,21 @@ public class Json {
             }
         }
 
-        public JsonObject getPoint(String point) {
+        public JsonObject getPointer(String pointer) {
             synchronized (JsonObject.class) {
-                pointerAddress = _getPoint(address, point);
+                pointerAddress = _getPoint(address, pointer);
                 return this;
             }
         }
 
         public JsonObject getPointerObject(String name) {
             synchronized (JsonObject.class) {
-                String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address);
-                pointerAddress = Long.parseLong(_address);
+                if (name.isBlank()) {
+                    throw new RuntimeException(BlackSkyUtil.ERROR_MSG.ERROR_APPLY_MEMORY_ERROR.msg);
+                } else {
+                    String _address = (String) _get(Json_Type.OBJECT.id, name, JSON_GET_METHOD.NAME_ADDRESS.id, address);
+                    pointerAddress = Long.parseLong(_address);
+                }
                 return this;
             }
         }

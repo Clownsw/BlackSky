@@ -221,11 +221,11 @@ public class JsonTest {
         System.out.println(json2.getObject("obj").getBoolean("b1"));
         System.out.println(json2.getObject("obj").getBoolean("b2"));
 
-        System.out.println(json2.getPoint("/obj/b1").asPointerBoolean());
-        System.out.println(json2.getPoint("/obj/b2").asPointerBoolean());
+        System.out.println(json2.getPointer("/obj/b1").asPointerBoolean());
+        System.out.println(json2.getPointer("/obj/b2").asPointerBoolean());
 
-        System.out.println(json2.getObject("obj").getPoint("/b1").asPointerBoolean());
-        System.out.println(json2.getObject("obj").getPoint("/b2").asPointerBoolean());
+        System.out.println(json2.getObject("obj").getPointer("/b1").asPointerBoolean());
+        System.out.println(json2.getObject("obj").getPointer("/b2").asPointerBoolean());
 
         json2.close();
 
@@ -243,8 +243,8 @@ public class JsonTest {
         System.out.println(json3.asRootArrJsonObject().get(0).getBoolean("b1"));
         System.out.println(json3.asRootArrJsonObject().get(1).getBoolean("b2"));
 
-        System.out.println(json3.asRootArrJsonObject().get(0).getPoint("/b1").asPointerBoolean());
-        System.out.println(json3.asRootArrJsonObject().get(1).getPoint("/b2").asPointerBoolean());
+        System.out.println(json3.asRootArrJsonObject().get(0).getPointer("/b1").asPointerBoolean());
+        System.out.println(json3.asRootArrJsonObject().get(1).getPointer("/b2").asPointerBoolean());
 
         json3.close();
     }
@@ -331,8 +331,8 @@ public class JsonTest {
         System.out.println(jsonObjects.get(0).getString("name"));
         System.out.println(jsonObjects.get(1).getString("name"));
 
-        System.out.println(jsonObjects.get(0).getPoint("/name").asPointerString());
-        System.out.println(jsonObjects.get(1).getPoint("/name").asPointerString());
+        System.out.println(jsonObjects.get(0).getPointer("/name").asPointerString());
+        System.out.println(jsonObjects.get(1).getPointer("/name").asPointerString());
 
         json.close();
     }
@@ -405,19 +405,19 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        System.out.println(json.getPoint("/size").asPointerInt());
+        System.out.println(json.getPointer("/size").asPointerInt());
 
-        System.out.println(json.getPoint("/users/0/id").asPointerInt());
-        System.out.println(json.getPoint("/users/1/id").asPointerInt());
-        System.out.println(json.getPoint("/users/2/id").asPointerInt());
+        System.out.println(json.getPointer("/users/0/id").asPointerInt());
+        System.out.println(json.getPointer("/users/1/id").asPointerInt());
+        System.out.println(json.getPointer("/users/2/id").asPointerInt());
 
-        System.out.println(json.getPoint("/users/0/name").asPointerString());
-        System.out.println(json.getPoint("/users/1/name").asPointerString());
-        System.out.println(json.getPoint("/users/2/name").asPointerString());
+        System.out.println(json.getPointer("/users/0/name").asPointerString());
+        System.out.println(json.getPointer("/users/1/name").asPointerString());
+        System.out.println(json.getPointer("/users/2/name").asPointerString());
 
-        System.out.println(json.getPoint("/users/0/id").asPointerLong());
-        System.out.println(json.getPoint("/users/1/id").asPointerLong());
-        System.out.println(json.getPoint("/users/2/id").asPointerLong());
+        System.out.println(json.getPointer("/users/0/id").asPointerLong());
+        System.out.println(json.getPointer("/users/1/id").asPointerLong());
+        System.out.println(json.getPointer("/users/2/id").asPointerLong());
 
         json.close();
     }
@@ -444,19 +444,19 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        System.out.println(json.getPoint("/a/b/0/name").asPointerString());
-        System.out.println(json.getPoint("/a/b/1/name").asPointerString());
+        System.out.println(json.getPointer("/a/b/0/name").asPointerString());
+        System.out.println(json.getPointer("/a/b/1/name").asPointerString());
 
-        System.out.println(json.getObject("a").getPoint("/b/0/name").asPointerString());
-        System.out.println(json.getObject("a").getPoint("/b/1/name").asPointerString());
+        System.out.println(json.getObject("a").getPointer("/b/0/name").asPointerString());
+        System.out.println(json.getObject("a").getPointer("/b/1/name").asPointerString());
 
         // a -> b -> 0 -> name
         //           ^
         //           |
-        System.out.println(json.getObject("a").getArrJsonObject("b").get(0).getPoint("/name").asPointerString());
+        System.out.println(json.getObject("a").getArrJsonObject("b").get(0).getPointer("/name").asPointerString());
 
-        System.out.println(json.getObject("a").getPoint("/b/0/height").asPointerDouble());
-        System.out.println(json.getObject("a").getPoint("/b/1/height").asPointerDouble());
+        System.out.println(json.getObject("a").getPointer("/b/0/height").asPointerDouble());
+        System.out.println(json.getObject("a").getPointer("/b/1/height").asPointerDouble());
         json.close();
     }
 
@@ -476,8 +476,8 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        System.out.println(json.asRootArrJsonObject().get(0).getPoint("/obj/b1").asPointerBoolean());
-        System.out.println(json.asRootArrJsonObject().get(0).getPoint("/obj/c2").asPointerString());
+        System.out.println(json.asRootArrJsonObject().get(0).getPointer("/obj/b1").asPointerBoolean());
+        System.out.println(json.asRootArrJsonObject().get(0).getPointer("/obj/c2").asPointerString());
 
         json.close();
     }
@@ -497,15 +497,15 @@ public class JsonTest {
 
         Json json = new Json(jsonStr);
 
-        System.out.println(json.getPoint("/obj1")
+        System.out.println(json.getPointer("/obj1")
                 .asPointerObject()
                 .getPointerObject("obj2")
                 .getPointString("name")
         );
 
-        System.out.println(json.getPoint("/obj1/obj2")
+        System.out.println(json.getPointer("/obj1/obj2")
                 .asPointerObject()
-                .getPoint("/name")
+                .getPointer("/name")
                 .asPointerString());
 
         json.close();
@@ -537,10 +537,10 @@ public class JsonTest {
 
         Json json = new Json(str);
 
-        List<Json.JsonObject> objs1 = json.getPoint("/obj1/arr1").asPointArrJsonObject();
+        List<Json.JsonObject> objs1 = json.getPointer("/obj1/arr1").asPointerArrJsonObject();
 
         for (Json.JsonObject obj1 : objs1) {
-            List<Json.JsonObject> objs2 = obj1.getPoint("/names").asPointArrJsonObject();
+            List<Json.JsonObject> objs2 = obj1.getPointer("/names").asPointArrJsonObject();
 
             for (Json.JsonObject obj2 : objs2) {
                 System.out.println(obj2.asPointerString());

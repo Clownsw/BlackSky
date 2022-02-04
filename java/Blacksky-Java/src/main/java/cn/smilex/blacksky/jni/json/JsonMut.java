@@ -2,6 +2,7 @@ package cn.smilex.blacksky.jni.json;
 
 import cn.smilex.blacksky.jni.Info;
 import cn.smilex.blacksky.jni.json.type.*;
+import cn.smilex.blacksky.jni.util.BlackSkyUtil;
 
 import java.lang.reflect.Field;
 
@@ -172,36 +173,7 @@ public class JsonMut {
     }
 
     private static String getType(long x) {
-        switch (_getType(x)) {
-            default:
-            case 0: {
-                return "none";
-            }
-
-            case 2: {
-                return "null";
-            }
-
-            case 3: {
-                return "boolean";
-            }
-
-            case 4: {
-                return "number";
-            }
-
-            case 5: {
-                return "string";
-            }
-
-            case 6: {
-                return "array";
-            }
-
-            case 7: {
-                return "object";
-            }
-        }
+        return BlackSkyUtil.getType(_getType(x));
     }
 
     /**

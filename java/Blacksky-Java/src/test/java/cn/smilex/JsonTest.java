@@ -4,6 +4,7 @@ import cn.smilex.blacksky.jni.json.*;
 import cn.smilex.blacksky.jni.json.type.*;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -899,6 +900,62 @@ public class JsonTest {
 
         System.out.println(mut.getJsonStr());
         mut.close();
+    }
+
+    /**
+     * 测试可变JSON对象替换
+     * @author smilex
+     */
+    @Test
+    public void testJsonMutObjectReplace() {
+        String str = "{\n" +
+                "\t\"obj\": {\n" +
+                "\t\t\"name\": \"Mash\",\n" +
+                "\t\t\"age\": 18,\n" +
+                "\t\t\"height\": 1.77\n" +
+                "\t}\n" +
+                "}";
+
+        JsonMut mutJson = JsonMut.buildByJsonStr(str);
+        var root = (JsonMut.JsonMutObject) mutJson.getRoot();
+
+        var obj = root.getPointerJsonMutObject("/obj");
+
+        var name = mutJson.createJsonTypeStr("Tom");
+        var height = mutJson.createJsonTypeDouble(1.55);
+        var testObj = mutJson.createFreeJsonMutObject("testObj");
+
+        testObj.addStr("name", "xd");
+
+        obj.replaceObj("name", name);
+        obj.replaceObj("height", height);
+        obj.replaceObj("age", testObj);
+
+        System.out.println(mutJson.getJsonStr());
+
+        mutJson.close();
+    }
+
+    @Test
+    public void testJsonAndJsonMut() {
+        String str = "{\n" +
+                "\t\"obj\": {\n" +
+                "\t\t\"name\": \"Mash\"\n" +
+                "\t}\n" +
+                "}";
+
+        JsonMut mutJson = JsonMut.buildByJsonStr(str);
+        var root = (JsonMut.JsonMutObject) mutJson.getRoot();
+
+        var obj = root.getPointerJsonMutObject("/obj");
+        if (obj != null) {
+            obj.removeObj("name");
+            obj.addStr("name", "Tom");
+        }
+
+
+        System.out.println(mutJson.getJsonStr());
+        mutJson.close();
     }
 
 }

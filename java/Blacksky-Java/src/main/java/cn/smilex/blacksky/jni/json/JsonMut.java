@@ -90,7 +90,8 @@ public class JsonMut {
 
     private enum JSON_MUT_OBJ_ACTION {
         JSON_MUT_OBJ_ACTION_REMOVE(0),
-        JSON_MUT_OBJ_ACTION_CLEAN(1);
+        JSON_MUT_OBJ_ACTION_CLEAN(1),
+        JSON_MUT_OBJ_ACTION_REPLACE(2);
 
         int id;
 
@@ -306,6 +307,12 @@ public class JsonMut {
         }
     }
 
+    public JsonMutObject jsonToMutJson(long addr) {
+        synchronized (JsonMutObject.class) {
+            return new JsonMutObject(_finalToMut(_address, addr));
+        }
+    }
+
     private static long getObjAddress(Object obj) {
         Class<?> aClass = obj.getClass();
         try {
@@ -453,7 +460,7 @@ public class JsonMut {
          */
         public boolean removeObj(String key) {
             synchronized (JsonMutObject.class) {
-                return _objAction(JSON_MUT_OBJ_ACTION.JSON_MUT_OBJ_ACTION_REMOVE.id, address, key);
+                return _objAction(JSON_MUT_OBJ_ACTION.JSON_MUT_OBJ_ACTION_REMOVE.id, 0, address, 0, key);
             }
         }
 
@@ -463,9 +470,65 @@ public class JsonMut {
          */
         public boolean cleanObj() {
             synchronized (JsonMutObject.class) {
-                return _objAction(JSON_MUT_OBJ_ACTION.JSON_MUT_OBJ_ACTION_CLEAN.id, address, null);
+                return _objAction(JSON_MUT_OBJ_ACTION.JSON_MUT_OBJ_ACTION_CLEAN.id,0, address, 0,null);
             }
         }
+
+        /**
+         * 替换对象内指定内容
+         * @param key key
+         * @param data 数据
+         * @return this
+         */
+        private boolean _replaceObj(String key, long data) {
+            synchronized (JsonMutObject.class) {
+                if (data == 0 || key.isBlank()) {
+                    return false;
+                }
+                return _objAction(JSON_MUT_OBJ_ACTION.JSON_MUT_OBJ_ACTION_REPLACE.id, _address, address, data, key);
+            }
+        }
+
+        /**
+         * 替换对象内指定内容
+         * @param key key
+         * @param data 数据
+         * @return this
+         */
+        public boolean replaceObj(String key, JsonType data) {
+            return _replaceObj(key, getObjAddress(data));
+        }
+
+        /**
+         * 替换对象内指定内容
+         * @param key key
+         * @param data 数据
+         * @return this
+         */
+        public boolean replaceObj(String key, JsonMutInter data) {
+            return _replaceObj(key, getObjAddress(data));
+        }
+
+        public JsonMutObject getPointerJsonMutObject(String pointer) {
+            synchronized (JsonMutObject.class) {
+                long ret = _getPointer(address, pointer);
+                if (ret == 0 || !getType(ret).equals("object")) {
+                    return null;
+                }
+                return new JsonMutObject(ret);
+            }
+        }
+
+        public JsonMutArr getPointerJsonMutArr(String pointer) {
+            synchronized (JsonMutArr.class) {
+                long ret = _getPointer(address, pointer);
+                if (ret == 0 || !getType(ret).equals("array")) {
+                    return null;
+                }
+                return new JsonMutArr(ret);
+            }
+        }
+
     }
 
     public class JsonMutArr implements JsonMutInter {
@@ -729,8 +792,10 @@ public class JsonMut {
     private native void _objAdd(int type, long _address, long address, String name, Object data);
     private native void _arrAdd(int type, long _address, long address, Object data);
     private native boolean _arrAction(int type, long arr, long data, int index, int len);
-    private native boolean _objAction(int type, long obj, String key);
+    private native boolean _objAction(int type, long _address, long obj, long obj2, String key);
     private native void _bind(long _address, long rootAddress, long address, String name);
     private native String _writeString(long address);
+    private native long _getPointer(long address, String pointer);
+    private native long _finalToMut(long _address, long address);
     private static native int _getType(long address);
 }

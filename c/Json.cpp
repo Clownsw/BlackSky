@@ -43,7 +43,8 @@ enum JSON_MUT_ARR_ACTION {
 
 enum JSON_MUT_OBJ_ACTION {
     JSON_MUT_OBJ_ACTION_REMOVE = 0,
-    JSON_MUT_OBJ_ACTION_CLEAN = 1
+    JSON_MUT_OBJ_ACTION_CLEAN = 1,
+    JSON_MUT_OBJ_ACTION_REPLACE = 2
 };
 
 static void throwApplyMemoryError(JNIEnv *&env) {
@@ -125,7 +126,7 @@ JNIEXPORT jobject JNICALL Java_cn_smilex_blacksky_jni_json_Json__1get
         }
 
         case JSON_TYPE_OBJECT: {
-            return env->NewStringUTF(std::to_string((jlong)root).c_str());
+            return env->NewStringUTF(std::to_string((jlong) root).c_str());
         }
 
         default: {
@@ -660,31 +661,80 @@ JNIEXPORT jint JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1getType
 /*
  * Class:     cn_smilex_blacksky_jni_json_JsonMut
  * Method:    _objAction
- * Signature: (IJLjava/lang/String;)Z
+ * Signature: (IJJJLjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1objAction
-    (JNIEnv *env, jobject obj, jint type, jlong _obj, jstring key) {
+    (JNIEnv *env, jobject obj, jint type, jlong _address, jlong _obj, jlong _obj2, jstring key) {
 
     const char *_key = key != nullptr
             ? env->GetStringUTFChars(key, JNI_FALSE)
             : nullptr;
     auto *__obj = (yyjson_mut_val *) _obj;
 
-    env->DeleteLocalRef(key);
-    env->DeleteLocalRef(obj);
+    jboolean ret = JNI_FALSE;
 
     switch (type) {
         case JSON_MUT_OBJ_ACTION_REMOVE: {
-            return yyjson_mut_obj_remove_str(__obj, _key) ? JNI_TRUE : JNI_FALSE;
+            ret = yyjson_mut_obj_remove_str(__obj, _key) ? JNI_TRUE : JNI_FALSE;
+            break;
         }
 
         case JSON_MUT_OBJ_ACTION_CLEAN: {
-            return yyjson_mut_obj_clear(__obj) ? JNI_TRUE : JNI_FALSE;
+            ret = yyjson_mut_obj_clear(__obj) ? JNI_TRUE : JNI_FALSE;
+            break;
         }
 
+        case JSON_MUT_OBJ_ACTION_REPLACE: {
+            ret = yyjson_mut_obj_replace(__obj, yyjson_mut_str((yyjson_mut_doc *) _address, _key), (yyjson_mut_val *) _obj2)
+                  ? JNI_TRUE
+                  : JNI_FALSE;
+            break;
+        }
+        
+
         default: {
-            return JNI_FALSE;
         }
     }
 
+    if (_key != nullptr) {
+        env->ReleaseStringUTFChars(key, _key);
+    }
+
+    env->DeleteLocalRef(key);
+    env->DeleteLocalRef(obj);
+
+    return ret;
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _getPointer
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1getPointer
+    (JNIEnv *env, jobject obj, jlong address, jstring pointer) {
+
+    const char *_pointer = env->GetStringUTFChars(pointer, JNI_FALSE);
+
+    auto ret = (jlong) yyjson_mut_get_pointer((yyjson_mut_val *) address, _pointer);
+
+    env->ReleaseStringUTFChars(pointer, _pointer);
+
+    env->DeleteLocalRef(pointer);
+    env->DeleteLocalRef(obj);
+
+    return ret;
+}
+
+/*
+ * Class:     cn_smilex_blacksky_jni_json_JsonMut
+ * Method:    _finalToMut
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_cn_smilex_blacksky_jni_json_JsonMut__1finalToMut
+    (JNIEnv *env, jobject obj, jlong _address, jlong address) {
+    
+    env->DeleteLocalRef(obj);
+
+    return (jlong) yyjson_val_mut_copy((yyjson_mut_doc *) _address, (yyjson_val *) address);
 }

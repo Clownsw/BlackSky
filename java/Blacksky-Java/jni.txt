@@ -1,0 +1,1 @@
+javac -encoding UTF-8 -h .\ JsonMut.java Json.java JsonMutInter.java .\type\JsonType.java .\type\JsonTypeBoolean.java .\type\JsonTypeDouble.java .\type\JsonTypeInt.java .\type\JsonTypeLong.java .\type\JsonTypeStr.java ..\Info.java ..\util\BlackSkyUtil.java

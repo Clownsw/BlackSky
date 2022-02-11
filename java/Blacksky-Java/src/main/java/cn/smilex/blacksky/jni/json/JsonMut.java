@@ -335,6 +335,8 @@ public class JsonMut {
         }
     }
 
+
+
     public class JsonMutObject implements JsonMutInter {
         private final long address;
 
@@ -527,6 +529,34 @@ public class JsonMut {
                 }
                 return new JsonMutArr(ret);
             }
+        }
+
+        public boolean isNone() {
+            return getType(address).equals("none");
+        }
+
+        public boolean isNull() {
+            return getType(address).equals("null");
+        }
+
+        public boolean isBool() {
+            return getType(address).equals("boolean");
+        }
+
+        public boolean isNumber() {
+            return getType(address).equals("number");
+        }
+
+        public boolean isString() {
+            return getType(address).equals("string");
+        }
+
+        public boolean isArray() {
+            return getType(address).equals("array");
+        }
+
+        public boolean isObject() {
+            return getType(address).equals("object");
         }
 
     }
@@ -782,6 +812,34 @@ public class JsonMut {
             synchronized (JsonMutArr.class) {
                 return _arrAction(JSON_MUT_ARR_ACTION.JSON_MUT_ARR_ACTION_CLEAN.id, address, 0, 0, 0);
             }
+        }
+
+        public boolean isNone() {
+            return getType(address).equals("none");
+        }
+
+        public boolean isNull() {
+            return getType(address).equals("null");
+        }
+
+        public boolean isBool() {
+            return getType(address).equals("boolean");
+        }
+
+        public boolean isNumber() {
+            return getType(address).equals("number");
+        }
+
+        public boolean isString() {
+            return getType(address).equals("string");
+        }
+
+        public boolean isArray() {
+            return getType(address).equals("array");
+        }
+
+        public boolean isObject() {
+            return getType(address).equals("object");
         }
     }
 

@@ -958,4 +958,23 @@ public class JsonTest {
         mutJson.close();
     }
 
+    @Test
+    public void testJsonMutIsTest() {
+        JsonMut mut = JsonMut.buildObject();
+        var root = (JsonMut.JsonMutObject) mut.getRoot();
+
+        System.out.println(root.isObject());
+        System.out.println(root.isArray());
+
+        mut.close();
+
+        JsonMut mut2 = JsonMut.buildArr();
+        var root2 = (JsonMut.JsonMutArr) mut2.getRoot();
+
+        System.out.println(root2.isObject());
+        System.out.println(root2.isArray());
+
+        mut2.close();
+    }
+
 }
